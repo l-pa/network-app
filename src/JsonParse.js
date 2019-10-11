@@ -1,36 +1,35 @@
-import React from 'react';
-import './App.css';
-import Network from './Network'
 
-function JsonParse(props) {
-    return (
-            <div className={"selector"}>
-                <div className={"center dialog"}>
+import React from 'react'
+import './App.css'
 
-                    <h2>Select nodes, edges</h2>
+function JsonParse (props) {
+  return (
+    <div className={'selector'}>
+      <div className={'center dialog'}>
 
-                    <div className={"values"}>
-                        <div>
-                            <p>Nodes</p>
-                            {
-                                Object.keys(props.file).map((o, i, a) => {
-                                    return <div>
-                                        <input key={i} type={"checkbox"} onChange={(event) => {
-                                        }} name={o} value={i} /> {o}
-                                    </div>
+        <h2>Select nodes, edges</h2>
 
-                                })}
-
-                        </div>
-                        <div>
-                            <p>Edges</p>
-                        </div>
-                    </div>
-                <button onClick={() => {
-                    props.showNetwork(true)
-                }}>Save</button>
+        <div className={'values'}>
+          <div>
+            <p>Nodes</p>
+            {
+              Object.keys(props.file).map((o, i, a) => {
+                return <div>
+                  <input key={i} type={'checkbox'} onChange={(event) => {
+                  }} name={o} value={i} /> {o}
                 </div>
-            </div>
-    )
+              })}
+
+          </div>
+          <div>
+            <p>Edges</p>
+          </div>
+        </div>
+        <button onClick={() => {
+          props.showNetwork(true)
+        }}>Save</button>
+      </div>
+    </div>
+  )
 }
-export default JsonParse;
+export default JsonParse

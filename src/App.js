@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
+import React, { useState, useEffect } from 'react'
+import './App.css'
 import JsonParse from './JsonParse'
 import Network from './Network'
 
-function App() {
-
-  let myGraph = { nodes: [{ id: "n1", label: "Alice" }, { id: "n2", label: "Rabbit" }], edges: [{ id: "e1", source: "n1", target: "n2", label: "SEES" }] };
-
+function App () {
   let fileReader
 
   const [file, setFile] = useState()
   const [jsonDialog, setJsonDialog] = useState(false)
   const [loadDialog, setLoadDialog] = useState(true)
   const [showNetwork, setShowNetwork] = useState(false)
-
+  const [loading, setLoading] = useState(false)
 
   const handleFileRead = (e) => {
     const content = fileReader.result
@@ -21,13 +18,13 @@ function App() {
       setFile(JSON.parse(content))
       setJsonDialog(true)
     } catch (e) {
-      console.log("Err", e);
+      console.log('Err', e)
     }
   }
 
   useEffect(() => {
     if (file) {
-      console.log(file);
+      console.log(file)
     }
   }, [file])
 
@@ -35,54 +32,64 @@ function App() {
     <div>
 
       {!showNetwork ? (
-        <div className="App">
+        <div className='App'>
           {
-            jsonDialog && <JsonParse file={file} showNetwork={setShowNetwork}></JsonParse>
+            jsonDialog && <JsonParse file={file} showNetwork={setShowNetwork} />
           }
           {loadDialog &&
-            <div className={"intro center"}>
+          <div className={'intro'}>
+            <div className={'center'}>
 
-              <div className={"left"}>
+              <div className={'left'}>
 
                 {/* <input type="file" onChange={(event) => {
                   fileReader = new FileReader()
                   fileReader.onloadend = handleFileRead
                   fileReader.readAsText(event.target.files[0])
                 }}
-                ></input> */}
+              ></input> */}
                 File input
               </div>
-              <div className={"border"}></div>
-              <div className={"right"}>
+              <div className={'border'} />
+              <div className={'right'}>
                 <h1>
                   Network graph demo
                 </h1>
-                <p>Examples</p>
+                <h3>Examples</h3>
                 <p onClick={() => {
+                  setLoading(true)
                   fetch('https://raw.githubusercontent.com/dunnock/react-sigma/master/public/upwork.json').then(
                     res => res.json()
                   )
                     .then(res => {
                       setFile(res)
                       setShowNetwork(true)
+                      setLoading(false)
                     }
                     )
                 }}>
-                  TEST
+                  Network.json
                 </p>
               </div>
             </div>
+            <div className={'loading'}>
+              {
+                loading &&
+                <h2>Loading</h2>
+              }
+            </div>
+          </div>
           }
         </div>
       ) : (
-          <div >
-              <Network network={file}></Network>
-          </div>
-        )
+        <div >
+          <Network network={file} />
+        </div>
+      )
       }
 
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

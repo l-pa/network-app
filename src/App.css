@@ -5,6 +5,10 @@ body {
 
 .intro {
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .center {
@@ -42,5 +46,20 @@ body {
 .values {
   display: flex;
   flex-direction: row;
+}
 
+.sidePanel{
+  width: 20vw;
+  background: #1d2026;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.loading {
+  margin-top: 2em;
+}
+.settings{
+  display: flex;
+  justify-content: space-between;
 }
