@@ -18,11 +18,8 @@ const SigmaNodes = props => {
     if (props.sigma) {
       console.log(props.sigma)
       // memo
-      props.sigma.graph.nodes().forEach(node => {
-        node.type = props.nodeType
-        var degree = props.sigma.graph.degree(node.id)
-        node.size = props.initialSize * Math.sqrt(degree)
-      })
+
+      props.sigma.settings('defaultNodeType', props.nodeType)
       props.sigma.refresh()
     }
   }, [props.nodeType])
@@ -34,6 +31,32 @@ const SigmaNodes = props => {
       props.sigma.refresh()
     }
   }, [props.edgeLabelSize, props.edgeLabelSizePowRatio])
+
+  useEffect(() => {
+    if (props.sigma) {
+      if (props.startLayout) {
+        switch (props.selectedLayout) {
+          case 'forceAtlas2':
+            props.sigma.startForceAtlas2()
+            break
+          case 'random':
+            props.sigma.graph.nodes().forEach(n => {
+              n.x = Math.random()
+              n.y = Math.random()
+            })
+            props.setStartLayout(false)
+            props.sigma.refresh()
+            break
+        }
+      } else {
+        switch (props.selectedLayout) {
+          case 'forceAtlas2':
+            props.sigma.stopForceAtlas2()
+            break
+        }
+      }
+    }
+  }, [props.startLayout])
 
   return null
 }
