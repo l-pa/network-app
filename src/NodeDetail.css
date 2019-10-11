@@ -2,4 +2,5 @@
     background-color: brown;
     z-index: 2;
     word-wrap: break-word;
+    padding: 1em;
 }

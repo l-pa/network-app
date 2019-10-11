@@ -26,18 +26,25 @@ const SigmaNodes = props => {
 
   useEffect(() => {
     if (props.sigma) {
-      props.sigma.settings('labelSize', props.edgeLabelSize)
-      props.sigma.settings('labelSizeRatio', props.edgeLabelSizePowRatio)
+      Object.keys(props.settings).forEach(function (key) {
+        props.sigma.settings(key, props.settings[key])
+        console.log(props.sigma.settings(key))
+      })
       props.sigma.refresh()
     }
-  }, [props.edgeLabelSize, props.edgeLabelSizePowRatio])
+  }, [props.settings])
 
   useEffect(() => {
     if (props.sigma) {
+      console.log(props)
       if (props.startLayout) {
         switch (props.selectedLayout) {
           case 'forceAtlas2':
-            props.sigma.startForceAtlas2()
+            if (props.selectedLayoutOptions) {
+              props.sigma.startForceAtlas2(props.selectedLayoutOptions)
+            } else {
+              props.sigma.startForceAtlas2()
+            }
             break
           case 'random':
             props.sigma.graph.nodes().forEach(n => {
@@ -49,14 +56,22 @@ const SigmaNodes = props => {
             break
         }
       } else {
+        props.sigma.stopForceAtlas2()
+      }
+    }
+  }, [props.startLayout])
+
+  useEffect(() => {
+    if (props.sigma) {
+      if (props.startLayout) {
         switch (props.selectedLayout) {
           case 'forceAtlas2':
-            props.sigma.stopForceAtlas2()
+            props.sigma.configForceAtlas2(props.selectedLayoutOptions)
             break
         }
       }
     }
-  }, [props.startLayout])
+  }, [props.selectedLayoutOptions])
 
   return null
 }

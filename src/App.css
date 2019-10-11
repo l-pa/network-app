@@ -54,6 +54,7 @@ body {
   z-index: 1;
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
 }
 
 .loading {
@@ -61,5 +62,25 @@ body {
 }
 .settings{
   display: flex;
+  margin: 1em;
   justify-content: space-between;
+  flex-direction: column;
+}
+.example {
+  background-color: #1d2026;
+  padding: 1em;
+  opacity: 0.6;
+  transition: 0.3s;
+}
+.example:hover{
+  opacity: 1;
+  cursor: pointer;
+}
+
+.settings p{
+  margin: 0;
+}
+.layoutSettings {
+  padding-left: 2em;
+  padding-right: 2em;
 }

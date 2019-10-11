@@ -56,7 +56,7 @@ function App () {
                   Network graph demo
                 </h1>
                 <h3>Examples</h3>
-                <p onClick={() => {
+                <p className={'example'} onClick={() => {
                   setLoading(true)
                   fetch('https://raw.githubusercontent.com/dunnock/react-sigma/master/public/upwork.json').then(
                     res => res.json()
