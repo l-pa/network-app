@@ -4,3 +4,12 @@
     word-wrap: break-word;
     padding: 1em;
 }
+.close {
+    margin-top:0 ;
+    opacity: 0.5;
+  transition: 0.3s;
+}
+.close:hover{
+    opacity: 1;
+    cursor: pointer;
+}

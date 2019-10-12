@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { Sigma, RandomizeNodePositions, RelativeSize, NodeShapes } from 'react-sigma'
+import React, { useState, useRef } from 'react'
+import { Sigma, RandomizeNodePositions } from 'react-sigma'
 import './App.css'
 import SigmaNodes from './SigmaNodes'
 import NodeDetail from './NodeDetail'
@@ -20,6 +20,7 @@ function Network (props) {
 
   const [edgeColor, setEdgeColor] = useState('#000')
   const [nodeColor, setNodeColor] = useState('#000')
+  const [labelColor, setLabelColor] = useState('#fff')
 
   const [selectedLayout, setSelectedLayout] = useState(layouts[0])
   const [selectedLayoutOptions, setSelectedOptions] = useState()
@@ -28,9 +29,11 @@ function Network (props) {
   const [showNodeDetail, setShowNodeDetail] = useState(false)
   const [nodeDetail, setNodeDetail] = useState(null)
   const [edgeLabelSizePowRatio, setEdgeLabelSizePowRatio] = useState(0.8)
+  const [labelThreshold, setLabelThreshold] = useState(3)
 
   const [showColorPickerNode, setShowColorPickerNode] = useState(false)
   const [showColorPickerEdge, setShowColorPickerEdge] = useState(false)
+  const [showColorPickerLabel, setShowColorPickerLabel] = useState(false)
 
   const renderLayoutOptions = (layout) => {
     switch (layout) {
@@ -106,6 +109,28 @@ function Network (props) {
             </select>
           </div>
           <div className={'settings'}>
+            <p>Label threshold</p>
+            <input defaultValue={labelThreshold} type='number' onChange={(event) => {
+              setLabelThreshold(event.target.value)
+            }} />
+            <small>The minimum size a node must have on screen to see its label displayed.</small>
+          </div>
+
+          <div className={'settings'}>
+            <p>Label color</p>
+            <input value={labelColor} onClick={() => {
+              setShowColorPickerLabel(val => !val)
+            }} />
+            {
+              showColorPickerLabel &&
+              <SketchPicker onChangeComplete={(event) => {
+                setLabelColor(event.hex)
+              }
+              } />
+            }
+          </div>
+
+          <div className={'settings'}>
             <p>Edge color</p>
             <input value={edgeColor} onClick={() => {
               setShowColorPickerEdge(val => !val)
@@ -171,7 +196,7 @@ function Network (props) {
           }
 
           {(nodeDetail && showNodeDetail) &&
-          <NodeDetail node={nodeDetail} />
+          <NodeDetail node={nodeDetail} setVisibility={setShowNodeDetail} />
           }
         </div>
         <SigmaNodes nodeType={shape}
@@ -179,9 +204,11 @@ function Network (props) {
             {
               labelSizeRatio: edgeLabelSizePowRatio,
               labelSize: edgeLabelSize,
-              edgeColor: 'source',
+              edgeColor: 'default',
               defaultNodeColor: nodeColor,
-              defaultEdgeColor: edgeColor
+              defaultEdgeColor: edgeColor,
+              labelThreshold: labelThreshold,
+              defaultLabelColor: labelColor
             }
           }
           showNodeDetail={setShowNodeDetail}
