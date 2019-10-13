@@ -3,6 +3,7 @@ import 'react-sigma/sigma/nodes'
 
 const SigmaNodes = props => {
   useEffect(() => {
+    props.setNetworkInstance(props.sigma)
     props.sigma.bind('clickNode', (node) => {
       console.log(node)
       props.showNodeDetail(true)
@@ -33,45 +34,6 @@ const SigmaNodes = props => {
       props.sigma.refresh()
     }
   }, [props.settings])
-
-  useEffect(() => {
-    if (props.sigma) {
-      console.log(props)
-      if (props.startLayout) {
-        switch (props.selectedLayout) {
-          case 'forceAtlas2':
-            if (props.selectedLayoutOptions) {
-              props.sigma.startForceAtlas2(props.selectedLayoutOptions)
-            } else {
-              props.sigma.startForceAtlas2()
-            }
-            break
-          case 'random':
-            props.sigma.graph.nodes().forEach(n => {
-              n.x = Math.random()
-              n.y = Math.random()
-            })
-            props.setStartLayout(false)
-            props.sigma.refresh()
-            break
-        }
-      } else {
-        props.sigma.stopForceAtlas2()
-      }
-    }
-  }, [props.startLayout])
-
-  useEffect(() => {
-    if (props.sigma) {
-      if (props.startLayout) {
-        switch (props.selectedLayout) {
-          case 'forceAtlas2':
-            props.sigma.configForceAtlas2(props.selectedLayoutOptions)
-            break
-        }
-      }
-    }
-  }, [props.selectedLayoutOptions])
 
   return null
 }

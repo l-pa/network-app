@@ -68,6 +68,20 @@ function App () {
                     }
                     )
                 }}>
+                  Java packages.json
+                </p>
+                <p className={'example'} onClick={() => {
+                  setLoading(true)
+                  fetch('https://raw.githubusercontent.com/dunnock/react-sigma/master/public/upwork.json').then(
+                    res => res.json()
+                  )
+                    .then(res => {
+                      setFile(res)
+                      setShowNetwork(true)
+                      setLoading(false)
+                    }
+                    )
+                }}>
                   Network.json
                 </p>
               </div>

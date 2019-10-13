@@ -1,19 +1,18 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Sigma, RandomizeNodePositions } from 'react-sigma'
 import './App.css'
 import SigmaNodes from './SigmaNodes'
 import NodeDetail from './NodeDetail'
 import { SketchPicker } from 'react-color'
+import { ForceAtlas2 } from './layouts/ForceAtlas2'
+import { RandomLayout } from './layouts/RandomLayout'
 
 function Network (props) {
   const shapes = ['def', 'pacman', 'star', 'equilateral', 'cross', 'diamond', 'circle', 'square']
   const edgeLabelSizes = ['fixed', 'proportional']
   const layouts = ['forceAtlas2', 'random']
 
-  const linLogMode = useRef(false)
-  const scalingRatio = useRef(1)
-  const gravity = useRef(1)
-  const worker = useRef(false)
+  const networkRef = useRef(null)
 
   const [shape, setShape] = useState(shapes[0])
   const [edgeLabelSize, setEdgeLabelSize] = useState(edgeLabelSizes[0])
@@ -23,8 +22,6 @@ function Network (props) {
   const [labelColor, setLabelColor] = useState('#fff')
 
   const [selectedLayout, setSelectedLayout] = useState(layouts[0])
-  const [selectedLayoutOptions, setSelectedOptions] = useState()
-  const [startLayout, setStartLayout] = useState(false)
 
   const [showNodeDetail, setShowNodeDetail] = useState(false)
   const [nodeDetail, setNodeDetail] = useState(null)
@@ -38,44 +35,16 @@ function Network (props) {
   const renderLayoutOptions = (layout) => {
     switch (layout) {
       case layouts[0]:
-        return <div className={'layoutSettings settings'}>
-          <p>Options</p>
-          <br />
-          <div>
-            <input ref={linLogMode} type='checkbox' value='linLogMode' />linLogMode
-          </div>
-          <div>
-            <input defaultValue={scalingRatio.current} onChange={(event) => {
-              scalingRatio.current = event.target.value
-            }} type='number' />scalingRatio
-          </div>
-          <div>
-            <input defaultValue={gravity.current} onChange={(event) => {
-              gravity.current = event.target.value
-            }} type='number' />gravity
-          </div>
-          <div>
-            <input ref={worker} type='checkbox' value='worker' />worker
-          </div>
-          <button onClick={(event) => {
-            setSelectedOptions({ linLogMode: linLogMode.current.checked, scalingRatio: scalingRatio.current, gravity: gravity.current, worker: worker.current.checked })
-            setStartLayout(true)
-          }}>Start</button>
-          <button onClick={(event) => {
-            setStartLayout(false)
-          }}>Stop</button>
-        </div>
+        return <ForceAtlas2 network={networkRef.current} />
       case layouts[1]:
-        return <div className={'layoutSettings settings'}>
-          <p>Options</p>
-          <button onClick={(event) => {
-            setStartLayout(true)
-          }}>Random</button>
-        </div>
-
+        return <RandomLayout network={networkRef.current} />
       default:
         return null
     }
+  }
+
+  const setNetworkInstance = (network) => {
+    networkRef.current = network
   }
 
   return (
@@ -110,7 +79,7 @@ function Network (props) {
           </div>
           <div className={'settings'}>
             <p>Label threshold</p>
-            <input defaultValue={labelThreshold} type='number' onChange={(event) => {
+            <input defaultValue={labelThreshold} step={0.1} min={1} max={100} type='number' onChange={(event) => {
               setLabelThreshold(event.target.value)
             }} />
             <small>The minimum size a node must have on screen to see its label displayed.</small>
@@ -181,8 +150,11 @@ function Network (props) {
           <div className={'settings'}>
             <p>Layout</p>
             <select onChange={(event) => {
-              setStartLayout(false)
-              setSelectedLayout(event.target.selectedOptions[0].value)
+              if (event.target.selectedOptions[0].value !== selectedLayout) // REFACTOR - LAYOUT.STOP() ...
+              {
+                setSelectedLayout(event.target.selectedOptions[0].value)
+                networkRef.current.stopForceAtlas2()
+              }
             }}>
               {
                 layouts.map((o, i, a) => {
@@ -199,7 +171,9 @@ function Network (props) {
           <NodeDetail node={nodeDetail} setVisibility={setShowNodeDetail} />
           }
         </div>
-        <SigmaNodes nodeType={shape}
+
+        <SigmaNodes
+          nodeType={shape}
           settings={
             {
               labelSizeRatio: edgeLabelSizePowRatio,
@@ -211,12 +185,10 @@ function Network (props) {
               defaultLabelColor: labelColor
             }
           }
+          setNetworkInstance={setNetworkInstance}
           showNodeDetail={setShowNodeDetail}
           setSelectedNode={setNodeDetail}
           selectedLayout={selectedLayout}
-          selectedLayoutOptions={selectedLayoutOptions}
-          startLayout={startLayout}
-          setStartLayout={setStartLayout}
         />
         <RandomizeNodePositions />
       </Sigma>
