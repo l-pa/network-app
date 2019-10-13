@@ -94,20 +94,22 @@ function App () {
                   A karate club at a US university in the 1970s
                   </small>
                 </div>
-                <p className={'example'} onClick={() => {
-                  setLoading(true)
-                  fetch('https://raw.githubusercontent.com/dunnock/react-sigma/master/public/upwork.json').then(
-                    res => res.json()
-                  )
-                    .then(res => {
-                      setFile(res)
-                      setShowNetwork(true)
-                      setLoading(false)
-                    }
+                <div className={'example'}>
+                  <p onClick={() => {
+                    setLoading(true)
+                    fetch('https://raw.githubusercontent.com/dunnock/react-sigma/master/public/upwork.json').then(
+                      res => res.json()
                     )
-                }}>
+                      .then(res => {
+                        setFile(res)
+                        setShowNetwork(true)
+                        setLoading(false)
+                      }
+                      )
+                  }}>
                   Network.json
-                </p>
+                  </p>
+                </div>
               </div>
             </div>
             <div className={'loading'}>
