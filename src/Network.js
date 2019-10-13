@@ -51,6 +51,11 @@ function Network (props) {
     <div>
       <Sigma renderer='canvas' style={{ height: '100vh', display: 'flex', flexDirection: 'row-reverse' }} graph={props.network}>
         <div className={'sidePanel'}>
+          <button style={{ margin: '1em' }} onClick={
+            () => {
+              props.setShowNetwork(false)
+            }
+          }>Home</button>
           <h3 style={{ margin: '1em' }}>Settings</h3>
           <small>
             Color will not work if nodes / edges have custom color in JSON

@@ -37,27 +37,26 @@ function App () {
             jsonDialog && <JsonParse file={file} showNetwork={setShowNetwork} />
           }
           {loadDialog &&
-          <div className={'intro'}>
-            <div className={'center'}>
+            <div className={'intro'}>
+              <div className={'center'}>
 
-              <div className={'left'}>
+                <div className={'left'}>
 
-                {/* <input type="file" onChange={(event) => {
+                  {/* <input type="file" onChange={(event) => {
                   fileReader = new FileReader()
                   fileReader.onloadend = handleFileRead
                   fileReader.readAsText(event.target.files[0])
                 }}
               ></input> */}
-                File input
-              </div>
-              <div className={'border'} />
-              <div className={'right'}>
-                <h1>
-                  Network graph demo
-                </h1>
-                <h3>Examples</h3>
-                <div className={'example'}>
-                  <p onClick={() => {
+                  File input
+                </div>
+                <div className={'border'} />
+                <div className={'right'}>
+                  <h1>
+                    Network graph demo
+                  </h1>
+                  <h3>Examples</h3>
+                  <div onClick={() => {
                     setLoading(true)
                     fetch('https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/java_packages.json').then(
                       res => res.json()
@@ -68,15 +67,15 @@ function App () {
                         setLoading(false)
                       }
                       )
-                  }}>
-                  Java packages.json
-                  </p>
-                  <small>
-                  1.5k nodes, 8k edges
-                  </small>
-                </div>
-                <div className={'example'}>
-                  <p onClick={() => {
+                  }} className={'example'}>
+                    <p>
+                      Java packages.json
+                    </p>
+                    <small>
+                      1.5k nodes, 8k edges
+                    </small>
+                  </div>
+                  <div onClick={() => {
                     setLoading(true)
                     fetch('https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/karate.json').then(
                       res => res.json()
@@ -87,15 +86,15 @@ function App () {
                         setLoading(false)
                       }
                       )
-                  }}>
-                  Zachary's karate club.json
-                  </p>
-                  <small>
-                  A karate club at a US university in the 1970s
-                  </small>
-                </div>
-                <div className={'example'}>
-                  <p onClick={() => {
+                  }} className={'example'}>
+                    <p>
+                      Zachary's karate club.json
+                    </p>
+                    <small>
+                      A karate club at a US university in the 1970s
+                    </small>
+                  </div>
+                  <div onClick={() => {
                     setLoading(true)
                     fetch('https://raw.githubusercontent.com/dunnock/react-sigma/master/public/upwork.json').then(
                       res => res.json()
@@ -106,24 +105,25 @@ function App () {
                         setLoading(false)
                       }
                       )
-                  }}>
-                  Network.json
-                  </p>
+                  }} className={'example'}>
+                    <p>
+                      Network.json
+                    </p>
+                  </div>
                 </div>
               </div>
+              <div className={'loading'}>
+                {
+                  loading &&
+                  <h2>Loading</h2>
+                }
+              </div>
             </div>
-            <div className={'loading'}>
-              {
-                loading &&
-                <h2>Loading</h2>
-              }
-            </div>
-          </div>
           }
         </div>
       ) : (
         <div >
-          <Network network={file} />
+          <Network setShowNetwork={setShowNetwork} network={file} />
         </div>
       )
       }
