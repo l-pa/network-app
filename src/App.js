@@ -75,6 +75,25 @@ function App () {
                   1.5k nodes, 8k edges
                   </small>
                 </div>
+                <div className={'example'}>
+                  <p onClick={() => {
+                    setLoading(true)
+                    fetch('https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/karate.json').then(
+                      res => res.json()
+                    )
+                      .then(res => {
+                        setFile(res)
+                        setShowNetwork(true)
+                        setLoading(false)
+                      }
+                      )
+                  }}>
+                  Zachary's karate club.json
+                  </p>
+                  <small>
+                  A karate club at a US university in the 1970s
+                  </small>
+                </div>
                 <p className={'example'} onClick={() => {
                   setLoading(true)
                   fetch('https://raw.githubusercontent.com/dunnock/react-sigma/master/public/upwork.json').then(
