@@ -56,20 +56,25 @@ function App () {
                   Network graph demo
                 </h1>
                 <h3>Examples</h3>
-                <p className={'example'} onClick={() => {
-                  setLoading(true)
-                  fetch('https://raw.githubusercontent.com/dunnock/react-sigma/master/public/upwork.json').then(
-                    res => res.json()
-                  )
-                    .then(res => {
-                      setFile(res)
-                      setShowNetwork(true)
-                      setLoading(false)
-                    }
+                <div className={'example'}>
+                  <p onClick={() => {
+                    setLoading(true)
+                    fetch('https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/java_packages.json').then(
+                      res => res.json()
                     )
-                }}>
+                      .then(res => {
+                        setFile(res)
+                        setShowNetwork(true)
+                        setLoading(false)
+                      }
+                      )
+                  }}>
                   Java packages.json
-                </p>
+                  </p>
+                  <small>
+                  1.5k nodes, 8k edges
+                  </small>
+                </div>
                 <p className={'example'} onClick={() => {
                   setLoading(true)
                   fetch('https://raw.githubusercontent.com/dunnock/react-sigma/master/public/upwork.json').then(

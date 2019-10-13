@@ -73,6 +73,10 @@ body {
   transition: 0.3s;
   box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
 }
+
+.example p {
+margin-top: 0;
+}
 .example:hover{
   opacity: 1;
   cursor: pointer;
