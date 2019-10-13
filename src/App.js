@@ -53,7 +53,7 @@ function App () {
                 <div className={'border'} />
                 <div className={'right'}>
                   <h1>
-                    Network graph demo
+                    Network demo
                   </h1>
                   <h3>Examples</h3>
                   <div onClick={() => {
