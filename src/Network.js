@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Sigma, RandomizeNodePositions } from 'react-sigma'
 import './App.css'
 import SigmaNodes from './SigmaNodes'
 import NodeDetail from './NodeDetail'
@@ -9,13 +8,13 @@ import { RandomLayout } from './layouts/RandomLayout'
 
 function Network (props) {
   const shapes = ['def', 'pacman', 'star', 'equilateral', 'cross', 'diamond', 'circle', 'square']
+  const edgeShapes = ['def', 'curve']
   const edgeLabelSizes = ['fixed', 'proportional']
   const layouts = ['forceAtlas2', 'random']
 
-  const networkRef = useRef(null)
-
   const [shape, setShape] = useState(shapes[0])
   const [edgeLabelSize, setEdgeLabelSize] = useState(edgeLabelSizes[0])
+  const [edgeShape, setEdgeShape] = useState(edgeShapes[0])
 
   const [edgeColor, setEdgeColor] = useState('#000')
   const [nodeColor, setNodeColor] = useState('#000')
@@ -32,34 +31,64 @@ function Network (props) {
   const [showColorPickerEdge, setShowColorPickerEdge] = useState(false)
   const [showColorPickerLabel, setShowColorPickerLabel] = useState(false)
 
+  useEffect(() => {
+    window.network.addRenderer({
+      type: 'canvas',
+      container: 'container'
+    })
+    switch (props.network.type) {
+      case 'json':
+        window.sigma.parsers.json(props.network.url, window.network, () => {
+          window.network.refresh()
+        })
+        break
+      case 'gexf':
+        window.sigma.parsers.gexf(props.network.url, window.network, () => {
+          console.log('LOADED')
+          window.network.refresh()
+        })
+        break
+    }
+  }, [])
+
+  useEffect(() => {
+    window.sigma.plugins.dragNodes(window.network, window.network.renderers[Object.keys(window.network.renderers).length - 1])
+  })
+
   const renderLayoutOptions = (layout) => {
     switch (layout) {
       case layouts[0]:
-        return <ForceAtlas2 network={networkRef.current} />
+        return <ForceAtlas2 />
       case layouts[1]:
-        return <RandomLayout network={networkRef.current} />
+        return <RandomLayout />
       default:
         return null
     }
   }
 
-  const setNetworkInstance = (network) => {
-    networkRef.current = network
-  }
-
   return (
-    <div>
-      <Sigma renderer='canvas' style={{ height: '100vh', display: 'flex', flexDirection: 'row-reverse' }} graph={props.network}>
-        <div className={'sidePanel'}>
-          <button style={{ margin: '1em' }} onClick={
-            () => {
-              props.setShowNetwork(false)
-            }
-          }>Home</button>
-          <h3 style={{ margin: '1em' }}>Settings</h3>
-          <small>
-            Color will not work if nodes / edges have custom color in JSON
-          </small>
+    <div id='container' style={{ height: '100vh', display: 'flex', flexDirection: 'row-reverse' }}>
+      <div className={'sidePanel'}>
+        <button style={{ marginTop: '2em', marginLeft: '2em', marginRight: '2em' }} onClick={
+          () => {
+            props.setShowNetwork(false)
+          }
+        }>Home</button>
+        <hr />
+
+        <button style={{ marginLeft: '2em', marginRight: '2em' }} onClick={() => {
+          window.network.toJSON({
+            download: true,
+            pretty: true,
+            filename: 'myGraph.json'
+          })
+        }}>Export as JSON</button>
+        <hr />
+        <div className='settingsCattegory'>
+
+          <h2>Node</h2>
+          <hr />
+
           <div className={'settings'}>
             <p>Node color</p>
             <input value={nodeColor} onClick={() => {
@@ -85,9 +114,17 @@ function Network (props) {
               }
             </select>
           </div>
+        </div>
+        <hr />
+
+        <div className='settingsCattegory'>
+
+          <h2>Label</h2>
+          <hr />
+
           <div className={'settings'}>
             <p>Label threshold</p>
-            <input defaultValue={labelThreshold} step={0.1} min={1} max={100} type='number' onChange={(event) => {
+            <input defaultValue={labelThreshold} step={1} min={1} max={100} type='number' onChange={(event) => {
               setLabelThreshold(event.target.value)
             }} />
             <small>The minimum size a node must have on screen to see its label displayed.</small>
@@ -106,6 +143,13 @@ function Network (props) {
               } />
             }
           </div>
+        </div>
+        <hr />
+
+        <div className='settingsCattegory'>
+
+          <h2>Edge</h2>
+          <hr />
 
           <div className={'settings'}>
             <p>Edge color</p>
@@ -127,6 +171,19 @@ function Network (props) {
             }}>
               {
                 edgeLabelSizes.map((o, i, a) => {
+                  return <option value={o}>{o}</option>
+                })
+              }
+            </select>
+          </div>
+
+          <div className={'settings'}>
+            <p>Edge shape</p>
+            <select onChange={(event) => {
+              setEdgeShape(event.target.selectedOptions[0].value)
+            }}>
+              {
+                edgeShapes.map((o, i, a) => {
                   return <option value={o}>{o}</option>
                 })
               }
@@ -155,13 +212,19 @@ function Network (props) {
             }
           </div>
 
+        </div>
+        <hr />
+
+        <div className='settingsCattegory'>
+          <h2>Layout</h2>
+          <hr />
+
           <div className={'settings'}>
-            <p>Layout</p>
             <select onChange={(event) => {
               if (event.target.selectedOptions[0].value !== selectedLayout) // REFACTOR - LAYOUT.STOP() ...
               {
                 setSelectedLayout(event.target.selectedOptions[0].value)
-                networkRef.current.stopForceAtlas2()
+              //   networkRef.current.stopForceAtlas2()
               }
             }}>
               {
@@ -174,32 +237,32 @@ function Network (props) {
           {
             renderLayoutOptions(selectedLayout)
           }
-
-          {(nodeDetail && showNodeDetail) &&
-          <NodeDetail node={nodeDetail} setVisibility={setShowNodeDetail} />
-          }
         </div>
 
-        <SigmaNodes
-          nodeType={shape}
-          settings={
-            {
-              labelSizeRatio: edgeLabelSizePowRatio,
-              labelSize: edgeLabelSize,
-              edgeColor: 'default',
-              defaultNodeColor: nodeColor,
-              defaultEdgeColor: edgeColor,
-              labelThreshold: labelThreshold,
-              defaultLabelColor: labelColor
-            }
+        {(nodeDetail && showNodeDetail) &&
+          <NodeDetail node={nodeDetail} setVisibility={setShowNodeDetail} />
+        }
+      </div>
+
+      <SigmaNodes
+        nodeType={shape}
+        settings={
+          {
+            labelSizeRatio: edgeLabelSizePowRatio,
+            labelSize: edgeLabelSize,
+            defaultEdgeType: edgeShape,
+            edgeColor: 'default',
+            defaultNodeColor: nodeColor,
+            defaultEdgeColor: edgeColor,
+            labelThreshold: labelThreshold,
+            defaultLabelColor: labelColor
           }
-          setNetworkInstance={setNetworkInstance}
-          showNodeDetail={setShowNodeDetail}
-          setSelectedNode={setNodeDetail}
-          selectedLayout={selectedLayout}
-        />
-        <RandomizeNodePositions />
-      </Sigma>
+        }
+        showNodeDetail={setShowNodeDetail}
+        edgeShape={edgeShape}
+        setSelectedNode={setNodeDetail}
+      />
+
     </div>
   )
 }

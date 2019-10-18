@@ -13,14 +13,29 @@ function App () {
   const [loading, setLoading] = useState(false)
 
   const handleFileRead = (e) => {
-    const content = fileReader.result
+    //   const content = fileReader.result
+    console.log(URL.createObjectURL(e))
+
     try {
-      setFile(JSON.parse(content))
-      setJsonDialog(true)
+      switch (e.name.split('.').pop()) {
+        case 'gexf':
+          setFile({ url: URL.createObjectURL(e), type: 'gexf' })
+          break
+        case 'json':
+          setFile({ url: URL.createObjectURL(e), type: 'json' })
+          break
+
+      }
+      setShowNetwork(true)
     } catch (e) {
       console.log('Err', e)
     }
   }
+
+  useEffect(() => {
+    console.log('called once')
+    window.network = new window.sigma()
+  }, [])
 
   useEffect(() => {
     if (file) {
@@ -42,12 +57,12 @@ function App () {
 
                 <div className={'left'}>
 
-                  {/* <input type="file" onChange={(event) => {
-                  fileReader = new FileReader()
-                  fileReader.onloadend = handleFileRead
-                  fileReader.readAsText(event.target.files[0])
-                }}
-              ></input> */}
+                  <input type='file' onChange={(event) => {
+                    fileReader = new FileReader()
+                    fileReader.onloadend = handleFileRead(event.target.files[0])
+                    fileReader.readAsText(event.target.files[0])
+                  }}
+                  />
                   File input
                 </div>
                 <div className={'border'} />
@@ -58,15 +73,9 @@ function App () {
                   <h3>Examples</h3>
                   <div onClick={() => {
                     setLoading(true)
-                    fetch('https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/java_packages.json').then(
-                      res => res.json()
-                    )
-                      .then(res => {
-                        setFile(res)
-                        setShowNetwork(true)
-                        setLoading(false)
-                      }
-                      )
+                    setFile({ url: 'https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/java_packages.json', type: 'json' })
+                    setShowNetwork(true)
+                    setLoading(false)
                   }} className={'example'}>
                     <p>
                       Java packages.json
@@ -77,15 +86,10 @@ function App () {
                   </div>
                   <div onClick={() => {
                     setLoading(true)
-                    fetch('https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/karate.json').then(
-                      res => res.json()
-                    )
-                      .then(res => {
-                        setFile(res)
-                        setShowNetwork(true)
-                        setLoading(false)
-                      }
-                      )
+
+                    setFile({ url: 'https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/karate.json', type: 'json' })
+                    setShowNetwork(true)
+                    setLoading(false)
                   }} className={'example'}>
                     <p>
                       Zachary's karate club.json
@@ -96,15 +100,10 @@ function App () {
                   </div>
                   <div onClick={() => {
                     setLoading(true)
-                    fetch('https://raw.githubusercontent.com/dunnock/react-sigma/master/public/upwork.json').then(
-                      res => res.json()
-                    )
-                      .then(res => {
-                        setFile(res)
-                        setShowNetwork(true)
-                        setLoading(false)
-                      }
-                      )
+
+                    setFile({ url: 'https://raw.githubusercontent.com/dunnock/react-sigma/master/public/upwork.json', type: 'json' })
+                    setShowNetwork(true)
+                    setLoading(false)
                   }} className={'example'}>
                     <p>
                       Network.json

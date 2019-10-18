@@ -1,37 +1,46 @@
 import { useEffect } from 'react'
-import 'react-sigma/sigma/nodes'
 
 const SigmaNodes = props => {
   useEffect(() => {
-    props.setNetworkInstance(props.sigma)
-    props.sigma.bind('clickNode', (node) => {
-      console.log(node)
+    window.network.bind('clickNode', (node) => {
       props.showNodeDetail(true)
       props.setSelectedNode(node)
     })
 
-    props.sigma.bind('overNode', (node) => {
+    window.network.bind('overNode', (node) => {
 
     })
   }, [])
 
   useEffect(() => {
-    if (props.sigma) {
-      console.log(props.sigma)
+    if (window.network) {
       // memo
 
-      props.sigma.settings('defaultNodeType', props.nodeType)
-      props.sigma.refresh()
+      window.network.settings('defaultNodeType', props.nodeType)
+      window.network.refresh()
     }
   }, [props.nodeType])
 
   useEffect(() => {
-    if (props.sigma) {
-      Object.keys(props.settings).forEach(function (key) {
-        props.sigma.settings(key, props.settings[key])
-        console.log(props.sigma.settings(key))
+    if (window.network) {
+      console.log(props.edgeShape)
+
+      // memo
+      window.network.graph.edges().forEach(function (edge) {
+        console.log(edge)
+        
+        edge.type = props.edgeShape
       })
-      props.sigma.refresh()
+      window.network.refresh()
+    }
+  }, [props.edgeShape])
+
+  useEffect(() => {
+    if (window.network) {
+      Object.keys(props.settings).forEach(function (key) {
+        window.network.settings(key, props.settings[key])
+      })
+      window.network.refresh()
     }
   }, [props.settings])
 
