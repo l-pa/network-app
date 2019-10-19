@@ -23,20 +23,6 @@ const SigmaNodes = props => {
 
   useEffect(() => {
     if (window.network) {
-      console.log(props.edgeShape)
-
-      // memo
-      window.network.graph.edges().forEach(function (edge) {
-        console.log(edge)
-        
-        edge.type = props.edgeShape
-      })
-      window.network.refresh()
-    }
-  }, [props.edgeShape])
-
-  useEffect(() => {
-    if (window.network) {
       Object.keys(props.settings).forEach(function (key) {
         window.network.settings(key, props.settings[key])
       })

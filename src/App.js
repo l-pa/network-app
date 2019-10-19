@@ -15,7 +15,7 @@ function App () {
   const handleFileRead = (e) => {
     //   const content = fileReader.result
     console.log(URL.createObjectURL(e))
-
+    setLoading(true)
     try {
       switch (e.name.split('.').pop()) {
         case 'gexf':
@@ -24,7 +24,6 @@ function App () {
         case 'json':
           setFile({ url: URL.createObjectURL(e), type: 'json' })
           break
-
       }
       setShowNetwork(true)
     } catch (e) {
@@ -33,13 +32,11 @@ function App () {
   }
 
   useEffect(() => {
-    console.log('called once')
     window.network = new window.sigma()
   }, [])
 
   useEffect(() => {
     if (file) {
-      console.log(file)
     }
   }, [file])
 
@@ -56,14 +53,15 @@ function App () {
               <div className={'center'}>
 
                 <div className={'left'}>
+                  <h2>Custom network</h2>
+                  <p>GEXF - 1.2+ / JSON</p>
 
-                  <input type='file' onChange={(event) => {
+                  <input type='file' accept='.gexf, .json' onChange={(event) => {
                     fileReader = new FileReader()
                     fileReader.onloadend = handleFileRead(event.target.files[0])
                     fileReader.readAsText(event.target.files[0])
                   }}
                   />
-                  File input
                 </div>
                 <div className={'border'} />
                 <div className={'right'}>
@@ -75,7 +73,6 @@ function App () {
                     setLoading(true)
                     setFile({ url: 'https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/java_packages.json', type: 'json' })
                     setShowNetwork(true)
-                    setLoading(false)
                   }} className={'example'}>
                     <p>
                       Java packages.json
@@ -89,7 +86,6 @@ function App () {
 
                     setFile({ url: 'https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/karate.json', type: 'json' })
                     setShowNetwork(true)
-                    setLoading(false)
                   }} className={'example'}>
                     <p>
                       Zachary's karate club.json
@@ -103,7 +99,6 @@ function App () {
 
                     setFile({ url: 'https://raw.githubusercontent.com/dunnock/react-sigma/master/public/upwork.json', type: 'json' })
                     setShowNetwork(true)
-                    setLoading(false)
                   }} className={'example'}>
                     <p>
                       Network.json
@@ -122,7 +117,7 @@ function App () {
         </div>
       ) : (
         <div >
-          <Network setShowNetwork={setShowNetwork} network={file} />
+          <Network setShowNetwork={setShowNetwork} network={file} loading={loading} setLoading={setLoading} />
         </div>
       )
       }

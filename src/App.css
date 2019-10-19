@@ -144,3 +144,9 @@ margin-top: 0;
   padding-left: 2em;
   padding-right: 2em;
 }
+
+@media only screen and (max-width: 900px) {
+  .sidePanel {
+    width: 15em;
+  }
+}

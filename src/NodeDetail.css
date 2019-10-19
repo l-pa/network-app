@@ -1,8 +1,31 @@
 .window {
-    background-color: brown;
+    margin-left:  2em ;
+    margin-right:  2em ;
+    border-radius: 1em;
+    background-color: #22313f;
     z-index: 2;
     word-wrap: break-word;
     padding: 1em;
+}
+
+.option {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.option input{
+    height: 1.5em;
+    width: -webkit-fill-available;
+}  
+
+.option div{
+    min-width: 50%;
+}
+
+.option h2{
+    flex-basis: 100%;
 }
 .close {
     margin-top:0 ;

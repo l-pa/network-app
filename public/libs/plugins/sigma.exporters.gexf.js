@@ -64,9 +64,9 @@
    * @param  {string} str The string to convert, e.g. 'a.b.etc'.
    * @return {?}          The object reference.
    */
-  function strToObjectRef(obj, str) {
+  function strToObjectRef(obj, str) {    
     // http://stackoverflow.com/a/6393943
-    if (str === null) return null;
+    if (!str) return null;
     return str.split('.').reduce(function(obj, i) { return obj[i] }, obj);
   }
 

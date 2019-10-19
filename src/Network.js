@@ -5,12 +5,14 @@ import NodeDetail from './NodeDetail'
 import { SketchPicker } from 'react-color'
 import { ForceAtlas2 } from './layouts/ForceAtlas2'
 import { RandomLayout } from './layouts/RandomLayout'
+import { Noverlap } from './layouts/Noverlap'
+import { FruchtermanReingold } from './layouts/FruchtermanReingold'
 
 function Network (props) {
   const shapes = ['def', 'pacman', 'star', 'equilateral', 'cross', 'diamond', 'circle', 'square']
   const edgeShapes = ['def', 'curve']
   const edgeLabelSizes = ['fixed', 'proportional']
-  const layouts = ['forceAtlas2', 'random']
+  const layouts = ['forceAtlas2', 'random', 'noverlap', 'FruchtermanReingold']
 
   const [shape, setShape] = useState(shapes[0])
   const [edgeLabelSize, setEdgeLabelSize] = useState(edgeLabelSizes[0])
@@ -25,6 +27,7 @@ function Network (props) {
   const [showNodeDetail, setShowNodeDetail] = useState(false)
   const [nodeDetail, setNodeDetail] = useState(null)
   const [edgeLabelSizePowRatio, setEdgeLabelSizePowRatio] = useState(0.8)
+  const [maxNodeSize, setMaxNodeSize] = useState(10)
   const [labelThreshold, setLabelThreshold] = useState(3)
 
   const [showColorPickerNode, setShowColorPickerNode] = useState(false)
@@ -32,10 +35,13 @@ function Network (props) {
   const [showColorPickerLabel, setShowColorPickerLabel] = useState(false)
 
   useEffect(() => {
+    
     window.network.addRenderer({
       type: 'canvas',
       container: 'container'
     })
+
+    window.sigma.plugins.dragNodes(window.network, window.network.renderers[0])
     switch (props.network.type) {
       case 'json':
         window.sigma.parsers.json(props.network.url, window.network, () => {
@@ -49,11 +55,9 @@ function Network (props) {
         })
         break
     }
+    props.setLoading(false)
   }, [])
 
-  useEffect(() => {
-    window.sigma.plugins.dragNodes(window.network, window.network.renderers[Object.keys(window.network.renderers).length - 1])
-  })
 
   const renderLayoutOptions = (layout) => {
     switch (layout) {
@@ -61,6 +65,10 @@ function Network (props) {
         return <ForceAtlas2 />
       case layouts[1]:
         return <RandomLayout />
+      case layouts[2]:
+        return <Noverlap />
+      case layouts[3]:
+        return <FruchtermanReingold />
       default:
         return null
     }
@@ -69,21 +77,39 @@ function Network (props) {
   return (
     <div id='container' style={{ height: '100vh', display: 'flex', flexDirection: 'row-reverse' }}>
       <div className={'sidePanel'}>
-        <button style={{ marginTop: '2em', marginLeft: '2em', marginRight: '2em' }} onClick={
+        <div style={{ marginTop: '2em' }} />
+        <button style={{ marginLeft: '2em', marginRight: '2em' }} onClick={
           () => {
             props.setShowNetwork(false)
           }
         }>Home</button>
         <hr />
+        <div className='settingsCattegory'>
 
+          <h2>Export</h2>
+          <hr />
+        </div>
         <button style={{ marginLeft: '2em', marginRight: '2em' }} onClick={() => {
           window.network.toJSON({
             download: true,
             pretty: true,
             filename: 'myGraph.json'
           })
-        }}>Export as JSON</button>
+        }}>JSON</button>
+
+        <button style={{ marginLeft: '2em', marginRight: '2em' }} onClick={() => {
+          window.network.toGEXF({
+            download: true
+          })
+        }}>GEXF</button>
         <hr />
+
+        {(nodeDetail && showNodeDetail) &&
+        <div>
+          <NodeDetail node={nodeDetail} setVisibility={setShowNodeDetail} />
+          <hr />
+        </div>
+        }
         <div className='settingsCattegory'>
 
           <h2>Node</h2>
@@ -96,7 +122,7 @@ function Network (props) {
             }} />
             {
               showColorPickerNode &&
-              <SketchPicker onChangeComplete={(event) => {
+              <SketchPicker color={nodeColor} onChangeComplete={(event) => {
                 setNodeColor(event.hex)
               }
               } />
@@ -113,6 +139,12 @@ function Network (props) {
                 })
               }
             </select>
+          </div>
+          <div className={'settings'}>
+            <p>Max size of nodes</p>
+            <input defaultValue={maxNodeSize} step={1} min={1} max={100} type='number' onChange={(event) => {
+              setMaxNodeSize(event.target.value)
+            }} />
           </div>
         </div>
         <hr />
@@ -137,7 +169,7 @@ function Network (props) {
             }} />
             {
               showColorPickerLabel &&
-              <SketchPicker onChangeComplete={(event) => {
+              <SketchPicker color={labelColor} onChangeComplete={(event) => {
                 setLabelColor(event.hex)
               }
               } />
@@ -158,7 +190,7 @@ function Network (props) {
             }} />
             {
               showColorPickerEdge &&
-              <SketchPicker onChangeComplete={(event) => {
+              <SketchPicker color={edgeColor} onChangeComplete={(event) => {
                 setEdgeColor(event.hex)
               }
               } />
@@ -211,7 +243,6 @@ function Network (props) {
                 )
             }
           </div>
-
         </div>
         <hr />
 
@@ -238,12 +269,11 @@ function Network (props) {
             renderLayoutOptions(selectedLayout)
           }
         </div>
-
-        {(nodeDetail && showNodeDetail) &&
-          <NodeDetail node={nodeDetail} setVisibility={setShowNodeDetail} />
-        }
+        <div style={{ marginBottom: '2em' }} />
       </div>
-
+      {
+        props.loading && 'LOADING'
+      }
       <SigmaNodes
         nodeType={shape}
         settings={
@@ -251,15 +281,20 @@ function Network (props) {
             labelSizeRatio: edgeLabelSizePowRatio,
             labelSize: edgeLabelSize,
             defaultEdgeType: edgeShape,
+            defaultNodeColor: '#fff',
             edgeColor: 'default',
-            defaultNodeColor: nodeColor,
             defaultEdgeColor: edgeColor,
             labelThreshold: labelThreshold,
-            defaultLabelColor: labelColor
+            defaultLabelColor: labelColor,
+            maxNodeSize: maxNodeSize,
+            borderSize: 2,
+            defaultNodeBorderColor: '#fff',
+            defaultEdgeHoverColor: '#fff',
+            edgeHoverSizeRatio: 3,
+            edgeHoverColor: 'default'
           }
         }
         showNodeDetail={setShowNodeDetail}
-        edgeShape={edgeShape}
         setSelectedNode={setNodeDetail}
       />
 
