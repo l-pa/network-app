@@ -5,7 +5,7 @@ import NodeDetail from './NodeDetail'
 import { SketchPicker } from 'react-color'
 import { ForceAtlas2 } from './layouts/ForceAtlas2'
 import { RandomLayout } from './layouts/RandomLayout'
-import { Noverlap } from './layouts/Noverlap'
+import { NoverlapUI } from './layouts/Noverlap'
 import { FruchtermanReingold } from './layouts/FruchtermanReingold'
 
 function Network (props) {
@@ -35,7 +35,6 @@ function Network (props) {
   const [showColorPickerLabel, setShowColorPickerLabel] = useState(false)
 
   useEffect(() => {
-    
     window.network.addRenderer({
       type: 'canvas',
       container: 'container'
@@ -66,7 +65,7 @@ function Network (props) {
       case layouts[1]:
         return <RandomLayout />
       case layouts[2]:
-        return <Noverlap />
+        return <NoverlapUI />
       case layouts[3]:
         return <FruchtermanReingold />
       default:
