@@ -48,13 +48,13 @@ function Network (props) {
             if (res.settings) {
               try {
                 console.log(res.settings)
+                setMaxNodeSize(res.settings.maxNodeSize)
                 setEdgeLabelSizePowRatio(res.settings.labelSizeRatio)
                 setEdgeLabelSize(res.settings.labelSize)
                 setEdgeShape(res.settings.defaultEdgeType)
                 setEdgeColor(res.settings.defaultEdgeColor)
                 setLabelThreshold(res.settings.labelThreshold)
                 setLabelColor(res.settings.defaultLabelColor)
-                setMaxNodeSize(res.settings.maxNodeSize)
               } catch (e) {
                 console.log(e)
               }
