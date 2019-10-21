@@ -2,7 +2,7 @@ import React, { } from 'react'
 
 function RandomLayout (props) {
   return (
-    <div className={'layoutSettings settings'}>
+    <div className="layoutSettings settings">
       <p />
       <button onClick={(event) => {
         window.network.graph.nodes().forEach(n => {
@@ -10,7 +10,9 @@ function RandomLayout (props) {
           n.y = Math.random()
         })
         window.network.refresh()
-      }}>Random</button>
+      }}
+      >Random
+      </button>
     </div>
 
   )

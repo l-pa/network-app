@@ -35,16 +35,31 @@ function Network (props) {
   const [showColorPickerLabel, setShowColorPickerLabel] = useState(false)
 
   useEffect(() => {
-    
     window.network.addRenderer({
       type: 'canvas',
       container: 'container'
     })
-
+    window.sigma.plugins.killDragNodes(window.network)
     window.sigma.plugins.dragNodes(window.network, window.network.renderers[0])
     switch (props.network.type) {
       case 'json':
         window.sigma.parsers.json(props.network.url, window.network, () => {
+          fetch(props.network.url).then(res => res.json()).then(res => {
+            if (res.settings) {
+              try {
+                console.log(res.settings)
+                setEdgeLabelSizePowRatio(res.settings.labelSizeRatio)
+                setEdgeLabelSize(res.settings.labelSize)
+                setEdgeShape(res.settings.defaultEdgeType)
+                setEdgeColor(res.settings.defaultEdgeColor)
+                setLabelThreshold(res.settings.labelThreshold)
+                setLabelColor(res.settings.defaultLabelColor)
+                setMaxNodeSize(res.settings.maxNodeSize)
+              } catch (e) {
+                console.log(e)
+              }
+            }
+          })
           window.network.refresh()
         })
         break
@@ -57,7 +72,6 @@ function Network (props) {
     }
     props.setLoading(false)
   }, [])
-
 
   const renderLayoutOptions = (layout) => {
     switch (layout) {
@@ -76,63 +90,105 @@ function Network (props) {
 
   return (
     <div id='container' style={{ height: '100vh', display: 'flex', flexDirection: 'row-reverse' }}>
-      <div className={'sidePanel'}>
+      <div className='sidePanel'>
         <div style={{ marginTop: '2em' }} />
-        <button style={{ marginLeft: '2em', marginRight: '2em' }} onClick={
-          () => {
-            props.setShowNetwork(false)
+        <button
+          style={{ marginLeft: '2em', marginRight: '2em' }} onClick={
+            () => {
+              props.setShowNetwork(false)
+              window.network.graph.clear()
           }
-        }>Home</button>
+          }
+        >Home
+        </button>
         <hr />
         <div className='settingsCattegory'>
 
           <h2>Export</h2>
           <hr />
         </div>
-        <button style={{ marginLeft: '2em', marginRight: '2em' }} onClick={() => {
-          window.network.toJSON({
-            download: true,
-            pretty: true,
-            filename: 'myGraph.json'
-          })
-        }}>JSON</button>
+        <button
+          style={{ marginLeft: '2em', marginRight: '2em' }} onClick={() => {
+            window.network.toJSON({
+              download: true,
+              pretty: true,
+              filename: 'myGraph.json',
+              settings: {
+                labelSizeRatio: edgeLabelSizePowRatio,
+                labelSize: edgeLabelSize,
+                defaultEdgeType: edgeShape,
+                defaultNodeColor: '#fff',
+                edgeColor: 'default',
+                defaultEdgeColor: edgeColor,
+                labelThreshold: labelThreshold,
+                defaultLabelColor: labelColor,
+                maxNodeSize: maxNodeSize,
+                borderSize: 2,
+                defaultNodeBorderColor: '#fff',
+                defaultEdgeHoverColor: '#fff',
+                edgeHoverSizeRatio: 3,
+                edgeHoverColor: 'default'
+              }
+            })
+          }}
+        >JSON
+        </button>
 
-        <button style={{ marginLeft: '2em', marginRight: '2em' }} onClick={() => {
-          window.network.toGEXF({
-            download: true
-          })
-        }}>GEXF</button>
+        <button
+          style={{ marginLeft: '2em', marginRight: '2em' }} onClick={() => {
+            window.network.toGEXF({
+              download: true
+            })
+          }}
+        >GEXF
+        </button>
+        <button
+          style={{ marginLeft: '2em', marginRight: '2em' }} onClick={() => {
+            window.network.toSVG({
+              download: true,
+              filename: 'my-fancy-graph.svg',
+              labels: true,
+              classes: false,
+              data: true
+            })
+          }}
+        >SVG
+        </button>
         <hr />
 
         {(nodeDetail && showNodeDetail) &&
-        <div>
-          <NodeDetail node={nodeDetail} setVisibility={setShowNodeDetail} />
-          <hr />
-        </div>
-        }
+          <div>
+            <NodeDetail node={nodeDetail} setVisibility={setShowNodeDetail} />
+            <hr />
+          </div>}
         <div className='settingsCattegory'>
 
           <h2>Node</h2>
           <hr />
 
-          <div className={'settings'}>
+          <div className='settings'>
             <p>Node color</p>
-            <input value={nodeColor} onClick={() => {
-              setShowColorPickerNode(val => !val)
-            }} />
+            <input
+              disabled
+              value={nodeColor} onClick={() => {
+                setShowColorPickerNode(val => !val)
+              }}
+            />
             {
               showColorPickerNode &&
-              <SketchPicker color={nodeColor} onChangeComplete={(event) => {
-                setNodeColor(event.hex)
-              }
-              } />
+                <SketchPicker
+                  color={nodeColor} onChangeComplete={(event) => {
+                    setNodeColor(event.hex)
+                  }}
+                />
             }
           </div>
-          <div className={'settings'}>
+          <div className='settings'>
             <p>Node type</p>
             <select onChange={(event) => {
               setShape(event.target.selectedOptions[0].value)
-            }}>
+            }}
+            >
               {
                 shapes.map((o, i, a) => {
                   return <option value={o}>{o}</option>
@@ -140,11 +196,13 @@ function Network (props) {
               }
             </select>
           </div>
-          <div className={'settings'}>
+          <div className='settings'>
             <p>Max size of nodes</p>
-            <input defaultValue={maxNodeSize} step={1} min={1} max={100} type='number' onChange={(event) => {
-              setMaxNodeSize(event.target.value)
-            }} />
+            <input
+              defaultValue={maxNodeSize} step={1} min={1} max={100} type='number' onChange={(event) => {
+                setMaxNodeSize(event.target.value)
+              }}
+            />
           </div>
         </div>
         <hr />
@@ -154,25 +212,30 @@ function Network (props) {
           <h2>Label</h2>
           <hr />
 
-          <div className={'settings'}>
+          <div className='settings'>
             <p>Label threshold</p>
-            <input defaultValue={labelThreshold} step={1} min={1} max={100} type='number' onChange={(event) => {
-              setLabelThreshold(event.target.value)
-            }} />
+            <input
+              defaultValue={labelThreshold} step={1} min={1} max={100} type='number' onChange={(event) => {
+                setLabelThreshold(event.target.value)
+              }}
+            />
             <small>The minimum size a node must have on screen to see its label displayed.</small>
           </div>
 
-          <div className={'settings'}>
+          <div className='settings'>
             <p>Label color</p>
-            <input value={labelColor} onClick={() => {
-              setShowColorPickerLabel(val => !val)
-            }} />
+            <input
+              value={labelColor} onClick={() => {
+                setShowColorPickerLabel(val => !val)
+              }}
+            />
             {
               showColorPickerLabel &&
-              <SketchPicker color={labelColor} onChangeComplete={(event) => {
-                setLabelColor(event.hex)
-              }
-              } />
+                <SketchPicker
+                  color={labelColor} onChangeComplete={(event) => {
+                    setLabelColor(event.hex)
+                  }}
+                />
             }
           </div>
         </div>
@@ -183,24 +246,29 @@ function Network (props) {
           <h2>Edge</h2>
           <hr />
 
-          <div className={'settings'}>
+          <div className='settings'>
             <p>Edge color</p>
-            <input value={edgeColor} onClick={() => {
-              setShowColorPickerEdge(val => !val)
-            }} />
+            <input
+              disabled
+              value={edgeColor} onClick={() => {
+                setShowColorPickerEdge(val => !val)
+              }}
+            />
             {
               showColorPickerEdge &&
-              <SketchPicker color={edgeColor} onChangeComplete={(event) => {
-                setEdgeColor(event.hex)
-              }
-              } />
+                <SketchPicker
+                  color={edgeColor} onChangeComplete={(event) => {
+                    setEdgeColor(event.hex)
+                  }}
+                />
             }
           </div>
-          <div className={'settings'}>
+          <div className='settings'>
             <p>Edge type</p>
             <select onChange={(event) => {
               setEdgeLabelSize(event.target.selectedOptions[0].value)
-            }}>
+            }}
+            >
               {
                 edgeLabelSizes.map((o, i, a) => {
                   return <option value={o}>{o}</option>
@@ -209,11 +277,12 @@ function Network (props) {
             </select>
           </div>
 
-          <div className={'settings'}>
+          <div className='settings'>
             <p>Edge shape</p>
             <select onChange={(event) => {
               setEdgeShape(event.target.selectedOptions[0].value)
-            }}>
+            }}
+            >
               {
                 edgeShapes.map((o, i, a) => {
                   return <option value={o}>{o}</option>
@@ -221,15 +290,17 @@ function Network (props) {
               }
             </select>
           </div>
-          <div className={'settings'}>
+          <div className='settings'>
             <p>Edge LabelSizePowRatio</p>
             {
               edgeLabelSize === 'fixed'
                 ? (
                   <div>
-                    <input disabled type='number' onChange={(event) => {
-                      setEdgeLabelSizePowRatio(event.target.value)
-                    }} />
+                    <input
+                      disabled type='number' onChange={(event) => {
+                        setEdgeLabelSizePowRatio(event.target.value)
+                      }}
+                    />
                     <br />
                     <small>
                     Available with proportional edge label type
@@ -237,9 +308,11 @@ function Network (props) {
                   </div>
                 )
                 : (
-                  <input type='number' onChange={(event) => {
-                    setEdgeLabelSizePowRatio(event.target.value)
-                  }} />
+                  <input
+                    type='number' onChange={(event) => {
+                      setEdgeLabelSizePowRatio(event.target.value)
+                    }}
+                  />
                 )
             }
           </div>
@@ -250,14 +323,15 @@ function Network (props) {
           <h2>Layout</h2>
           <hr />
 
-          <div className={'settings'}>
+          <div className='settings'>
             <select onChange={(event) => {
               if (event.target.selectedOptions[0].value !== selectedLayout) // REFACTOR - LAYOUT.STOP() ...
               {
                 setSelectedLayout(event.target.selectedOptions[0].value)
               //   networkRef.current.stopForceAtlas2()
               }
-            }}>
+            }}
+            >
               {
                 layouts.map((o, i, a) => {
                   return <option value={o}>{o}</option>
@@ -292,7 +366,7 @@ function Network (props) {
             defaultEdgeHoverColor: '#fff',
             edgeHoverSizeRatio: 3,
             edgeHoverColor: 'default'
-          }
+        }
         }
         showNodeDetail={setShowNodeDetail}
         setSelectedNode={setNodeDetail}
