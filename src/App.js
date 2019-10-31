@@ -117,6 +117,25 @@ function App() {
                   >
                     <p>Network.json</p>
                   </div>
+                  <div
+                    role="button"
+                    tabIndex="-1"
+                    onClick={() => {
+                      setLoading(true);
+                      setFile({
+                        url:
+                          "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/codeminer.gexf",
+                        type: "gexf"
+                      });
+                      setShowNetwork(true);
+                    }}
+                    className="example"
+                  >
+                    <p>Java code.GEXF</p>
+                    <small>Source code structure of a Java program</small>
+                    <br></br>
+                    <small>by S.Heymann & J.Palmier, 2008.</small>
+                  </div>
                 </div>
               </div>
               <div className="loading">{loading && <h2>Loading</h2>}</div>
