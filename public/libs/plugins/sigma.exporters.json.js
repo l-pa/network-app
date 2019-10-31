@@ -1,5 +1,5 @@
-;(function (undefined) {
-  'use strict'
+(function(undefined) {
+  "use strict";
 
   /**
    * Sigma JSON File Exporter
@@ -12,43 +12,48 @@
    * Version: 0.0.1
    */
 
-  if (typeof sigma === 'undefined') { throw 'sigma.exporters.json: sigma is not declared' }
+  if (typeof sigma === "undefined") {
+    throw "sigma.exporters.json: sigma is not declared";
+  }
 
   // Utilities
-  function download (fileEntry, extension, filename) {
-    var blob = null
-    var objectUrl = null
-    var dataUrl = null
+  function download(fileEntry, extension, filename) {
+    var blob = null;
+    var objectUrl = null;
+    var dataUrl = null;
 
     if (window.Blob) {
       // use Blob if available
-      blob = new Blob([fileEntry], { type: 'text/json' })
-      objectUrl = window.URL.createObjectURL(blob)
+      blob = new Blob([fileEntry], { type: "text/json" });
+      objectUrl = window.URL.createObjectURL(blob);
     } else {
       // else use dataURI
-      dataUrl = 'data:text/json;charset=UTF-8,' + encodeURIComponent(fileEntry)
+      dataUrl = "data:text/json;charset=UTF-8," + encodeURIComponent(fileEntry);
     }
 
-    if (navigator.msSaveBlob) { // IE11+ : (has Blob, but not a[download])
-      navigator.msSaveBlob(blob, filename)
-    } else if (navigator.msSaveOrOpenBlob) { // IE10+ : (has Blob, but not a[download])
-      navigator.msSaveOrOpenBlob(blob, filename)
+    if (navigator.msSaveBlob) {
+      // IE11+ : (has Blob, but not a[download])
+      navigator.msSaveBlob(blob, filename);
+    } else if (navigator.msSaveOrOpenBlob) {
+      // IE10+ : (has Blob, but not a[download])
+      navigator.msSaveOrOpenBlob(blob, filename);
     } else {
       // A-download
-      var anchor = document.createElement('a')
-      anchor.setAttribute('href', (window.Blob) ? objectUrl : dataUrl)
-      anchor.setAttribute('download', filename || 'graph.' + extension)
+      var anchor = document.createElement("a");
+      anchor.setAttribute("href", window.Blob ? objectUrl : dataUrl);
+      anchor.setAttribute("download", filename || "graph." + extension);
 
       // Firefox requires the link to be added to the DOM before it can be clicked.
-      document.body.appendChild(anchor)
-      anchor.click()
-      document.body.removeChild(anchor)
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
     }
 
     if (objectUrl) {
-      setTimeout(function () { // Firefox needs a timeout
-        window.URL.revokeObjectURL(objectUrl)
-      }, 0)
+      setTimeout(function() {
+        // Firefox needs a timeout
+        window.URL.revokeObjectURL(objectUrl);
+      }, 0);
     }
   }
 
@@ -58,19 +63,21 @@
    * @param  {object} o The object.
    * @return {object}   The object copy.
    */
-  function deepCopy (o) {
-    var copy = Object.create(null)
+  function deepCopy(o) {
+    var copy = Object.create(null);
     for (var i in o) {
-      if (typeof o[i] === 'object' && o[i] !== null) {
-        copy[i] = deepCopy(o[i])
-      } else if (typeof o[i] === 'function' && o[i] !== null) {
+      if (typeof o[i] === "object" && o[i] !== null) {
+        copy[i] = deepCopy(o[i]);
+      } else if (typeof o[i] === "function" && o[i] !== null) {
         // clone function:
-        eval(' copy[i] = ' + o[i].toString())
+        eval(" copy[i] = " + o[i].toString());
         // copy[i] = o[i].bind(_g);
-      } else { copy[i] = o[i] }
+      } else {
+        copy[i] = o[i];
+      }
     }
-    return copy
-  };
+    return copy;
+  }
 
   /**
    * Returns true if the string "str" starts with the string "start".
@@ -79,9 +86,9 @@
    * @param {string} str
    * @return {boolean}
    */
-  function startsWith (start, str) {
-    return str.slice(0, start.length) == start
-  };
+  function startsWith(start, str) {
+    return str.slice(0, start.length) == start;
+  }
 
   /**
    * Remove attributes added by the cameras and renderers. The node/edge
@@ -90,18 +97,18 @@
    * @param  {object} o The node or edge object.
    * @return {object}   The cleaned object.
    */
-  function cleanup (o) {
+  function cleanup(o) {
     for (var prop in o) {
       if (
-        startsWith('read_cam', prop) ||
-        startsWith('cam', prop) ||
-        startsWith('renderer', '' + prop)
+        startsWith("read_cam", prop) ||
+        startsWith("cam", prop) ||
+        startsWith("renderer", "" + prop)
       ) {
-        o[prop] = undefined
+        o[prop] = undefined;
       }
     }
 
-    return o
+    return o;
   }
 
   /**
@@ -110,32 +117,38 @@
    * @param  {object} params The options.
    * @return {string}        The JSON string.
    */
-  sigma.prototype.toJSON = function (params) {
-    params = params || {}
+  sigma.prototype.toJSON = function(params) {
+    params = params || {};
 
     var graph = {
-      nodes: this.graph.nodes().map(deepCopy).map(cleanup),
-      edges: this.graph.edges().map(deepCopy).map(cleanup)
-    }
+      nodes: this.graph
+        .nodes()
+        .map(deepCopy)
+        .map(cleanup),
+      edges: this.graph
+        .edges()
+        .map(deepCopy)
+        .map(cleanup)
+    };
 
     if (params.pretty) {
-      var jsonString = JSON.stringify(graph, null, ' ')
+      var jsonString = JSON.stringify(graph, null, " ");
     } else {
-      var jsonString = JSON.stringify(graph)
+      var jsonString = JSON.stringify(graph);
     }
 
     if (params.settings) {
-      const jsonParse = JSON.parse(jsonString)
-      jsonParse.settings = {}
+      const jsonParse = JSON.parse(jsonString);
+      jsonParse.settings = {};
       for (const [key, value] of Object.entries(params.settings)) {
-        jsonParse.settings[key] = value
+        jsonParse.settings[key] = value;
       }
-      jsonString = JSON.stringify(jsonParse)
+      jsonString = JSON.stringify(jsonParse);
     }
     if (params.download) {
-      download(jsonString, 'json', params.filename)
+      download(jsonString, "json", params.filename);
     }
 
-    return jsonString
-  }
-}).call(this)
+    return jsonString;
+  };
+}.call(this));

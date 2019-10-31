@@ -1,36 +1,37 @@
-import { useEffect } from 'react'
+import { useEffect } from "react";
 
 const SigmaNodes = props => {
   useEffect(() => {
-    window.network.bind('clickNode', (node) => {
-      props.showNodeDetail(true)
-      props.setSelectedNode(node)
-    })
+    // TODO
 
-    window.network.bind('overNode', (node) => {
+    window.network.bind("clickNode", node => {
+      props.showNodeDetail(true);
+      props.setSelectedNode(node);
+      console.log(node);
+    });
 
-    })
-  }, [])
+    //  window.network.bind("overNode", node => {});
+  }, []);
 
   useEffect(() => {
     if (window.network) {
       // memo
 
-      window.network.settings('defaultNodeType', props.nodeType)
-      window.network.refresh()
+      window.network.settings("defaultNodeType", props.nodeType);
+      window.network.refresh();
     }
-  }, [props.nodeType])
+  }, [props.nodeType]);
 
   useEffect(() => {
     if (window.network) {
-      Object.keys(props.settings).forEach(function (key) {
-        window.network.settings(key, props.settings[key])
-      })
-      window.network.refresh()
+      Object.keys(props.settings).forEach(function(key) {
+        window.network.settings(key, props.settings[key]);
+      });
+      window.network.refresh();
     }
-  }, [props.settings])
+  }, [props.settings]);
 
-  return null
-}
+  return null;
+};
 
-export default SigmaNodes
+export default SigmaNodes;

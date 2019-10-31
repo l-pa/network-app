@@ -4,23 +4,23 @@
 #EEB902
 */
 
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap");
 
 body {
   background-color: #282c34;
   color: white;
-  font-family: 'Open Sans', Helvetica, sans-serif;
+  font-family: "Open Sans", Helvetica, sans-serif;
 }
 
-button{
+button {
   border-radius: 10px;
   padding: 0.5em;
-  background-color: #2D7DD2;
+  background-color: #2d7dd2;
   border-style: none;
   margin: 0.5em;
   color: white;
   font-weight: 700;
-  font-family: 'Open Sans', Helvetica, sans-serif;
+  font-family: "Open Sans", Helvetica, sans-serif;
   text-transform: uppercase;
   font-size: 0.85em;
   opacity: 0.85;
@@ -28,12 +28,11 @@ button{
   box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
 }
 
-button:hover{
+button:hover {
   opacity: 1;
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
-
 }
-hr{
+hr {
   width: 75%;
   border-top: 1px solid #8c8b8b;
   margin-top: 1em;
@@ -58,7 +57,7 @@ hr{
   flex-direction: column;
 }
 
-.border{
+.border {
   border: 2px solid white;
   height: 30em;
 }
@@ -85,19 +84,20 @@ hr{
   flex-direction: row;
 }
 
-.sidePanel{
+.sidePanel {
   width: 20vw;
   background: #1d2026;
   z-index: 1;
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
+  width: 100;
 }
 
 .loading {
   margin-top: 2em;
 }
-.settings{
+.settings {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -106,16 +106,15 @@ hr{
 .settings > * {
   margin: 0.3em;
 }
-.settingsCattegory{
+.settingsCattegory {
   margin-left: 2em;
   margin-right: 2em;
 }
-.settingsCattegory > h2{
-margin-top: 0;
-margin-bottom: 0.5em;
-text-transform: uppercase;
-text-align: center;
-
+.settingsCattegory > h2 {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  text-transform: uppercase;
+  text-align: center;
 }
 .example {
   background-color: #1d2026;
@@ -128,16 +127,15 @@ text-align: center;
 }
 
 .example p {
-margin-top: 0;
+  margin-top: 0;
 }
-.example:hover{
+.example:hover {
   opacity: 1;
   cursor: pointer;
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
-
 }
 
-.settings p{
+.settings p {
   margin: 0;
 }
 .layoutSettings {
