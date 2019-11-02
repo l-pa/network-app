@@ -24,6 +24,11 @@ function App() {
         case "json":
           setFile({ url: URL.createObjectURL(e), type: "json" });
           break;
+        case "gml":
+          setFile({ url: URL.createObjectURL(e), type: "gml" });
+          //     const result = gml2json.parse(gmlString);
+          console.log(e);
+          break;
         default:
           console.log("Unsupported file");
           break;
@@ -49,11 +54,11 @@ function App() {
               <div className="center">
                 <div className="left">
                   <h2>Custom network</h2>
-                  <p>GEXF - 1.2+ / JSON</p>
+                  <p>GEXF - 1.2+ / JSON / GML</p>
 
                   <input
                     type="file"
-                    accept=".gexf, .json"
+                    accept=".gexf, .json, .gml"
                     onChange={event => {
                       fileReader = new FileReader();
                       fileReader.onloadend = handleFileRead(
@@ -133,7 +138,7 @@ function App() {
                   >
                     <p>Java code.GEXF</p>
                     <small>Source code structure of a Java program</small>
-                    <br></br>
+                    <br />
                     <small>by S.Heymann & J.Palmier, 2008.</small>
                   </div>
                 </div>

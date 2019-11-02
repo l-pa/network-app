@@ -8,6 +8,7 @@ import { ForceAtlas2 } from "./layouts/ForceAtlas2";
 import { RandomLayout } from "./layouts/RandomLayout";
 import { NoverlapUI } from "./layouts/Noverlap";
 import { FruchtermanReingold } from "./layouts/FruchtermanReingold";
+import "./gmlparse.js";
 
 function Network(props) {
   const shapes = [
@@ -87,6 +88,32 @@ function Network(props) {
           props.setLoading(false);
           window.network.refresh();
         });
+        break;
+      case "gml":
+        var rawFile = new XMLHttpRequest();
+        rawFile.open("GET", props.network.url);
+        rawFile.onreadystatechange = function() {
+          if (rawFile.readyState === 4) {
+            if (rawFile.status === 200 || rawFile.status == 0) {
+              // console.log(rawFile.responseText[0]);
+              const text = rawFile.responseText;
+              const parsedGML = window.gmlParser.parse(
+                text.substring(text.indexOf("graph"))
+              );
+
+              let tmp = 0;
+              parsedGML.edges.forEach(element => {
+                element.id = tmp;
+                tmp++;
+              });
+              window.network.graph.read(parsedGML);
+              props.setLoading(false);
+              window.network.refresh();
+            }
+          }
+        };
+
+        rawFile.send(null);
         break;
       default:
         console.log("Unsupported file");

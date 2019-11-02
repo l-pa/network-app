@@ -1,0 +1,45 @@
+Graph = graph: _ "graph" _ "[" _ directed:("directed" _ Integer)? _ nodes:Node _ edges:Edge "]" _ {return {"directed": directed == null ? 0 : 1, nodes, edges}}
+
+Node = ( _ "node" _ "[" _ id: ("id" _ Integer) _ label: ("label" _ "\""[^"]* "\"")? _ value: ("value" _ Integer)? _ source: ("source" _ "\""[^"]* "\"")? _ "]" _ {return {"id": id[2], "label": label == null ? null : label[3].join(""), "value": value == null ? null : value[2], "source": source == null ? null : source[3].join("")}})*
+
+Edge = ( _ "edge" _ "[" _ source: ("source" _ Integer) _ target:("target" _ Integer) _ value:("value" _ Integer)? _"]" _ {return {"source": source[2], "target": target[2], "value" : value == null ? null : value[2]}})*
+
+Integer "integer"
+  = _ [0-9]+ { return parseInt(text(), 10); }
+
+_ "whitespace"
+  = [ \t\n\r]*
+  
+ __ = [ \t\r\n]+
+
+Decimal
+---------------------------
+Graph = graph: _ "graph" _ "[" _ directed:("directed" _ Integer)? _ nodes:Node _ edges:Edge "]" _ {return {"directed": directed == null ? 0 : 1, nodes, edges}}
+
+Node = ( _ "node" _ "[" _ id: ("id" _ Integer) _ label: ("label" _ "\""[^"]* "\"")? _ value: ("value" _ Integer)? _ source: ("source" _ "\""[^"]* "\"")? _ "]" _ {return {"id": id[2], "label": label == null ? null : label[3].join(""), "value": value == null ? null : value[2], "source": source == null ? null : source[3].join("")}})*
+
+Edge = ( _ "edge" _ "[" _ source: ("source" _ Integer) _ target:("target" _ Integer) _ value:("value" _ Integer)? _"]" _ {return {"source": source[2], "target": target[2], "value" : value == null ? null : value[2]}})*
+
+Integer "integer"
+  = _ [0-9.]+ { return parseFloat(text()); }
+
+_ "whitespace"
+  = [ \t\n\r]*
+  
+ __ = [ \t\r\n]+
+
+----------------------------
+
+Graph = graph: _ "graph" _ "[" _ directed:("directed" _ Integer)? _ nodes:Node _ edges:Edge "]" _ {return {nodes, edges}}
+
+Node = ( _ "node" _ "[" _ id: ("id" _ Integer) _ label: ("label" _ "\""[^"]* "\"")? _ value: ("value" _ Integer)? _ source: ("source" _ "\""[^"]* "\"")? _ "]" _ {return {"id": id[2], "x": Math.random(), "y": Math.random(), "label": label == null ? "" : label[3].join(""), "size": value == null ? 1 : value[2], "source": source == null ? null : source[3].join("")}})*
+
+Edge = ( _ "edge" _ "[" _ source: ("source" _ Integer) _ target:("target" _ Integer) _ value:("value" _ Integer)? _"]" _ { return {"source": source[2], "target": target[2], 'size': value == null ? 1 : value[2] } })*
+
+Integer "integer"
+  = _ [0-9.]+ { return parseFloat(text()); }
+
+_ "whitespace"
+  = [ \t\n\r]*
+  
+ __ = [ \t\r\n]+
