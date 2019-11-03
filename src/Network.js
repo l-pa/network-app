@@ -25,6 +25,8 @@ function Network(props) {
   const edgeLabelSizes = ["fixed", "proportional"];
   const layouts = ["forceAtlas2", "random", "noverlap", "FruchtermanReingold"];
 
+  const nodeSizeArr = ["default", "fixed", "degree"];
+
   const [shape, setShape] = useState(shapes[0]);
   const [edgeLabelSize, setEdgeLabelSize] = useState(edgeLabelSizes[0]);
   const [edgeShape, setEdgeShape] = useState(edgeShapes[0]);
@@ -32,6 +34,8 @@ function Network(props) {
   const [edgeColor, setEdgeColor] = useState("#000");
   const [nodeColor, setNodeColor] = useState("#000");
   const [labelColor, setLabelColor] = useState("#fff");
+
+  const [nodeSize, setNodeSize] = useState(nodeSizeArr[0]);
 
   const [selectedLayout, setSelectedLayout] = useState(layouts[0]);
 
@@ -44,6 +48,8 @@ function Network(props) {
   const [showColorPickerNode, setShowColorPickerNode] = useState(false);
   const [showColorPickerEdge, setShowColorPickerEdge] = useState(false);
   const [showColorPickerLabel, setShowColorPickerLabel] = useState(false);
+
+  const defaultNodeSizes = useRef([]);
 
   useEffect(() => {
     window.network.addRenderer({
@@ -79,6 +85,8 @@ function Network(props) {
               }
               props.setLoading(false);
             });
+          defaultNodeSizes.current = window.network.graph.nodes().slice();
+
           window.network.refresh();
         });
         break;
@@ -87,6 +95,7 @@ function Network(props) {
           console.log("LOADED");
           props.setLoading(false);
           window.network.refresh();
+          defaultNodeSizes.current = window.network.graph.nodes().slice();
         });
         break;
       case "gml":
@@ -109,6 +118,7 @@ function Network(props) {
               window.network.graph.read(parsedGML);
               props.setLoading(false);
               window.network.refresh();
+              defaultNodeSizes.current = window.network.graph.nodes().slice();
             }
           }
         };
@@ -123,6 +133,37 @@ function Network(props) {
       window.sigma.plugins.killDragNodes(window.network);
     };
   }, []);
+
+  useEffect(() => {
+    // second create size for every node
+    switch (nodeSize) {
+      case "default":
+        for (let i = 0; i < window.network.graph.nodes().length; i++) {
+          window.network.graph.nodes()[i].size =
+            defaultNodeSizes.current[i].size;
+        }
+        break;
+
+      case "fixed":
+        for (let i = 0; i < window.network.graph.nodes().length; i++) {
+          window.network.graph.nodes()[i].size = 1;
+        }
+        break;
+
+      case "degree":
+        for (let i = 0; i < window.network.graph.nodes().length; i++) {
+          const degree = window.network.graph.degree(
+            window.network.graph.nodes()[i].id
+          );
+          window.network.graph.nodes()[i].size = 1 * Math.sqrt(degree);
+        }
+        break;
+
+      default:
+        break;
+    }
+    window.network.refresh();
+  }, [nodeSize]);
 
   const renderLayoutOptions = layout => {
     switch (layout) {
@@ -234,7 +275,6 @@ function Network(props) {
           <div className="settings">
             <p>Node color</p>
             <input
-              disabled
               value={nodeColor}
               onClick={() => {
                 setShowColorPickerNode(val => !val);
@@ -257,6 +297,19 @@ function Network(props) {
               }}
             >
               {shapes.map((o, i, a) => {
+                return <option value={o}>{o}</option>;
+              })}
+            </select>
+          </div>
+
+          <div className="settings">
+            <p>Node size</p>
+            <select
+              onChange={event => {
+                setNodeSize(event.target.selectedOptions[0].value);
+              }}
+            >
+              {nodeSizeArr.map((o, i, a) => {
                 return <option value={o}>{o}</option>;
               })}
             </select>
@@ -298,7 +351,41 @@ function Network(props) {
               displayed.
             </small>
           </div>
-
+          <div className="settings">
+            <p>Label sizes</p>
+            <select
+              onChange={event => {
+                setEdgeLabelSize(event.target.selectedOptions[0].value);
+              }}
+            >
+              {edgeLabelSizes.map((o, i, a) => {
+                return <option value={o}>{o}</option>;
+              })}
+            </select>
+          </div>
+          <div className="settings">
+            <p>Label Size PowRatio</p>
+            {edgeLabelSize === "fixed" ? (
+              <div>
+                <input
+                  disabled
+                  type="number"
+                  onChange={event => {
+                    setEdgeLabelSizePowRatio(event.target.value);
+                  }}
+                />
+                <br />
+                <small>Available with proportional edge label type</small>
+              </div>
+            ) : (
+              <input
+                type="number"
+                onChange={event => {
+                  setEdgeLabelSizePowRatio(event.target.value);
+                }}
+              />
+            )}
+          </div>
           <div className="settings">
             <p>Label color</p>
             <input
@@ -342,19 +429,6 @@ function Network(props) {
             )}
           </div>
           <div className="settings">
-            <p>Edge type</p>
-            <select
-              onChange={event => {
-                setEdgeLabelSize(event.target.selectedOptions[0].value);
-              }}
-            >
-              {edgeLabelSizes.map((o, i, a) => {
-                return <option value={o}>{o}</option>;
-              })}
-            </select>
-          </div>
-
-          <div className="settings">
             <p>Edge shape</p>
             <select
               onChange={event => {
@@ -365,29 +439,6 @@ function Network(props) {
                 return <option value={o}>{o}</option>;
               })}
             </select>
-          </div>
-          <div className="settings">
-            <p>Edge LabelSizePowRatio</p>
-            {edgeLabelSize === "fixed" ? (
-              <div>
-                <input
-                  disabled
-                  type="number"
-                  onChange={event => {
-                    setEdgeLabelSizePowRatio(event.target.value);
-                  }}
-                />
-                <br />
-                <small>Available with proportional edge label type</small>
-              </div>
-            ) : (
-              <input
-                type="number"
-                onChange={event => {
-                  setEdgeLabelSizePowRatio(event.target.value);
-                }}
-              />
-            )}
           </div>
         </div>
         <hr />
@@ -419,6 +470,7 @@ function Network(props) {
       <SigmaNodes
         nodeType={shape}
         settings={{
+          defaultNodeColor: nodeColor,
           labelSizeRatio: edgeLabelSizePowRatio,
           labelSize: edgeLabelSize,
           defaultEdgeType: edgeShape,
