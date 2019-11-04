@@ -10,6 +10,8 @@ import { NoverlapUI } from "./layouts/Noverlap";
 import { FruchtermanReingold } from "./layouts/FruchtermanReingold";
 import "./gmlparse.js";
 
+// https://medialab.github.io/iwanthue/
+
 function Network(props) {
   const shapes = [
     "def",
@@ -25,7 +27,7 @@ function Network(props) {
   const edgeLabelSizes = ["fixed", "proportional"];
   const layouts = ["forceAtlas2", "random", "noverlap", "FruchtermanReingold"];
 
-  const nodeSizeArr = ["default", "fixed", "degree"];
+  const nodeSizeArr = ["default", "fixed", "degree", "degreeIn", "degreeOut"];
 
   const [shape, setShape] = useState(shapes[0]);
   const [edgeLabelSize, setEdgeLabelSize] = useState(edgeLabelSizes[0]);
@@ -85,7 +87,10 @@ function Network(props) {
               }
               props.setLoading(false);
             });
-          defaultNodeSizes.current = window.network.graph.nodes().slice();
+
+          defaultNodeSizes.current = JSON.parse(
+            JSON.stringify(window.network.graph.nodes())
+          );
 
           window.network.refresh();
         });
@@ -95,7 +100,9 @@ function Network(props) {
           console.log("LOADED");
           props.setLoading(false);
           window.network.refresh();
-          defaultNodeSizes.current = window.network.graph.nodes().slice();
+          defaultNodeSizes.current = JSON.parse(
+            JSON.stringify(window.network.graph.nodes())
+          );
         });
         break;
       case "gml":
@@ -118,7 +125,9 @@ function Network(props) {
               window.network.graph.read(parsedGML);
               props.setLoading(false);
               window.network.refresh();
-              defaultNodeSizes.current = window.network.graph.nodes().slice();
+              defaultNodeSizes.current = JSON.parse(
+                JSON.stringify(window.network.graph.nodes())
+              );
             }
           }
         };
@@ -156,6 +165,34 @@ function Network(props) {
             window.network.graph.nodes()[i].id
           );
           window.network.graph.nodes()[i].size = 1 * Math.sqrt(degree);
+        }
+        break;
+
+      case "degreeIn":
+        for (let i = 0; i < window.network.graph.nodes().length; i++) {
+          const degree = window.network.graph.degree(
+            window.network.graph.nodes()[i].id,
+            "in"
+          );
+          if (degree === 0) {
+            window.network.graph.nodes()[i].size = 1;
+          } else {
+            window.network.graph.nodes()[i].size = 1 * Math.sqrt(degree);
+          }
+        }
+        break;
+
+      case "degreeOut":
+        for (let i = 0; i < window.network.graph.nodes().length; i++) {
+          const degree = window.network.graph.degree(
+            window.network.graph.nodes()[i].id,
+            "out"
+          );
+          if (degree === 0) {
+            window.network.graph.nodes()[i].size = 1;
+          } else {
+            window.network.graph.nodes()[i].size = Math.sqrt(degree);
+          }
         }
         break;
 
@@ -274,7 +311,8 @@ function Network(props) {
 
           <div className="settings">
             <p>Node color</p>
-            <input
+            {/* <input
+              disabled
               value={nodeColor}
               onClick={() => {
                 setShowColorPickerNode(val => !val);
@@ -287,7 +325,24 @@ function Network(props) {
                   setNodeColor(event.hex);
                 }}
               />
-            )}
+            )} */}
+
+            {/* <button
+              type="button"
+              onClick={() => {
+                window.network.graph.nodes().sort(function(a, b) {
+                  return (
+                    window.network.graph.degree(b.id) -
+                    window.network.graph.degree(a.id)
+                  );
+                });
+                window.network.graph.nodes().forEach(element => {
+                  console.log(window.network.graph.degree(element.id));
+                });
+              }}
+            >
+              Color
+            </button> */}
           </div>
           <div className="settings">
             <p>Node type</p>
@@ -440,6 +495,27 @@ function Network(props) {
               })}
             </select>
           </div>
+          <div className="settings">
+            <p>Edge arrow (directed)</p>
+            <div style={{ display: "flex" }}>
+              <input
+                type="checkbox"
+                onChange={event => {
+                  if (event.target.checked) {
+                    window.network.graph.edges().forEach(element => {
+                      element.type = "arrow";
+                    });
+                  } else {
+                    window.network.graph.edges().forEach(element => {
+                      element.type = "";
+                    });
+                  }
+                  window.network.refresh();
+                }}
+              />
+              Directed
+            </div>
+          </div>
         </div>
         <hr />
 
@@ -484,7 +560,8 @@ function Network(props) {
           defaultNodeBorderColor: "#fff",
           defaultEdgeHoverColor: "#fff",
           edgeHoverSizeRatio: 3,
-          edgeHoverColor: "default"
+          edgeHoverColor: "default",
+          minArrowSize: 10
         }}
         showNodeDetail={setShowNodeDetail}
         setSelectedNode={setNodeDetail}
