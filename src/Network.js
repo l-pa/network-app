@@ -216,7 +216,7 @@ function Network(props) {
         return null;
     }
   };
-
+  // Separate file
   return (
     <div
       id="container"
