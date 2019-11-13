@@ -3,6 +3,7 @@ let iterCount = 100;
 
 function atomicGo(nodes, config) {
   if (!running || iterCount < 1) return false;
+
   const nodesCount = nodes.length;
   let i;
   let n;
@@ -170,19 +171,20 @@ function atomicGo(nodes, config) {
   if (running && iterCount < 1) {
     running = false;
   }
-
-  postMessage({ nodes, iterCount, running });
+  var tmp = [];
+  nodes.forEach(element => {
+    tmp.push({ dn_x: element.dn_x, dn_y: element.dn_y });
+  });
+  postMessage({ nodes: tmp, iterCount, running });
 }
 
 addEventListener("message", event => {
   if (event.data.run === true) {
-    //  postMessage({ status: "Worker started" });
     iterCount = event.data.config.maxIterations;
 
     while (running) {
       atomicGo(event.data.nodes, event.data.config);
     }
-    //  postMessage({ status: "Worker stopped" });
   }
 
   if (event.data.run === false) {

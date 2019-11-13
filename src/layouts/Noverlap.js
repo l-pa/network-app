@@ -52,7 +52,6 @@ function Noverlap() {
 
   this.go = function() {
     const helloWorker = new Worker();
-    let messageCount = 0;
 
     helloWorker.postMessage({
       run: true,
