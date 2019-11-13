@@ -1,4 +1,7 @@
+/* eslint-disable */
+
 import React, { useState, useRef, useEffect } from "react";
+import Worker from "worker-loader!./workers/noverlap.worker.js";
 
 window.sigma.utils.pkg("sigma.layouts.noverlap");
 
@@ -231,9 +234,23 @@ function Noverlap() {
 
   this.go = function() {
     this.iterCount = this.config.maxIterations;
+
+    const helloWorker = new Worker();
+    let messageCount = 0;
+
+    helloWorker.postMessage({ run: true, nodes: this.sigInst.graph.nodes() });
+
+    helloWorker.onmessage = event => {
+      console.log(event.data);
+    };
+
+    helloWorker.postMessage({ run: false });
+
+    /*
     while (this.running) {
       this.atomicGo();
     }
+    */
     this.stop();
   };
 
