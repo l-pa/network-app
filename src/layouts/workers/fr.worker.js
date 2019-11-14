@@ -1,6 +1,14 @@
 let running = true;
 let iterCount = 100;
 
+let objectNodes = {};
+
+const arrayToObject = (array, keyField) =>
+  array.reduce((obj, item) => {
+    obj[item[keyField]] = item;
+    return obj;
+  }, {});
+
 function atomicGo(nodes, edges, config) {
   if (!running || iterCount < 1) return false;
 
@@ -61,16 +69,8 @@ function atomicGo(nodes, edges, config) {
     e = edges[i];
 
     // Attraction force
-
-    nodes.forEach(element => {
-      if (e.source === element.id) {
-        nSource = element;
-      }
-
-      if (e.target === element.id) {
-        nTarget = element;
-      }
-    });
+    nSource = objectNodes[e.source];
+    nTarget = objectNodes[e.target];
 
     xDist = nSource.fr_x - nTarget.fr_x;
     yDist = nSource.fr_y - nTarget.fr_y;
@@ -124,7 +124,7 @@ function atomicGo(nodes, edges, config) {
 addEventListener("message", event => {
   if (event.data.run === true) {
     iterCount = event.data.config.iterations;
-
+    objectNodes = arrayToObject(event.data.nodes, "id");
     while (running) {
       atomicGo(event.data.nodes, event.data.edges, event.data.config);
     }

@@ -1,6 +1,14 @@
 let running = true;
 let iterCount = 100;
 
+let objectNodes = {};
+
+const arrayToObject = (array, keyField) =>
+  array.reduce((obj, item) => {
+    obj[item[keyField]] = item;
+    return obj;
+  }, {});
+
 function atomicGo(nodes, config) {
   if (!running || iterCount < 1) return false;
 
@@ -133,12 +141,8 @@ function atomicGo(nodes, config) {
   for (i = 0; i < nodesCount; i++) {
     n1 = nodes[i];
     adjacentNodes[n1.id].forEach(function(nodeId) {
-      let n2 = {};
-      nodes.forEach(element => {
-        if (element.id === nodeId) {
-          n2 = element;
-        }
-      });
+      let n2 = objectNodes[nodeId];
+
       const xDist = n2.dn_x - n1.dn_x;
       const yDist = n2.dn_y - n1.dn_y;
       const dist = Math.sqrt(xDist * xDist + yDist * yDist);
@@ -181,7 +185,7 @@ function atomicGo(nodes, config) {
 addEventListener("message", event => {
   if (event.data.run === true) {
     iterCount = event.data.config.maxIterations;
-
+    objectNodes = arrayToObject(event.data.nodes, "id");
     while (running) {
       atomicGo(event.data.nodes, event.data.config);
     }

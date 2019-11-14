@@ -52,6 +52,7 @@ function Noverlap() {
 
   this.go = function() {
     const helloWorker = new Worker();
+    console.log(this.sigInst.graph.nodes());
 
     helloWorker.postMessage({
       run: true,
