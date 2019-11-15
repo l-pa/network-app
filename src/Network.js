@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import "./App.css";
 import "./loader.css";
 import { SketchPicker } from "react-color";
@@ -53,16 +53,8 @@ function Network(props) {
 
   const defaultNodeSizes = useRef([]);
 
-  useEffect(() => {
-    window.network.addRenderer({
-      type: "canvas",
-      container: "container"
-    });
-
-    window.sigma.plugins.dragNodes(
-      window.network,
-      window.network.renderers[Object.keys(window.network.renderers).length - 1]
-    );
+  const checkFileType = useCallback(() => {
+    console.log("rendered");
 
     switch (props.network.type) {
       case "json":
@@ -110,7 +102,7 @@ function Network(props) {
         rawFile.open("GET", props.network.url);
         rawFile.onreadystatechange = function() {
           if (rawFile.readyState === 4) {
-            if (rawFile.status === 200 || rawFile.status == 0) {
+            if (rawFile.status === 200 || rawFile.status === 0) {
               // console.log(rawFile.responseText[0]);
               const text = rawFile.responseText;
               const parsedGML = window.gmlParser.parse(
@@ -138,10 +130,23 @@ function Network(props) {
         console.log("Unsupported file");
         break;
     }
+  }, [props.network]);
+
+  useEffect(() => {
+    window.network.addRenderer({
+      type: "canvas",
+      container: "container"
+    });
+    checkFileType();
+    window.sigma.plugins.dragNodes(
+      window.network,
+      window.network.renderers[Object.keys(window.network.renderers).length - 1]
+    );
+
     return () => {
       window.sigma.plugins.killDragNodes(window.network);
     };
-  }, []);
+  }, [checkFileType]);
 
   useEffect(() => {
     // second create size for every node
@@ -550,7 +555,6 @@ function Network(props) {
           labelSizeRatio: edgeLabelSizePowRatio,
           labelSize: edgeLabelSize,
           defaultEdgeType: edgeShape,
-          defaultNodeColor: "#fff",
           edgeColor: "default",
           defaultEdgeColor: edgeColor,
           labelThreshold,
