@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 let running = true;
 let iterCount = 100;
 
