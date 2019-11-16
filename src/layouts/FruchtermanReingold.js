@@ -4,9 +4,21 @@ import React, { useState, useRef, useEffect } from "react";
 
 import Worker from "worker-loader!./workers/fr.worker.js";
 
+import {
+  SettingsButton,
+  SettingsInput,
+  SettingsSubTitle,
+  SettingsSelect,
+  HorizontalLine,
+  SettingsTitle,
+  SettingsSubMenu,
+  SideBar,
+  Test
+} from "../style";
+
 let helloWorker = new Worker();
 
-function FruchtermanReingold(props) {
+export default function FruchtermanReingold(props) {
   const autoArea = useRef(false);
   const area = useRef(1);
   const gravity = useRef(1);
@@ -316,15 +328,10 @@ function FruchtermanReingold(props) {
 
 
   return (
-    <div className="layoutSettings settings">
-      <p>Options</p>
-      <br />
-      <div>
-        <input ref={autoArea} type="checkbox" value="linLogMode" />
+    <Test>
+        <SettingsInput ref={autoArea} type="checkbox" value="linLogMode" />
         autoArea
-      </div>
-      <div>
-        <input
+        <SettingsInput
           step={0.1}
           min={0.1}
           max={20}
@@ -335,9 +342,7 @@ function FruchtermanReingold(props) {
           type="number"
         />
         area
-      </div>
-      <div>
-        <input
+        <SettingsInput
           step={0.1}
           min={0.1}
           max={50}
@@ -348,9 +353,8 @@ function FruchtermanReingold(props) {
           type="number"
         />
         gravity
-      </div>
-      <div>
-        <input
+      
+        <SettingsInput
           step={0.1}
           min={0.1}
           max={50}
@@ -361,9 +365,8 @@ function FruchtermanReingold(props) {
           type="number"
         />
         speed
-      </div>
-      <div>
-        <input
+        
+        <SettingsInput
           step={1}
           min={1}
           max={10000}
@@ -374,9 +377,8 @@ function FruchtermanReingold(props) {
           type="number"
         />
         iterations
-      </div>
       {!isRunning ? (
-      <button
+      <SettingsButton
         type="button"
         onClick={event => {
           const settings = {
@@ -405,9 +407,9 @@ function FruchtermanReingold(props) {
         }}
       >
         Start
-      </button>
+      </SettingsButton>
       ) : (
-        <button
+        <SettingsButton
         type="button"
         onClick={event => {
           helloWorker.terminate()
@@ -416,11 +418,9 @@ function FruchtermanReingold(props) {
         }}
         >
           Stop
-        </button>
+        </SettingsButton>
       )
       }
-    </div>
+    </Test>
   );
 }
-
-export { FruchtermanReingold };

@@ -1,86 +1,25 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
 import { SketchPicker } from "react-color";
+
+import {
+  HideMenu,
+  SettingsButton,
+  SettingsInput,
+  SettingsSubTitle,
+  SettingsSelect,
+  HorizontalLine,
+  SettingsTitle,
+  SettingsSubMenu,
+  SideBar
+} from "./style";
+
 import NodeDetail from "./NodeDetail";
 
-import { ForceAtlas2 } from "./layouts/ForceAtlas2";
-import { RandomLayout } from "./layouts/RandomLayout";
-import { NoverlapUI } from "./layouts/Noverlap";
-import { FruchtermanReingold } from "./layouts/FruchtermanReingold";
+import ForceAtlas2 from "./layouts/ForceAtlas2";
+import RandomLayout from "./layouts/RandomLayout";
+import NoverlapUI from "./layouts/Noverlap";
+import FruchtermanReingold from "./layouts/FruchtermanReingold";
 import SigmaNodes from "./SigmaNodes";
-
-const SideBar = styled.div`
-  font-family: "Open Sans", Helvetica, sans-serif;
-  width: 20vw;
-  background: #1d2026;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-y: scroll;
-  width: 100;
-
-  @media only screen and (max-width: 900px) {
-    .sidePanel {
-      width: 15em;
-    }
-`;
-
-const SettingsButton = styled.button`
-  margin-left: 2em;
-  margin-right: 2em;
-  padding: 0.5em;
-  background-color: #3c5da1;
-  border-style: none;
-  margin: 0.5em;
-  color: white;
-  font-weight: 700;
-  font-family: "Open Sans", Helvetica, sans-serif;
-  text-transform: uppercase;
-  font-size: 0.85em;
-  opacity: 1;
-  transition: 0.3s;
-  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
-  :hover {
-    opacity: 0.8;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
-  }
-`;
-
-const HorizontalLine = styled.hr`
-  width: 75%;
-  border-top: 1px solid #8c8b8b;
-  margin-top: 1em;
-  margin-bottom: 1em;
-`;
-
-const SettingsSelect = styled.select``;
-
-const SettingsInput = styled.input`
-  display: flex;
-`;
-
-const SettingsTitle = styled.div`
-  margin-left: 2em;
-  margin-right: 2em;
-
-  margin-bottom: 0;
-  text-transform: uppercase;
-  text-align: center;
-  font-size: 1.5em;
-  font-weight: bold;
-
-  background-color: #282c34;
-  padding-top: 5px;
-  padding-bottom: 5px;
-`;
-
-const SettingsSubMenu = styled.div`
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  margin-left: 2em;
-  margin-right: 2em;
-`;
 
 export default function Settings(props) {
   const shapes = [
@@ -95,7 +34,12 @@ export default function Settings(props) {
   ];
   const edgeShapes = ["def", "curve"];
   const edgeLabelSizes = ["fixed", "proportional"];
-  const layouts = ["forceAtlas2", "random", "noverlap", "FruchtermanReingold"];
+  const layouts = [
+    "Force atlas 2",
+    "Random",
+    "No overlap",
+    "Fruchterman Reingold"
+  ];
 
   const nodeSizeArr = ["default", "fixed", "degree", "degreeIn", "degreeOut"];
 
@@ -217,6 +161,7 @@ export default function Settings(props) {
 
   return (
     <SideBar>
+      <br />
       <SettingsButton
         onClick={() => {
           props.setShowNetwork(false);
@@ -225,6 +170,7 @@ export default function Settings(props) {
       >
         Home
       </SettingsButton>
+
       <HorizontalLine />
       <SettingsSubMenu>
         <SettingsTitle>Export</SettingsTitle>
@@ -291,7 +237,7 @@ export default function Settings(props) {
       <SettingsSubMenu>
         <SettingsTitle>Node</SettingsTitle>
         <HorizontalLine />
-        <SettingsTitle>Node type</SettingsTitle>
+        <SettingsSubTitle>Node type</SettingsSubTitle>
         <SettingsSelect
           onChange={event => {
             setShape(event.target.selectedOptions[0].value);
@@ -301,7 +247,7 @@ export default function Settings(props) {
             return <option value={o}>{o}</option>;
           })}
         </SettingsSelect>
-        <SettingsTitle>Node size</SettingsTitle>
+        <SettingsSubTitle>Node size</SettingsSubTitle>
         <SettingsSelect
           onChange={event => {
             setNodeSize(event.target.selectedOptions[0].value);
@@ -311,7 +257,7 @@ export default function Settings(props) {
             return <option value={o}>{o}</option>;
           })}
         </SettingsSelect>
-        <SettingsTitle>Max size of nodes e</SettingsTitle>
+        <SettingsSubTitle>Max size of nodes</SettingsSubTitle>
         <SettingsInput
           defaultValue={maxNodeSize}
           step={1}
@@ -328,7 +274,7 @@ export default function Settings(props) {
       <SettingsSubMenu>
         <SettingsTitle>Label</SettingsTitle>
         <HorizontalLine />
-        <SettingsTitle>Label threshold</SettingsTitle>
+        <SettingsSubTitle>Label threshold</SettingsSubTitle>
         <SettingsInput
           defaultValue={labelThreshold}
           step={1}
@@ -339,11 +285,14 @@ export default function Settings(props) {
             setLabelThreshold(event.target.value);
           }}
         />
-
+        <small>
+          The minimum size a node must have on screen to see its label
+          displayed.
+        </small>
         {/* Small test
         The minimum size a node must have on screen to see its label displayed.
-        */}
-        <SettingsTitle>Label size</SettingsTitle>
+      */}
+        <SettingsSubTitle>Label size</SettingsSubTitle>
         <SettingsSelect
           onChange={event => {
             setEdgeLabelSize(event.target.selectedOptions[0].value);
@@ -353,18 +302,11 @@ export default function Settings(props) {
             return <option value={o}>{o}</option>;
           })}
         </SettingsSelect>
-        <SettingsTitle>Label pow ratio</SettingsTitle>
+        <SettingsSubTitle>Label pow ratio</SettingsSubTitle>
 
         {edgeLabelSize === "fixed" ? (
           <div>
-            <SettingsInput
-              disabled
-              type="number"
-              onChange={event => {
-                setEdgeLabelSizePowRatio(event.target.value);
-              }}
-            />
-            <small>Available with proportional edge label type</small>
+              <small>Available with proportional edge label type</small>
           </div>
         ) : (
           <SettingsInput
@@ -374,11 +316,7 @@ export default function Settings(props) {
             }}
           />
         )}
-        {/* 
-        Available with proportional edge label type
-        */}
-
-        <SettingsTitle>Label color</SettingsTitle>
+        <SettingsSubTitle>Label color</SettingsSubTitle>
         <SettingsInput
           value={labelColor}
           onClick={() => {
@@ -399,9 +337,8 @@ export default function Settings(props) {
       <SettingsSubMenu>
         <SettingsTitle>Edge</SettingsTitle>
         <HorizontalLine />
-        <SettingsTitle>Edge color</SettingsTitle>
+        <SettingsSubTitle>Edge color</SettingsSubTitle>
         <SettingsInput
-          disabled
           value={edgeColor}
           onClick={() => {
             setShowColorPickerEdge(val => !val);
@@ -416,7 +353,7 @@ export default function Settings(props) {
           />
         )}
 
-        <SettingsTitle>Edge shape</SettingsTitle>
+        <SettingsSubTitle>Edge shape</SettingsSubTitle>
         <SettingsSelect
           onChange={event => {
             setEdgeShape(event.target.selectedOptions[0].value);
@@ -427,8 +364,8 @@ export default function Settings(props) {
           })}
         </SettingsSelect>
 
-        <SettingsTitle>Directed</SettingsTitle>
-        {/* <SettingsInput
+        <SettingsSubTitle>Directed</SettingsSubTitle>
+        <SettingsInput
           type="checkbox"
           onChange={event => {
             if (event.target.checked) {
@@ -442,9 +379,7 @@ export default function Settings(props) {
             }
             window.network.refresh();
           }}
-        >
-          Directed
-        </SettingsInput> */}
+        />
       </SettingsSubMenu>
 
       <HorizontalLine />
@@ -460,10 +395,11 @@ export default function Settings(props) {
             }
           }}
         >
-          {layouts.map((o, i, a) => {
+          {layouts.map(o => {
             return <option value={o}>{o}</option>;
           })}
         </SettingsSelect>
+        <SettingsSubTitle>Options</SettingsSubTitle>
         {renderLayoutOptions(selectedLayout)}
       </SettingsSubMenu>
       <SigmaNodes
@@ -473,7 +409,6 @@ export default function Settings(props) {
           labelSizeRatio: edgeLabelSizePowRatio,
           labelSize: edgeLabelSize,
           defaultEdgeType: edgeShape,
-          edgeColor: "default",
           defaultEdgeColor: edgeColor,
           labelThreshold,
           defaultLabelColor: labelColor,
@@ -483,11 +418,13 @@ export default function Settings(props) {
           defaultEdgeHoverColor: "#fff",
           edgeHoverSizeRatio: 3,
           edgeHoverColor: "default",
+          edgeColor: "default",
           minArrowSize: 10
         }}
         showNodeDetail={setShowNodeDetail}
         setSelectedNode={setNodeDetail}
       />
+      <br />
     </SideBar>
   );
 }

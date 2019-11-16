@@ -1,4 +1,15 @@
 import React, { useState, useRef } from "react";
+import {
+  SettingsButton,
+  SettingsInput,
+  SettingsSubTitle,
+  SettingsSelect,
+  HorizontalLine,
+  SettingsTitle,
+  SettingsSubMenu,
+  SideBar,
+  Test
+} from "../style";
 
 function ForceAtlas2(props) {
   const linLogMode = useRef(false);
@@ -9,47 +20,33 @@ function ForceAtlas2(props) {
   const [isRunning, setIsRunning] = useState(false);
 
   return (
-    <div className="layoutSettings settings">
-      <p>Options</p>
-      <br />
-      <div>
-        <input ref={linLogMode} type="checkbox" value="linLogMode" />
-        linLogMode
-      </div>
-      <div>
-        <input
-          step={0.1}
-          min={0.1}
-          max={10}
-          defaultValue={scalingRatio.current}
-          onChange={event => {
-            scalingRatio.current = event.target.value;
-          }}
-          type="number"
-        />
-        scalingRatio
-      </div>
-      <div>
-        <input
-          step={0.1}
-          min={0.1}
-          max={50}
-          defaultValue={gravity.current}
-          onChange={event => {
-            gravity.current = event.target.value;
-          }}
-          type="number"
-        />
-        gravity
-      </div>
-      <div>
-        <input ref={worker} type="checkbox" value="worker" />
-        worker
-      </div>
-
+    <Test>
+      <SettingsInput ref={linLogMode} type="checkbox" value="linLogMode" />
+      linLogMode
+      <SettingsInput
+        step={0.1}
+        min={0.1}
+        max={10}
+        defaultValue={scalingRatio.current}
+        onChange={event => {
+          scalingRatio.current = event.target.value;
+        }}
+        type="number"
+      />
+      scalingRatio
+      <SettingsInput
+        step={0.1}
+        min={0.1}
+        max={50}
+        defaultValue={gravity.current}
+        onChange={event => {
+          gravity.current = event.target.value;
+        }}
+        type="number"
+      />
+      gravity
       {!isRunning ? (
-        <button
-          type="button"
+        <SettingsButton
           onClick={event => {
             const settings = {
               linLogMode: linLogMode.current.checked,
@@ -68,20 +65,19 @@ function ForceAtlas2(props) {
           }}
         >
           Start
-        </button>
+        </SettingsButton>
       ) : (
-        <button
-          type="button"
+        <SettingsButton
           onClick={event => {
             window.network.killForceAtlas2();
             setIsRunning(false);
           }}
         >
           Stop
-        </button>
+        </SettingsButton>
       )}
-    </div>
+    </Test>
   );
 }
 
-export { ForceAtlas2 };
+export default ForceAtlas2;

@@ -1,11 +1,20 @@
 import React from "react";
+import {
+  SettingsButton,
+  SettingsInput,
+  SettingsSubTitle,
+  SettingsSelect,
+  HorizontalLine,
+  SettingsTitle,
+  SettingsSubMenu,
+  SideBar,
+  Test
+} from "../style";
 
-function RandomLayout(props) {
+export default function RandomLayout(props) {
   return (
-    <div className="layoutSettings settings">
-      <p />
-      <button
-        type="button"
+    <Test>
+      <SettingsButton
         onClick={event => {
           window.network.graph.nodes().forEach(n => {
             n.x = Math.random();
@@ -15,9 +24,7 @@ function RandomLayout(props) {
         }}
       >
         Random
-      </button>
-    </div>
+      </SettingsButton>
+    </Test>
   );
 }
-
-export { RandomLayout };

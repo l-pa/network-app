@@ -48,7 +48,7 @@ function NodeDetail(props) {
             <div>
               <HuePicker
                 color={colorInput.current}
-                width={"auto"}
+                width="auto"
                 onChangeComplete={event => {
                   colorInput.current.value = `rgb(${event.rgb.r},${event.rgb.g},${event.rgb.b})`;
                   color.current = `rgb(${event.rgb.r},${event.rgb.g},${event.rgb.b})`;
