@@ -37,9 +37,9 @@ function App() {
   };
 
   useEffect(() => {
-    console.log("called new sigma");
-    window.network = new window.sigma();
-  }, []);
+    console.log("called new sigma"); // TODO
+    if (showNetwork === false) window.network = new window.sigma();
+  }, [showNetwork]);
 
   return (
     <div>

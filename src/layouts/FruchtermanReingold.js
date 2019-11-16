@@ -17,9 +17,7 @@ function FruchtermanReingold(props) {
 
 
   (function(undefined) {
-  
-    if (typeof sigma === "undefined") throw new Error("sigma is not declared");
-  
+    
     // Initialize package:
     window.sigma.utils.pkg("sigma.layouts.fruchtermanReingold");
   

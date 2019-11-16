@@ -15,15 +15,6 @@ const SigmaNodes = props => {
 
   useEffect(() => {
     if (window.network) {
-      // memo
-
-      window.network.settings("defaultNodeType", props.nodeType);
-      window.network.refresh();
-    }
-  }, [props.nodeType]);
-
-  useEffect(() => {
-    if (window.network) {
       Object.keys(props.settings).forEach(function(key) {
         window.network.settings(key, props.settings[key]);
       });

@@ -191,6 +191,7 @@ addEventListener("message", event => {
     while (running) {
       atomicGo(event.data.nodes, event.data.config);
     }
+
   }
 
   if (event.data.run === false) {
