@@ -237,7 +237,7 @@ export default function NoverlapUI(props) {
   }).call(this)
 
   return (
-    <Test>
+    <SettingsSubMenu>
       <SettingsInput step={0.1}
         min={0.1}
         max={10}
@@ -353,6 +353,6 @@ export default function NoverlapUI(props) {
           </SettingsButton>
             )
         }
-        </Test>
+        </SettingsSubMenu>
       );
     }

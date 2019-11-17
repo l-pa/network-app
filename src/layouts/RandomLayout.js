@@ -13,7 +13,7 @@ import {
 
 export default function RandomLayout(props) {
   return (
-    <Test>
+    <SettingsSubMenu>
       <SettingsButton
         onClick={event => {
           window.network.graph.nodes().forEach(n => {
@@ -25,6 +25,6 @@ export default function RandomLayout(props) {
       >
         Random
       </SettingsButton>
-    </Test>
+    </SettingsSubMenu>
   );
 }

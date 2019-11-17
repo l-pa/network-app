@@ -12,6 +12,14 @@ export const SideBar = styled.div`
   flex-direction: column;
   overflow-y: scroll;
   width: 20vw;
+
+  @media only screen and (max-width: 1000px) {
+    width: 35vw;
+  }
+
+  @media only screen and (max-width: 700px) {
+    width: 50vw;
+  }
 `;
 
 export const SettingsButton = styled.button`
@@ -75,6 +83,12 @@ export const SettingsSubMenu = styled.div`
   flex-direction: column;
   margin-left: 2em;
   margin-right: 2em;
+
+  @media only screen and (max-width: 1000px) {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}  
 `;
 
 export const Test = styled.div`

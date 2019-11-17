@@ -65,7 +65,7 @@ function App() {
               </div>
               <div className="border" />
               <div className="right">
-                <h1>Network demo</h1>
+                <h1></h1>
                 <h3>Examples</h3>
                 <div
                   role="button"

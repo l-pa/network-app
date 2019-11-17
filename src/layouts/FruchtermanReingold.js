@@ -328,7 +328,7 @@ export default function FruchtermanReingold(props) {
 
 
   return (
-    <Test>
+    <SettingsSubMenu>
         <SettingsInput ref={autoArea} type="checkbox" value="linLogMode" />
         autoArea
         <SettingsInput
@@ -421,6 +421,6 @@ export default function FruchtermanReingold(props) {
         </SettingsButton>
       )
       }
-    </Test>
+    </SettingsSubMenu>
   );
 }

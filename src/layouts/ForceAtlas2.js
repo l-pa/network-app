@@ -20,7 +20,7 @@ function ForceAtlas2(props) {
   const [isRunning, setIsRunning] = useState(false);
 
   return (
-    <Test>
+    <SettingsSubMenu>
       <SettingsInput ref={linLogMode} type="checkbox" value="linLogMode" />
       linLogMode
       <SettingsInput
@@ -76,7 +76,7 @@ function ForceAtlas2(props) {
           Stop
         </SettingsButton>
       )}
-    </Test>
+    </SettingsSubMenu>
   );
 }
 

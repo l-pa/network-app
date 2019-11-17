@@ -83,7 +83,7 @@ hr {
 
 @media only screen and (max-width: 600px) {
   .center {
-    margin-top: 20em;
+    
     display: flex;
     flex-direction: column;
   }
