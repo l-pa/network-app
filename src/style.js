@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 
 export const HideMenu = styled.button`
@@ -91,6 +92,13 @@ export const SettingsSubMenu = styled.div`
 }  
 `;
 
+export const ToggleButton = styled.button`
+height: 7em;
+flex:auto;
+background-color:#1d2026;
+border-style: none;
+`;
+
 export const Test = styled.div`
   display: flex;
   justify-content: space-between;
@@ -102,3 +110,27 @@ export const Test = styled.div`
   padding-left: 2em;
   padding-right: 2em;
 `;
+
+export function SettingsInputCheckbox(props) {
+  return (
+    <div style={{ display: "flex", alignItems: "baseline" }}>
+      <SettingsInput ref={props.value} type="checkbox" />
+      <SettingsSubTitle>{props.text}</SettingsSubTitle>
+    </div>
+  );
+}
+
+export function SettingsInputRange(props) {
+  return (
+    <div style={{ display: "flex", alignItems: "baseline" }}>
+      <SettingsInput
+        type="range"
+        min={props.min}
+        max={props.max}
+        value={props.value}
+        step={props.step}
+      />
+      <SettingsSubTitle>{props.text}</SettingsSubTitle>
+    </div>
+  );
+}

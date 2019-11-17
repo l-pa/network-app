@@ -8,7 +8,8 @@ import {
   SettingsTitle,
   SettingsSubMenu,
   SideBar,
-  Test
+  SettingsInputCheckbox,
+  SettingsInputRange
 } from "../style";
 
 function ForceAtlas2(props) {
@@ -21,8 +22,8 @@ function ForceAtlas2(props) {
 
   return (
     <SettingsSubMenu>
-      <SettingsInput ref={linLogMode} type="checkbox" value="linLogMode" />
-      linLogMode
+      <SettingsInputCheckbox text="Lin log mod" value={linLogMode} />
+      Scaling ratio
       <SettingsInput
         step={0.1}
         min={0.1}
@@ -33,7 +34,7 @@ function ForceAtlas2(props) {
         }}
         type="number"
       />
-      scalingRatio
+      {scalingRatio.current}
       <SettingsInput
         step={0.1}
         min={0.1}
@@ -60,7 +61,7 @@ function ForceAtlas2(props) {
               } else {
                 window.network.configForceAtlas2(settings);
               }
-              setIsRunning(true);
+              setIsRunning(true);              
             }
           }}
         >
