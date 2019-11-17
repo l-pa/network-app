@@ -14,6 +14,13 @@ export const SideBar = styled.div`
   overflow-y: scroll;
   width: 20vw;
 
+  ${({ show }) =>
+    !show &&
+    `
+    display: none;
+
+`}
+
   @media only screen and (max-width: 1000px) {
     width: 35vw;
   }
@@ -93,10 +100,10 @@ export const SettingsSubMenu = styled.div`
 `;
 
 export const ToggleButton = styled.button`
-height: 7em;
-flex:auto;
-background-color:#1d2026;
-border-style: none;
+  height: 7em;
+  flex: auto;
+  background-color: #1d2026;
+  border-style: none;
 `;
 
 export const Test = styled.div`
