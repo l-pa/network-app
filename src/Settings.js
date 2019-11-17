@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { SketchPicker } from "react-color";
 
 // https://feathericons.com/
@@ -16,7 +16,8 @@ import {
   SettingsTitle,
   SettingsSubMenu,
   SideBar,
-  ToggleButton
+  ToggleButton,
+  SettingsInputCheckbox
 } from "./style";
 
 import NodeDetail from "./NodeDetail";
@@ -66,12 +67,15 @@ export default function Settings(props) {
   const [edgeLabelSizePowRatio, setEdgeLabelSizePowRatio] = useState(0.8);
   const [maxNodeSize, setMaxNodeSize] = useState(10);
   const [labelThreshold, setLabelThreshold] = useState(3);
+  const [showLabel, setShowLabel] = useState(true);
 
   const [showColorPickerNode, setShowColorPickerNode] = useState(false);
   const [showColorPickerEdge, setShowColorPickerEdge] = useState(false);
   const [showColorPickerLabel, setShowColorPickerLabel] = useState(false);
 
   const [showSideMenu, setShowSideMenu] = useState(true);
+
+  const edgeShapeRef = useRef();
 
   const renderLayoutOptions = layout => {
     switch (layout) {
@@ -159,12 +163,30 @@ export default function Settings(props) {
   }, []);
 
   useEffect(() => {
-    if (window.network && props.settings) {
-      Object.keys(props.settings).forEach(function(key) {
-        window.network.settings(key, props.settings[key]);
-      });
-      window.network.refresh();
+    if (props.settings) {
+      console.log("Settings loaded");
+
+      setShape(props.settings.defaultNodeType);
+      setEdgeLabelSize(props.settings.labelSize);
+      setEdgeShape(props.settings.defaultEdgeType);
+      // setEdgeColor(props.settings.defaultEdgeColor)
+      // setNodeColor(props.settings.defaultNodeColor)
+      setLabelColor(props.settings.defaultLabelColor);
+
+      setNodeSize(props.settings.nodeSize);
+
+      setEdgeLabelSizePowRatio(props.settings.labelSizeRatio);
+      setMaxNodeSize(props.settings.maxNodeSize);
+      setLabelThreshold(props.settings.labelThreshold);
+      setShowLabel(props.settings.drawLabels);
     }
+
+    // if (window.network && props.settings) {
+    //   Object.keys(props.settings).forEach(function(key) {
+    //     window.network.settings(key, props.settings[key]);
+    //   });
+    //   window.network.refresh();
+    // }
   }, [props.settings]);
 
   return (
@@ -203,20 +225,23 @@ export default function Settings(props) {
                 filename: "myGraph.json",
                 settings: {
                   defaultNodeType: shape,
+                  defaultNodeColor: nodeColor,
                   labelSizeRatio: edgeLabelSizePowRatio,
                   labelSize: edgeLabelSize,
                   defaultEdgeType: edgeShape,
-                  defaultNodeColor: "#fff",
-                  edgeColor: "default",
                   defaultEdgeColor: edgeColor,
                   labelThreshold,
                   defaultLabelColor: labelColor,
                   maxNodeSize,
+                  nodeSize,
                   borderSize: 2,
                   defaultNodeBorderColor: "#fff",
                   defaultEdgeHoverColor: "#fff",
                   edgeHoverSizeRatio: 3,
-                  edgeHoverColor: "default"
+                  edgeHoverColor: "default",
+                  edgeColor: "default",
+                  minArrowSize: 10,
+                  drawLabels: showLabel
                 }
               });
             }}
@@ -259,6 +284,7 @@ export default function Settings(props) {
           <HorizontalLine />
           <SettingsSubTitle>Node type</SettingsSubTitle>
           <SettingsSelect
+            value={shape}
             onChange={event => {
               setShape(event.target.selectedOptions[0].value);
             }}
@@ -269,6 +295,7 @@ export default function Settings(props) {
           </SettingsSelect>
           <SettingsSubTitle>Node size</SettingsSubTitle>
           <SettingsSelect
+            value={nodeSize}
             onChange={event => {
               setNodeSize(event.target.selectedOptions[0].value);
             }}
@@ -279,6 +306,7 @@ export default function Settings(props) {
           </SettingsSelect>
           <SettingsSubTitle>Max size of nodes</SettingsSubTitle>
           <SettingsInput
+            value={maxNodeSize}
             defaultValue={maxNodeSize}
             step={1}
             min={1}
@@ -294,8 +322,29 @@ export default function Settings(props) {
         <SettingsSubMenu>
           <SettingsTitle>Label</SettingsTitle>
           <HorizontalLine />
+          <div style={{ display: "flex", alignItems: "baseline" }}>
+            <SettingsInput
+              checked={showLabel}
+              type="checkbox"
+              onChange={event => {
+                setShowLabel(event.target.checked);
+              }}
+            />
+            <SettingsSubTitle>Show labels</SettingsSubTitle>
+          </div>
+          {/* <div style={{ display: "flex", alignItems: "baseline" }}>
+            <SettingsInput
+              defaultChecked={true}
+              type="checkbox"
+              onChange={event => {
+                setShowLabel(event.target.checked);
+              }}
+            />
+            <SettingsSubTitle>Same color as node</SettingsSubTitle>
+          </div> */}
           <SettingsSubTitle>Label threshold</SettingsSubTitle>
           <SettingsInput
+            value={labelThreshold}
             defaultValue={labelThreshold}
             step={1}
             min={1}
@@ -314,6 +363,7 @@ export default function Settings(props) {
       */}
           <SettingsSubTitle>Label size</SettingsSubTitle>
           <SettingsSelect
+            value={edgeLabelSize}
             onChange={event => {
               setEdgeLabelSize(event.target.selectedOptions[0].value);
             }}
@@ -323,14 +373,15 @@ export default function Settings(props) {
             })}
           </SettingsSelect>
           <SettingsSubTitle>Label pow ratio</SettingsSubTitle>
-
           {edgeLabelSize === "fixed" ? (
             <div>
               <small>Available with proportional edge label type</small>
             </div>
           ) : (
             <SettingsInput
+              value={edgeLabelSizePowRatio}
               type="number"
+              min={0}
               onChange={event => {
                 setEdgeLabelSizePowRatio(event.target.value);
               }}
@@ -375,6 +426,8 @@ export default function Settings(props) {
 
           <SettingsSubTitle>Edge shape</SettingsSubTitle>
           <SettingsSelect
+            value={edgeShape}
+            ref={edgeShapeRef}
             onChange={event => {
               setEdgeShape(event.target.selectedOptions[0].value);
             }}
@@ -383,23 +436,26 @@ export default function Settings(props) {
               return <option value={o}>{o}</option>;
             })}
           </SettingsSelect>
-
-          <SettingsSubTitle>Directed</SettingsSubTitle>
-          <SettingsInput
-            type="checkbox"
-            onChange={event => {
-              if (event.target.checked) {
-                window.network.graph.edges().forEach(element => {
-                  element.type = "arrow";
-                });
-              } else {
-                window.network.graph.edges().forEach(element => {
-                  element.type = "";
-                });
-              }
-              window.network.refresh();
-            }}
-          />
+          <div style={{ display: "flex", alignItems: "baseline" }}>
+            <SettingsInput
+              type="checkbox"
+              onChange={event => {
+                if (event.target.checked) {
+                  window.network.graph.edges().forEach(element => {
+                    element.type = "arrow";
+                    edgeShapeRef.current.disabled = true;
+                  });
+                } else {
+                  window.network.graph.edges().forEach(element => {
+                    element.type = "";
+                    edgeShapeRef.current.disabled = false;
+                  });
+                }
+                window.network.refresh();
+              }}
+            />
+            <SettingsSubTitle>Directed</SettingsSubTitle>
+          </div>
         </SettingsSubMenu>
 
         <HorizontalLine />
@@ -439,7 +495,8 @@ export default function Settings(props) {
             edgeHoverSizeRatio: 3,
             edgeHoverColor: "default",
             edgeColor: "default",
-            minArrowSize: 10
+            minArrowSize: 10,
+            drawLabels: showLabel
           }}
           showNodeDetail={setShowNodeDetail}
           setSelectedNode={setNodeDetail}

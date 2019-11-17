@@ -63,6 +63,7 @@ export const SettingsSelect = styled.select``;
 
 export const SettingsInput = styled.input`
   display: flex;
+  margin-right: 0.5em;
 `;
 
 export const SettingsTitle = styled.h1`
@@ -121,7 +122,11 @@ export const Test = styled.div`
 export function SettingsInputCheckbox(props) {
   return (
     <div style={{ display: "flex", alignItems: "baseline" }}>
-      <SettingsInput ref={props.value} type="checkbox" />
+      <SettingsInput
+        defaultChecked={props.default}
+        ref={props.value}
+        type="checkbox"
+      />
       <SettingsSubTitle>{props.text}</SettingsSubTitle>
     </div>
   );

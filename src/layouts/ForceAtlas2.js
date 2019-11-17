@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   SettingsButton,
   SettingsInput,
@@ -14,16 +14,40 @@ import {
 
 function ForceAtlas2(props) {
   const linLogMode = useRef(false);
+  const outboundAtraction = useRef(false);
+  const adjustSizes = useRef(false);
+  const strongGravity = useRef(false);
+  const barnesHutEnable = useRef(true);
+  const barnesHutTheta = useRef(0.5);
+
   const scalingRatio = useRef(1);
   const gravity = useRef(1);
   const worker = useRef(false);
 
   const [isRunning, setIsRunning] = useState(false);
 
+  useEffect(() => {
+    return function unmount() {
+      // isRunning false??
+      console.log(isRunning);
+
+      window.network.killForceAtlas2();
+    };
+  }, []);
+
   return (
     <SettingsSubMenu>
       <SettingsInputCheckbox text="Lin log mod" value={linLogMode} />
-      Scaling ratio
+      <SettingsInputCheckbox
+        text="Outbound attraction distribution"
+        value={outboundAtraction}
+      />
+      <SettingsInputCheckbox text="Strong gravity mode" value={strongGravity} />
+      <SettingsInputCheckbox
+        text="BarnesHut Optimize"
+        value={barnesHutEnable}
+        default={true}
+      />
       <SettingsInput
         step={0.1}
         min={0.1}
@@ -34,7 +58,18 @@ function ForceAtlas2(props) {
         }}
         type="number"
       />
-      {scalingRatio.current}
+      Scaling ratio
+      <SettingsInput
+        step={0.1}
+        min={0.1}
+        max={10}
+        defaultValue={barnesHutTheta.current}
+        onChange={event => {
+          barnesHutTheta.current = event.target.value;
+        }}
+        type="number"
+      />
+      BarnesHut Theta
       <SettingsInput
         step={0.1}
         min={0.1}
@@ -51,6 +86,11 @@ function ForceAtlas2(props) {
           onClick={event => {
             const settings = {
               linLogMode: linLogMode.current.checked,
+              outboundAttractionDistribution: outboundAtraction.current.checked,
+              adjustSizes: adjustSizes.current.checked,
+              strongGravityMode: strongGravity.current.checked,
+              barnesHutOptimize: barnesHutEnable.current.checked,
+              barnesHutTheta: barnesHutTheta.current,
               scalingRatio: scalingRatio.current,
               gravity: gravity.current,
               worker: worker.current.checked
@@ -61,7 +101,7 @@ function ForceAtlas2(props) {
               } else {
                 window.network.configForceAtlas2(settings);
               }
-              setIsRunning(true);              
+              setIsRunning(true);
             }
           }}
         >

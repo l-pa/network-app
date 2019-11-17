@@ -27,7 +27,7 @@ export default function NoverlapUI(props) {
   const maxIterations = useRef(100);
   const [isRunning, setIsRunning] = useState(false);
 
-  (function (undefined) {
+  (function(undefined) {
     window.sigma.utils.pkg("sigma.layouts.noverlap");
 
     var settings = {
@@ -60,7 +60,7 @@ export default function NoverlapUI(props) {
 
     function Noverlap() {
       var self = this;
-      this.init = function (sigInst, options) {
+      this.init = function(sigInst, options) {
         options = options || {};
 
         helloWorker = new Worker();
@@ -84,7 +84,7 @@ export default function NoverlapUI(props) {
         }
       };
 
-      this.go = function () {
+      this.go = function() {
         helloWorker.postMessage({
           run: true,
           nodes: this.sigInst.graph.nodes(),
@@ -109,7 +109,7 @@ export default function NoverlapUI(props) {
               instanceNodes[i].dn_x = null;
               instanceNodes[i].dn_y = null;
             }
-            setIsRunning(false)
+            setIsRunning(false);
           }
           //  this.stop();
           this.sigInst.refresh();
@@ -117,12 +117,10 @@ export default function NoverlapUI(props) {
 
         helloWorker.onerror = event => {
           console.log(event);
-
-        }
-
+        };
       };
 
-      this.start = function () {
+      this.start = function() {
         var nodes = this.sigInst.graph.nodes();
 
         var prefix = this.sigInst.renderers[self.config.rendererIndex].options
@@ -143,7 +141,7 @@ export default function NoverlapUI(props) {
         this.go();
       };
 
-      this.stop = function () {
+      this.stop = function() {
         var nodes = this.sigInst.graph.nodes();
 
         if (this.easing) {
@@ -156,7 +154,7 @@ export default function NoverlapUI(props) {
             },
             {
               easing: self.easing,
-              onComplete: function () {
+              onComplete: function() {
                 self.sigInst.refresh();
                 for (var i = 0; i < nodes.length; i++) {
                   nodes[i].dn = null;
@@ -184,17 +182,17 @@ export default function NoverlapUI(props) {
           }
           _eventEmitter[self.sigInst.id].dispatchEvent("stop");
         }
-        helloWorker.terminate()
+        helloWorker.terminate();
       };
 
-      this.kill = function () {
+      this.kill = function() {
         this.sigInst = null;
         this.config = null;
         this.easing = null;
       };
     }
 
-    window.sigma.prototype.configNoverlap = function (config) {
+    window.sigma.prototype.configNoverlap = function(config) {
       var sigInst = window.network;
 
       if (!config) throw new Error('Missing argument: "config"');
@@ -206,7 +204,7 @@ export default function NoverlapUI(props) {
         window.sigma.classes.dispatcher.extend(_eventEmitter[sigInst.id]);
 
         // Binding on kill to clear the references
-        sigInst.bind("kill", function () {
+        sigInst.bind("kill", function() {
           _instance[sigInst.id].kill();
           _instance[sigInst.id] = null;
           _eventEmitter[sigInst.id] = null;
@@ -218,7 +216,7 @@ export default function NoverlapUI(props) {
       return _eventEmitter[sigInst.id];
     };
 
-    window.sigma.prototype.startNoverlap = function (config) {
+    window.sigma.prototype.startNoverlap = function(config) {
       var sigInst = window.network;
 
       if (config) {
@@ -229,130 +227,128 @@ export default function NoverlapUI(props) {
       return _eventEmitter[sigInst.id];
     };
 
-    window.sigma.prototype.isNoverlapRunning = function () {
+    window.sigma.prototype.isNoverlapRunning = function() {
       var sigInst = window.sigma;
 
       return !!_instance[sigInst.id] && _instance[sigInst.id].running;
     };
-  }).call(this)
+  }.call(this));
+
+  useEffect(() => {
+    return function unmount() {
+      helloWorker.terminate();
+    };
+  }, []);
 
   return (
     <SettingsSubMenu>
-      <SettingsInput step={0.1}
+      <SettingsInput
+        step={0.1}
         min={0.1}
         max={10}
         defaultValue={nodeMargin.current}
         onChange={event => {
           nodeMargin.current = event.target.value;
         }}
-        type="number"></SettingsInput>
-
+        type="number"
+      ></SettingsInput>
       nodeMargin
-
-        <SettingsInput step={0.1}
+      <SettingsInput
+        step={0.1}
         min={0.1}
         max={10}
         defaultValue={scaleNodes.current}
         onChange={event => {
           scaleNodes.current = event.target.value;
         }}
-        type="number">
+        type="number"
+      ></SettingsInput>
+      scaleNodes
+      <SettingsInput
+        step={1}
+        min={0}
+        max={10}
+        defaultValue={gridSize.current}
+        onChange={event => {
+          gridSize.current = event.target.value;
+        }}
+        type="number"
+      ></SettingsInput>
+      gridSize
+      <SettingsInput
+        step={0.1}
+        min={0.1}
+        max={10}
+        defaultValue={permittedExpansion.current}
+        onChange={event => {
+          permittedExpansion.current = event.target.value;
+        }}
+        type="number"
+      ></SettingsInput>
+      <SettingsInput
+        disabled
+        step={1}
+        min={0}
+        max={10}
+        defaultValue={rendererIndex.current}
+        onChange={event => {
+          rendererIndex.current = event.target.value;
+        }}
+        type="number"
+      ></SettingsInput>
+      rendererIndex
+      <SettingsInput
+        step={0.1}
+        min={0.1}
+        max={10}
+        defaultValue={speed.current}
+        onChange={event => {
+          speed.current = event.target.value;
+        }}
+        type="number"
+      ></SettingsInput>
+      speed
+      <SettingsInput
+        step={0.1}
+        min={0.1}
+        max={10}
+        defaultValue={maxIterations.current}
+        onChange={event => {
+          maxIterations.current = event.target.value;
+        }}
+        type="number"
+      ></SettingsInput>
+      maxIterations
+      {!isRunning ? (
+        <SettingsButton
+          onClick={event => {
+            var listner = window.network.configNoverlap({
+              nodeMargin: Number.parseFloat(nodeMargin.current),
+              easing: "quadraticInOut",
+              scaleNodes: scaleNodes.current,
+              gridSize: gridSize.current,
+              permittedExpansion: permittedExpansion.current,
+              rendererIndex: rendererIndex.current,
+              speed: speed.current,
+              maxIterations: maxIterations.current
+            });
 
-          </SettingsInput>
-
-
-        scaleNodes
-
-      <SettingsInput step={1}
-          min={0}
-          max={10}
-          defaultValue={gridSize.current}
-          onChange={event => {
-            gridSize.current = event.target.value;
+            window.network.startNoverlap();
+            setIsRunning(true);
           }}
-          type="number">
-
-        </SettingsInput >
-
-        gridSize
-
-      <SettingsInput step={0.1}
-          min={0.1}
-          max={10}
-          defaultValue={permittedExpansion.current}
-          onChange={event => {
-            permittedExpansion.current = event.target.value;
+        >
+          Start
+        </SettingsButton>
+      ) : (
+        <SettingsButton
+          onClick={event => {
+            helloWorker.terminate();
+            setIsRunning(false);
           }}
-          type="number">
-
-        </SettingsInput>
-
-
-        <SettingsInput disabled
-          step={1}
-          min={0}
-          max={10}
-          defaultValue={rendererIndex.current}
-          onChange={event => {
-            rendererIndex.current = event.target.value;
-          }}
-          type="number"></SettingsInput>
-
-        rendererIndex
-
-      <SettingsInput step={0.1}
-          min={0.1}
-          max={10}
-          defaultValue={speed.current}
-          onChange={event => {
-            speed.current = event.target.value;
-          }}
-          type="number">
-
-        </SettingsInput>
-
-        speed
-      <SettingsInput step={0.1}
-          min={0.1}
-          max={10}
-          defaultValue={maxIterations.current}
-          onChange={event => {
-            maxIterations.current = event.target.value;
-          }}
-          type="number">
-
-        </SettingsInput>
-
-        maxIterations
-      {
-          !isRunning ? (
-            <SettingsButton onClick={event => {
-              var listner = window.network.configNoverlap({
-                nodeMargin: Number.parseFloat(nodeMargin.current),
-                easing: "quadraticInOut",
-                scaleNodes: scaleNodes.current,
-                gridSize: gridSize.current,
-                permittedExpansion: permittedExpansion.current,
-                rendererIndex: rendererIndex.current,
-                speed: speed.current,
-                maxIterations: maxIterations.current
-              });
-
-              window.network.startNoverlap();
-              setIsRunning(true)
-            }}>
-              Start
-          </SettingsButton>
-
-          ) : (
-              <SettingsButton onClick={event => {
-                helloWorker.terminate()
-                setIsRunning(false)
-              }}>
-                Stop
-          </SettingsButton>
-            )
-        }
-        </SettingsSubMenu>
-      );
-    }
+        >
+          Stop
+        </SettingsButton>
+      )}
+    </SettingsSubMenu>
+  );
+}

@@ -29,7 +29,6 @@ function Network(props) {
           defaultNodeSizes.current = JSON.parse(
             JSON.stringify(window.network.graph.nodes())
           );
-
           window.network.refresh();
         });
         break;
