@@ -31,14 +31,6 @@ export function register(config) {
       return;
     }
 
-    window.addEventListener("install", event => {
-      event.waitUntil(
-        caches
-          .open(publicUrl)
-          .then(cache => cache.addAll(["/libs/sigma.min.js.js"]))
-      );
-    });
-
     window.addEventListener("load", () => {
       const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
 
