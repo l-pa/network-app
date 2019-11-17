@@ -10,10 +10,11 @@ import Settings from "./Settings";
 // https://medialab.github.io/iwanthue/
 
 function Network(props) {
-  const defaultNodeSizes = useRef([]);
   const settings = useRef();
 
-  const checkFileType = useCallback(() => {
+  const [defaultNodes, setDefaultNodes] = useState([]);
+
+  useEffect(() => {
     switch (props.network.type) {
       case "json":
         window.sigma.parsers.json(props.network.url, window.network, () => {
@@ -25,20 +26,18 @@ function Network(props) {
               }
               props.setLoading(false);
             });
-
-          defaultNodeSizes.current = JSON.parse(
-            JSON.stringify(window.network.graph.nodes())
+          setDefaultNodes(
+            JSON.parse(JSON.stringify(window.network.graph.nodes()))
           );
           window.network.refresh();
         });
         break;
       case "gexf":
         window.sigma.parsers.gexf(props.network.url, window.network, () => {
-          console.log("LOADED");
           props.setLoading(false);
           window.network.refresh();
-          defaultNodeSizes.current = JSON.parse(
-            JSON.stringify(window.network.graph.nodes())
+          setDefaultNodes(
+            JSON.parse(JSON.stringify(window.network.graph.nodes()))
           );
         });
         break;
@@ -62,9 +61,10 @@ function Network(props) {
               window.network.graph.read(parsedGML);
               props.setLoading(false);
               window.network.refresh();
-              defaultNodeSizes.current = JSON.parse(
-                JSON.stringify(window.network.graph.nodes())
+              setDefaultNodes(
+                JSON.parse(JSON.stringify(window.network.graph.nodes()))
               );
+              window.network.refresh();
             }
           }
         };
@@ -75,7 +75,7 @@ function Network(props) {
         console.log("Unsupported file");
         break;
     }
-  }, [props.network]);
+  }, []);
 
   useEffect(() => {
     window.network.addRenderer({
@@ -83,7 +83,6 @@ function Network(props) {
       container: "container"
     });
 
-    checkFileType();
     window.sigma.plugins.dragNodes(
       window.network,
       window.network.renderers[Object.keys(window.network.renderers).length - 1]
@@ -92,7 +91,7 @@ function Network(props) {
     return () => {
       window.sigma.plugins.killDragNodes(window.network);
     };
-  }, [checkFileType]);
+  }, []);
 
   return (
     <div
@@ -101,7 +100,7 @@ function Network(props) {
     >
       <Settings
         settings={settings.current}
-        defaultNodeSizes={defaultNodeSizes.current}
+        defaultNodeSizes={defaultNodes}
         setShowNetwork={props.setShowNetwork}
       />
       {props.loading && <div className="loader">Loading...</div>}

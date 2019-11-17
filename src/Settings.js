@@ -148,7 +148,7 @@ export default function Settings(props) {
         break;
     }
     window.network.refresh();
-  }, [props.defaultNodeSizes, nodeSize]);
+  }, [nodeSize]);
 
   useEffect(() => {
     // TODO
