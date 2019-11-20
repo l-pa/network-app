@@ -14,6 +14,20 @@ function Network(props) {
 
   const [defaultNodes, setDefaultNodes] = useState([]);
 
+  const [lasso, setLasso] = useState();
+
+  const afterLoad = nodes => {
+    setDefaultNodes(JSON.parse(JSON.stringify(nodes)));
+    window.network.refresh();
+
+    setLasso(
+      new window.sigma.plugins.lasso(
+        window.network,
+        window.network.renderers[0]
+      )
+    );
+  };
+
   useEffect(() => {
     switch (props.network.type) {
       case "json":
@@ -26,19 +40,13 @@ function Network(props) {
               }
               props.setLoading(false);
             });
-          setDefaultNodes(
-            JSON.parse(JSON.stringify(window.network.graph.nodes()))
-          );
-          window.network.refresh();
+          afterLoad(window.network.graph.nodes());
         });
         break;
       case "gexf":
         window.sigma.parsers.gexf(props.network.url, window.network, () => {
           props.setLoading(false);
-          window.network.refresh();
-          setDefaultNodes(
-            JSON.parse(JSON.stringify(window.network.graph.nodes()))
-          );
+          afterLoad(window.network.graph.nodes());
         });
         break;
       case "gml":
@@ -60,11 +68,7 @@ function Network(props) {
               });
               window.network.graph.read(parsedGML);
               props.setLoading(false);
-              window.network.refresh();
-              setDefaultNodes(
-                JSON.parse(JSON.stringify(window.network.graph.nodes()))
-              );
-              window.network.refresh();
+              afterLoad(window.network.graph.nodes());
             }
           }
         };
@@ -102,6 +106,7 @@ function Network(props) {
         settings={settings.current}
         defaultNodeSizes={defaultNodes}
         setShowNetwork={props.setShowNetwork}
+        lasso={lasso}
       />
       {props.loading && <div className="loader">Loading...</div>}
     </div>
