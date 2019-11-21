@@ -202,7 +202,7 @@ export default function Settings(props) {
           <img src={showMenu} alt="" style={{ color: "white" }} />
         )}
       </ToggleButton>
-      <SideBar show={showSideMenu}>
+      <SideBar show={showSideMenu} width={20} showScrolY>
         <br />
         <SettingsButton
           onClick={() => {
@@ -212,25 +212,10 @@ export default function Settings(props) {
         >
           Home
         </SettingsButton>
-        <br></br>
+        <br />
         <SettingsButton
           onClick={() => {
             props.lasso.activate();
-
-            props.lasso.bind("selectedNodes", function(event) {
-              var nodes = event.data;
-              console.log(nodes);
-
-              nodes.forEach(element => {
-                window.network.graph.nodes(element.id).type = "pacman";
-              });
-
-              window.network.refresh();
-              // Do whatever you want with those nodes
-
-              // Eventually unactivate the lasso-tool mode
-              props.lasso.deactivate();
-            });
           }}
         >
           Select nodes

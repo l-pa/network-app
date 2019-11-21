@@ -5,7 +5,15 @@ import SigmaNodes from "./SigmaNodes";
 import NodeDetail from "./NodeDetail";
 import "./gmlparse.js";
 
+import NodeGroups from "./NodeGroups";
+
 import Settings from "./Settings";
+import {
+  SideBar,
+  SettingsSubTitle,
+  SettingsTitle,
+  HorizontalLine
+} from "./style";
 
 // https://medialab.github.io/iwanthue/
 
@@ -15,6 +23,8 @@ function Network(props) {
   const [defaultNodes, setDefaultNodes] = useState([]);
 
   const [lasso, setLasso] = useState();
+
+  const [nodeGroups, setNodeGroups] = useState([]);
 
   const afterLoad = nodes => {
     setDefaultNodes(JSON.parse(JSON.stringify(nodes)));
@@ -26,7 +36,31 @@ function Network(props) {
         window.network.renderers[0]
       )
     );
+    setNodeGroups(val => [...val, window.network.graph.nodes()]);
   };
+
+  useEffect(() => {
+    if (lasso) {
+      lasso.bind("selectedNodes", function(event) {
+        const nodes = event.data;
+        setNodeGroups(val => [...val, nodes]);
+        /*
+        nodes.forEach(element => {
+          window.network.graph.nodes(element.id).type = "pacman";
+        });
+*/
+        window.network.refresh();
+        // Do whatever you want with those nodes
+
+        // Eventually unactivate the lasso-tool mode
+        lasso.deactivate();
+      });
+    }
+  }, [lasso]);
+
+  useEffect(() => {
+    console.log(nodeGroups);
+  }, [nodeGroups]);
 
   useEffect(() => {
     switch (props.network.type) {
@@ -100,15 +134,47 @@ function Network(props) {
   return (
     <div
       id="container"
-      style={{ height: "100vh", display: "flex", flexDirection: "row-reverse" }}
+      style={{
+        height: "100vh",
+        display: "flex"
+      }}
     >
-      <Settings
-        settings={settings.current}
-        defaultNodeSizes={defaultNodes}
-        setShowNetwork={props.setShowNetwork}
-        lasso={lasso}
-      />
-      {props.loading && <div className="loader">Loading...</div>}
+      {props.loading && (
+        <div
+          style={{
+            zIndex: 2,
+            display: "block",
+            position: "absolute",
+            left: "50%"
+          }}
+          className="loader"
+          showScrolY
+        >
+          Loading...
+        </div>
+      )}
+      <div
+        style={{
+          display: "flex",
+          width: "100vw",
+          justifyContent: "space-between"
+        }}
+      >
+        <SideBar show width={10}>
+          <br />
+          <SettingsTitle>Groups</SettingsTitle>
+          <HorizontalLine />
+          {nodeGroups.map((e, i) => {
+            return <NodeGroups id={i} nodes={e} />;
+          })}
+        </SideBar>
+        <Settings
+          settings={settings.current}
+          defaultNodeSizes={defaultNodes}
+          setShowNetwork={props.setShowNetwork}
+          lasso={lasso}
+        />
+      </div>
     </div>
   );
 }

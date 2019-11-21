@@ -11,14 +11,19 @@ export const SideBar = styled.div`
   z-index: 1;
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
-  width: 20vw;
+  width: ${props => `${props.width}vw`};
 
   ${({ show }) =>
     !show &&
     `
     display: none;
 
+`}
+
+  ${({ showScrolY }) =>
+    showScrolY &&
+    `
+    overflow-y: scroll;
 `}
 
   @media only screen and (max-width: 1000px) {
