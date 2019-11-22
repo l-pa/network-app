@@ -100,7 +100,7 @@ export default function GroupDetail(props) {
               Change group
             </SettingsButton>
 
-            <SettingsButton
+            {/* <SettingsButton
               onClick={() => {
                 const originalGraph = JSON.parse(
                   JSON.stringify(window.network)
@@ -119,7 +119,7 @@ export default function GroupDetail(props) {
               }}
             >
               Export selection
-            </SettingsButton>
+            </SettingsButton> */}
           </div>
         </div>
       </pre>
