@@ -27,11 +27,11 @@ export const SideBar = styled.div`
 `}
 
   @media only screen and (max-width: 1000px) {
-    width: 35vw;
+    width: 25vw;
   }
 
   @media only screen and (max-width: 700px) {
-    width: 50vw;
+    width: 20vw;
   }
 `;
 
@@ -69,6 +69,7 @@ export const SettingsSelect = styled.select``;
 export const SettingsInput = styled.input`
   display: flex;
   margin-right: 0.5em;
+  width: -webkit-fill-available;
 `;
 
 export const SettingsTitle = styled.h1`

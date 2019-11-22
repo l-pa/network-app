@@ -58,9 +58,7 @@ function Network(props) {
     }
   }, [lasso]);
 
-  useEffect(() => {
-    console.log(nodeGroups);
-  }, [nodeGroups]);
+  useEffect(() => {}, [nodeGroups]);
 
   useEffect(() => {
     switch (props.network.type) {

@@ -20,6 +20,14 @@ import {
   SettingsInputCheckbox
 } from "./style";
 
+import {
+  edgeLabelSizes,
+  edgeShapes,
+  layouts,
+  shapes,
+  nodeSizeArr
+} from "./statArrays";
+
 import NodeDetail from "./NodeDetail";
 
 import ForceAtlas2 from "./layouts/ForceAtlas2";
@@ -29,27 +37,6 @@ import FruchtermanReingold from "./layouts/FruchtermanReingold";
 import SigmaNodes from "./SigmaNodes";
 
 export default function Settings(props) {
-  const shapes = [
-    "def",
-    "pacman",
-    "star",
-    "equilateral",
-    "cross",
-    "diamond",
-    "circle",
-    "square"
-  ];
-  const edgeShapes = ["def", "curve"];
-  const edgeLabelSizes = ["fixed", "proportional"];
-  const layouts = [
-    "Force atlas 2",
-    "Random",
-    "No overlap",
-    "Fruchterman Reingold"
-  ];
-
-  const nodeSizeArr = ["default", "fixed", "degree", "degreeIn", "degreeOut"];
-
   const [shape, setShape] = useState(shapes[0]);
   const [edgeLabelSize, setEdgeLabelSize] = useState(edgeLabelSizes[0]);
   const [edgeShape, setEdgeShape] = useState(edgeShapes[0]);

@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-
-import { SettingsButton } from "./style";
+import GroupDetail from "./GroupDetail";
 
 export default function NodeGroups(props) {
   const Title = styled.h4`
@@ -12,23 +11,33 @@ export default function NodeGroups(props) {
   const Decription = styled.p`
     text-align: center;
     margin: 0;
-    margin-bottom: 10px;
+    padding-bottom: 10px;
   `;
 
   const Group = styled.div`
-    background-color: #acacac;
-    margin-bottom: 1em;
+    background-color: #ff5722;
+    margin-top: 1em;
   `;
+
+  const [label, setLabel] = useState(props.id);
+
+  const changeLabel = customId => {
+    setLabel(customId);
+  };
+
+  const setVisible = val => {
+    setShowGroupDetail(val);
+  };
+
+  const difference = window.network.graph
+    .nodes()
+    .filter(x => !props.nodes.includes(x));
+
+  const [showGroupDetail, setShowGroupDetail] = useState(false);
   return (
     <div
       onClick={() => {
         window.network.graph.nodes().forEach(e => (e.hidden = false));
-
-        console.log(props.nodes);
-
-        const difference = window.network.graph
-          .nodes()
-          .filter(x => !props.nodes.includes(x));
 
         difference.forEach(function(node) {
           node.hidden = true;
@@ -41,18 +50,33 @@ export default function NodeGroups(props) {
       {props.id === 0 ? (
         <Group>
           <Title>All nodes </Title>
-          <Decription>Nodes {props.nodes.length}          </Decription>
+          <Decription>
+            Nodes
+            {props.nodes.length}
+          </Decription>
         </Group>
       ) : (
-        <Group>
-          <Title>Group - {props.id}          </Title>
+        <Group
+          onClick={() => {
+            setShowGroupDetail(true);
+          }}
+        >
+          <Title>{label}</Title>
           <Decription>
-Nodes
-{' '}
-{props.nodes.length}
-{' '}
- </Decription>
+            Nodes
+            {props.nodes.length}
+          </Decription>
         </Group>
+      )}
+      {showGroupDetail && (
+        <GroupDetail
+          id={label}
+          nodes={props.nodes}
+          changeLabel={changeLabel}
+          visible={showGroupDetail}
+          setVisible={setVisible}
+          difference={difference}
+        />
       )}
     </div>
   );

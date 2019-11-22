@@ -2,9 +2,6 @@
   font-family: "Open Sans", Helvetica, sans-serif;
 }
 .window {
-  margin-left: 2em;
-  margin-right: 2em;
-  border-radius: 1em;
   background-color: #22313f;
   z-index: 2;
   word-wrap: break-word;
