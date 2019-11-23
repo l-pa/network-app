@@ -2,10 +2,10 @@
 
 Application for visualisation small or maybe medium networks, works serverless, all computations (not many) depend on client.
 
-This app is using for rendering and most things [SigmaJs](https://github.com/jacomyal/sigma.js) and their plugins.
-Sigma is quite older lib, so I had to change some plugins, to make them work properly, or change functionality for my own purposes. 
+This app is using [SigmaJs](https://github.com/jacomyal/sigma.js) and its plugins for most functionality (rendering etc.).
+Sigma is quite older library, so I had to make changes in some plugins, to make them work properly, or change functionality for my own purposes.
 
-For frontend Im using [React](https://reactjs.org/), it was not the best decision (importing webworkers, PWA static files ...) but it could be worse... now I would use something like [NextJs](https://nextjs.org/) where you're not limited and can configure webpack etc.
+For frontend I'm using [React](https://reactjs.org/), it was not the best decision (importing webworkers, PWA static files ...) but it could be worse... now I would use rather something like [NextJs](https://nextjs.org/) where you're not as limited and you can configure webpack etc.
 
 ![](https://media.giphy.com/media/h9KtiB6DgiS2s/giphy.gif)
 
