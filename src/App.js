@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import Network from "./Network";
 
@@ -8,11 +8,17 @@ function App() {
   const [file, setFile] = useState();
   const [showNetwork, setShowNetwork] = useState(false);
   const [loading, setLoading] = useState(false);
+  const fileName = useRef("graph");
 
   const handleFileRead = e => {
     //   const content = fileReader.result
     console.log(URL.createObjectURL(e));
     setLoading(true);
+    fileName.current = e.name
+      .split(".")
+      .slice(0, -1)
+      .join(".");
+
     try {
       switch (e.name.split(".").pop()) {
         case "gexf":
@@ -65,7 +71,7 @@ function App() {
               </div>
               <div className="border" />
               <div className="right">
-                <h1></h1>
+                <h1 />
                 <h3>Examples</h3>
                 <div
                   role="button"
@@ -77,6 +83,7 @@ function App() {
                         "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/java_packages.json",
                       type: "json"
                     });
+                    fileName.current = "java_packages";
                     setShowNetwork(true);
                   }}
                   className="example"
@@ -94,6 +101,7 @@ function App() {
                         "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/karate.json",
                       type: "json"
                     });
+                    fileName.current = "karate";
                     setShowNetwork(true);
                   }}
                   className="example"
@@ -111,6 +119,7 @@ function App() {
                         "https://raw.githubusercontent.com/dunnock/react-sigma/master/public/upwork.json",
                       type: "json"
                     });
+                    fileName.current = "upwork";
                     setShowNetwork(true);
                   }}
                   className="example"
@@ -127,6 +136,7 @@ function App() {
                         "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/codeminer.gexf",
                       type: "gexf"
                     });
+                    fileName.current = "code_miner";
                     setShowNetwork(true);
                   }}
                   className="example"
@@ -148,6 +158,7 @@ function App() {
             network={file}
             loading={loading}
             setLoading={setLoading}
+            fileName={fileName.current}
           />
         </div>
       )}

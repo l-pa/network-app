@@ -35,7 +35,7 @@ export default function GroupDetail(props) {
 
   return (
     <div className="window">
-      <div
+      {/* <div
         role="button"
         tabIndex="-1"
         className="close"
@@ -44,7 +44,7 @@ export default function GroupDetail(props) {
         }}
       >
         X
-      </div>
+      </div> */}
       <pre style={{ whiteSpace: "pre-wrap" }}>
         <SettingsSubTitle>Group name</SettingsSubTitle>
         <SettingsInput ref={label} defaultValue={props.id} type="text" />
@@ -100,7 +100,7 @@ export default function GroupDetail(props) {
               Change group
             </SettingsButton>
 
-            {/* <SettingsButton
+            <SettingsButton
               onClick={() => {
                 const originalGraph = JSON.parse(
                   JSON.stringify(window.network)
@@ -114,12 +114,31 @@ export default function GroupDetail(props) {
                 });
                 console.log(tmp.graph.nodes());
 
+                tmp.toJSON({
+                  download: true,
+                  pretty: true,
+                  filename: `${label.current.value}.json`,
+                  settings: {
+                    defaultNodeType: shape.current,
+                    defaultNodeColor: color.current,
+                    labelThreshold: 0,
+                    /*  defaultLabelColor: labelColor, */
+                    borderSize: 2,
+                    defaultNodeBorderColor: "#fff",
+                    defaultEdgeHoverColor: "#fff",
+                    edgeHoverSizeRatio: 3,
+                    edgeHoverColor: "default",
+                    edgeColor: "default",
+                    minArrowSize: 10
+                  }
+                });
+
                 //   window.network.graph.read(props.nodes);
                 //  window.network.refresh();
               }}
             >
               Export selection
-            </SettingsButton> */}
+            </SettingsButton>
           </div>
         </div>
       </pre>

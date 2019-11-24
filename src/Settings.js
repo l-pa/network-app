@@ -216,7 +216,7 @@ export default function Settings(props) {
               window.network.toJSON({
                 download: true,
                 pretty: true,
-                filename: "myGraph.json",
+                filename: `${props.fileName}.json`,
                 settings: {
                   defaultNodeType: shape,
                   defaultNodeColor: nodeColor,
@@ -246,7 +246,8 @@ export default function Settings(props) {
             onClick={() => {
               window.network.toGEXF({
                 renderer: window.network.renderers[0],
-                download: true
+                download: true,
+                filename: `${props.fileName}.gexf`
               });
             }}
           >
@@ -256,7 +257,7 @@ export default function Settings(props) {
             onClick={() => {
               window.network.toSVG({
                 download: true,
-                filename: "my-fancy-graph.svg",
+                filename: `${props.fileName}.svg`,
                 labels: true,
                 classes: false,
                 data: true
@@ -264,6 +265,19 @@ export default function Settings(props) {
             }}
           >
             SVG
+          </SettingsButton>
+          <SettingsButton
+            onClick={() => {
+              // Download the rendered graph as an image
+              window.network.renderers[0].snapshot({
+                download: true,
+                format: "png",
+                labels: showLabel,
+                filename: `${props.fileName}.png`
+              });
+            }}
+          >
+            PNG
           </SettingsButton>
         </SettingsSubMenu>
         {nodeDetail && showNodeDetail && (

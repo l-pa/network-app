@@ -26,6 +26,8 @@ function Network(props) {
 
   const [nodeGroups, setNodeGroups] = useState([]);
 
+  const [activeGroup, setActiveGroup] = useState(0);
+
   const afterLoad = nodes => {
     setDefaultNodes(JSON.parse(JSON.stringify(nodes)));
     window.network.refresh();
@@ -59,6 +61,7 @@ function Network(props) {
   }, [lasso]);
 
   useEffect(() => {}, [nodeGroups]);
+  console.log(props);
 
   useEffect(() => {
     switch (props.network.type) {
@@ -162,15 +165,36 @@ function Network(props) {
           <br />
           <SettingsTitle>Groups</SettingsTitle>
           <HorizontalLine />
-          {nodeGroups.map((e, i) => {
-            return <NodeGroups id={i} nodes={e} />;
-          })}
+          <div className="scrollable">
+            {nodeGroups.map((e, i) => {
+              if (i === activeGroup) {
+                return (
+                  <NodeGroups
+                    id={i}
+                    nodes={e}
+                    edgesL={window.network.graph.edges().length}
+                    active
+                    activeGroup={setActiveGroup}
+                  />
+                );
+              }
+              return (
+                <NodeGroups
+                  id={i}
+                  nodes={e}
+                  edgesL={window.network.graph.edges().length}
+                  activeGroup={setActiveGroup}
+                />
+              );
+            })}
+          </div>
         </SideBar>
         <Settings
           settings={settings.current}
           defaultNodeSizes={defaultNodes}
           setShowNetwork={props.setShowNetwork}
           lasso={lasso}
+          fileName={props.fileName}
         />
       </div>
     </div>
