@@ -118,16 +118,15 @@ y: 23.203983306884766
         opacity: "0.45",
         width: "70vw",
         height: "100vh",
-        top: 0,
-        left: "10vw"
+        top: 0
       }}
     >
       <canvas
         id="areaCanvas"
         ref={canvas}
         style={{ zIndex: -2 }}
-        width="100%"
-        height="100%"
+        width={window.innerWidth}
+        height={window.innerHeight}
       />
     </div>
   );
