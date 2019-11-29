@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { SketchPicker } from "react-color";
-
+import * as iwanthue from "iwanthue";
 // https://feathericons.com/
 
 import hideMenu from "./assets/hideMenu.svg";
@@ -273,7 +273,8 @@ export default function Settings(props) {
                 download: true,
                 format: "png",
                 labels: showLabel,
-                filename: `${props.fileName}.png`
+                filename: `${props.fileName}.png`,
+                area: props.groupArea
               });
             }}
           >
@@ -465,7 +466,59 @@ export default function Settings(props) {
             <SettingsSubTitle>Directed</SettingsSubTitle>
           </div>
         </SettingsSubMenu>
+        <HorizontalLine />
+        <SettingsSubMenu>
+          <SettingsTitle>Communities</SettingsTitle>
 
+          <SettingsButton
+            onClick={() => {
+              const nodes = [];
+              window.network.graph.nodes().forEach(element => {
+                nodes.push(element.id);
+              });
+
+              const community = window
+                .jLouvain()
+                .nodes(nodes)
+                .edges(window.network.graph.edges());
+              const result = community();
+              console.log(result);
+              const palette = iwanthue(Math.max(...Object.values(result)) + 1, {
+                clustering: "force-vector",
+                seed: Math.random()
+                  .toString(36)
+                  .substring(7),
+                quality: 100
+              });
+
+              const tmp = {};
+
+              window.network.graph.nodes().forEach(element => {
+                if (result[element.id] in tmp) {
+                  tmp[result[element.id]].push(
+                    window.network.graph.nodes(element.id)
+                  );
+                } else {
+                  tmp[result[element.id]] = [];
+                  tmp[result[element.id]].push(
+                    window.network.graph.nodes(element.id)
+                  );
+                }
+                window.network.graph.nodes(element.id).color =
+                  palette[result[element.id]];
+              });
+              window.network.refresh();
+              props.setNodeGroups([window.network.graph.nodes()]);
+
+              for (let i = 0; i < Math.max(...Object.values(result)) + 1; i++) {
+                // console.log(tmp[i]);
+                props.setNodeGroups(val => [...val, tmp[i]]);
+              }
+            }}
+          >
+            Louvain community detection
+          </SettingsButton>
+        </SettingsSubMenu>
         <HorizontalLine />
         <SettingsSubMenu>
           <SettingsTitle>Layout</SettingsTitle>
