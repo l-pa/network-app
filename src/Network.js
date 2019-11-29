@@ -4,6 +4,7 @@ import "./loader.css";
 import SigmaNodes from "./SigmaNodes";
 import NodeDetail from "./NodeDetail";
 import "./gmlparse.js";
+import GroupCanvas from "./GroupCanvas";
 
 import NodeGroups from "./NodeGroups";
 
@@ -12,8 +13,12 @@ import {
   SideBar,
   SettingsSubTitle,
   SettingsTitle,
-  HorizontalLine
+  HorizontalLine,
+  SettingsInput,
+  SettingsButton,
+  SettingsSubMenu
 } from "./style";
+import GroupDetail from "./GroupDetail";
 
 // https://medialab.github.io/iwanthue/
 
@@ -27,6 +32,8 @@ function Network(props) {
   const [nodeGroups, setNodeGroups] = useState([]);
 
   const [activeGroup, setActiveGroup] = useState(0);
+
+  const [groupArea, setGroupArea] = useState(false);
 
   const afterLoad = nodes => {
     setDefaultNodes(JSON.parse(JSON.stringify(nodes)));
@@ -45,6 +52,7 @@ function Network(props) {
     if (lasso) {
       lasso.bind("selectedNodes", function(event) {
         const nodes = event.data;
+
         setNodeGroups(val => [...val, nodes]);
         /*
         nodes.forEach(element => {
@@ -59,9 +67,6 @@ function Network(props) {
       });
     }
   }, [lasso]);
-
-  useEffect(() => {}, [nodeGroups]);
-  console.log(props);
 
   useEffect(() => {
     switch (props.network.type) {
@@ -122,6 +127,8 @@ function Network(props) {
       container: "container"
     });
 
+    props.renderer.current = props.renderer.current + 1;
+
     window.sigma.plugins.dragNodes(
       window.network,
       window.network.renderers[Object.keys(window.network.renderers).length - 1]
@@ -164,27 +171,55 @@ function Network(props) {
         <SideBar show width={10}>
           <br />
           <SettingsTitle>Groups</SettingsTitle>
+
+          <div style={{ display: "flex", alignItems: "baseline" }}>
+            <SettingsInput
+              type="checkbox"
+              defaultChecked={groupArea}
+              onChange={e => {
+                setGroupArea(e.target.checked);
+              }}
+            />
+            <SettingsSubTitle>Show groups area</SettingsSubTitle>
+          </div>
+
+          <SettingsButton
+            onClick={() => {
+              setNodeGroups([window.network.graph.nodes()]);
+            }}
+          >
+            Delete groups
+          </SettingsButton>
           <HorizontalLine />
           <div className="scrollable">
             {nodeGroups.map((e, i) => {
               if (i === activeGroup) {
                 return (
+                  <div>
+                    <NodeGroups
+                      id={i}
+                      nodes={e}
+                      edgesL={window.network.graph.edges().length}
+                      active
+                      activeGroup={setActiveGroup}
+                    />
+                    {/* <GroupCanvas nodes={e} /> */}
+                  </div>
+                );
+              }
+              return (
+                <div>
                   <NodeGroups
                     id={i}
                     nodes={e}
                     edgesL={window.network.graph.edges().length}
-                    active
                     activeGroup={setActiveGroup}
                   />
-                );
-              }
-              return (
-                <NodeGroups
-                  id={i}
-                  nodes={e}
-                  edgesL={window.network.graph.edges().length}
-                  activeGroup={setActiveGroup}
-                />
+                  {/* TODO USE MEMO !!!!!!!!!!!!!! */}
+                  {groupArea && (
+                    <GroupCanvas nodes={e} renderer={props.renderer} />
+                  )}
+                </div>
               );
             })}
           </div>
@@ -195,6 +230,8 @@ function Network(props) {
           setShowNetwork={props.setShowNetwork}
           lasso={lasso}
           fileName={props.fileName}
+          setNodeGroups={setNodeGroups}
+          groupArea={groupArea}
         />
       </div>
     </div>

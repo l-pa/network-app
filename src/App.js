@@ -10,6 +10,8 @@ function App() {
   const [loading, setLoading] = useState(false);
   const fileName = useRef("graph");
 
+  const renderer = useRef(0);
+
   const handleFileRead = e => {
     //   const content = fileReader.result
     console.log(URL.createObjectURL(e));
@@ -159,6 +161,7 @@ function App() {
             loading={loading}
             setLoading={setLoading}
             fileName={fileName.current}
+            renderer={renderer}
           />
         </div>
       )}
