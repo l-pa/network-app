@@ -188,7 +188,7 @@ function Network(props) {
             onClick={() => {
               window.network.graph.nodes();
               window.network.graph.nodes().forEach(element => {
-                element.color = "#fff";
+                element.color = "#000";
               });
               setNodeGroups([window.network.graph.nodes()]);
             }}
