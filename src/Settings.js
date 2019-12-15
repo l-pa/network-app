@@ -34,6 +34,8 @@ import ForceAtlas2 from "./layouts/ForceAtlas2";
 import RandomLayout from "./layouts/RandomLayout";
 import NoverlapUI from "./layouts/Noverlap";
 import FruchtermanReingold from "./layouts/FruchtermanReingold";
+import Circle from "./layouts/Circle";
+
 import SigmaNodes from "./SigmaNodes";
 
 export default function Settings(props) {
@@ -74,6 +76,8 @@ export default function Settings(props) {
         return <NoverlapUI />;
       case layouts[3]:
         return <FruchtermanReingold />;
+      case layouts[4]:
+        return <Circle />;
       default:
         return null;
     }
@@ -557,7 +561,9 @@ export default function Settings(props) {
             edgeHoverColor: "default",
             edgeColor: "default",
             minArrowSize: 10,
-            drawLabels: showLabel
+            drawLabels: showLabel,
+            maxEdgeSize: 2,
+            minEdgeSize: 0.1
           }}
           showNodeDetail={setShowNodeDetail}
           setSelectedNode={setNodeDetail}

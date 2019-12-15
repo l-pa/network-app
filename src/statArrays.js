@@ -14,7 +14,8 @@ export const layouts = [
   "Force atlas 2",
   "Random",
   "No overlap",
-  "Fruchterman Reingold"
+  "Fruchterman Reingold",
+  "Circle"
 ];
 
 export const nodeSizeArr = [

@@ -100,6 +100,7 @@ function Network(props) {
               const parsedGML = window.gmlParser.parse(
                 text.substring(text.indexOf("graph"))
               );
+              console.log(parsedGML);
 
               let tmp = 0;
               parsedGML.edges.forEach(element => {
@@ -185,6 +186,10 @@ function Network(props) {
 
           <SettingsButton
             onClick={() => {
+              window.network.graph.nodes();
+              window.network.graph.nodes().forEach(element => {
+                element.color = "#fff";
+              });
               setNodeGroups([window.network.graph.nodes()]);
             }}
           >
