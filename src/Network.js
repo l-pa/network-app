@@ -48,6 +48,13 @@ function Network(props) {
     setNodeGroups(val => [...val, window.network.graph.nodes()]);
   };
 
+  const deleteGroup = id => {
+    setNodeGroups(val => val.filter((_, i) => i !== id));
+    window.network.graph.nodes().forEach(e => (e.hidden = false));
+    window.network.refresh();
+    setActiveGroup(0);
+  };
+
   useEffect(() => {
     if (lasso) {
       lasso.bind("selectedNodes", function(event) {
@@ -202,26 +209,39 @@ function Network(props) {
                 return (
                   <div>
                     <NodeGroups
+                      index={i}
                       id={i}
                       nodes={e}
-                      edgesL={window.network.graph.edges().length}
                       active
                       activeGroup={setActiveGroup}
+                      deleteGroup={deleteGroup}
                     />
-                    {/* <GroupCanvas nodes={e} /> */}
+                    {i === 0
+                      ? groupArea &&
+                        i === activeGroup && (
+                          <GroupCanvas
+                            color="#fff"
+                            nodes={e}
+                            renderer={props.renderer}
+                          />
+                        )
+                      : groupArea &&
+                        i === activeGroup && (
+                          <GroupCanvas nodes={e} renderer={props.renderer} />
+                        )}
                   </div>
                 );
               }
               return (
                 <div>
                   <NodeGroups
+                    index={i}
                     id={i}
                     nodes={e}
-                    edgesL={window.network.graph.edges().length}
                     activeGroup={setActiveGroup}
+                    deleteGroup={deleteGroup}
                   />
-                  {/* TODO USE MEMO !!!!!!!!!!!!!! */}
-                  {groupArea && (
+                  {groupArea && activeGroup === 0 && (
                     <GroupCanvas nodes={e} renderer={props.renderer} />
                   )}
                 </div>
@@ -237,6 +257,7 @@ function Network(props) {
           fileName={props.fileName}
           setNodeGroups={setNodeGroups}
           groupArea={groupArea}
+          selectNodesButton={groupArea}
         />
       </div>
     </div>

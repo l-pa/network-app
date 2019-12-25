@@ -101,6 +101,23 @@ export default function GroupDetail(props) {
             </SettingsButton>
 
             <SettingsButton
+              type="button"
+              onClick={() => {
+                props.nodes.forEach(e => {
+                  const { color } = window.network.graph.nodes()[0];
+                  const { shape } = window.network.graph.nodes()[0];
+
+                  e.color = color;
+                  e.type = shape;
+                });
+                props.deleteGroup(props.index);
+                window.network.refresh();
+              }}
+            >
+              Delete group
+            </SettingsButton>
+
+            <SettingsButton
               onClick={() => {
                 const originalGraph = JSON.parse(
                   JSON.stringify(window.network)
@@ -112,7 +129,6 @@ export default function GroupDetail(props) {
                 props.difference.forEach(element => {
                   tmp.graph.dropNode(element.id);
                 });
-                console.log(tmp.graph.nodes());
 
                 tmp.toJSON({
                   download: true,
@@ -133,7 +149,7 @@ export default function GroupDetail(props) {
                   }
                 });
 
-                //   window.network.graph.read(props.nodes);
+                //  window.network.graph.read(props.nodes);
                 //  window.network.refresh();
               }}
             >

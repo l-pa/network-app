@@ -205,6 +205,7 @@ export default function Settings(props) {
         </SettingsButton>
         <br />
         <SettingsButton
+          disabled={props.selectNodesButton}
           onClick={() => {
             props.lasso.activate();
           }}
