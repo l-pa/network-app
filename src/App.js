@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import Network from "./Network";
+import ErrorBoundary from "./ErrorBoundary";
 
 function App() {
   let fileReader;
@@ -50,122 +51,124 @@ function App() {
   }, [showNetwork]);
 
   return (
-    <div>
-      {!showNetwork ? (
-        <div className="App">
-          <div className="intro">
-            <div className="center">
-              <div className="left">
-                <h2>Custom network</h2>
-                <p>GEXF - 1.2+ / JSON / GML</p>
+    <ErrorBoundary>
+      <div>
+        {!showNetwork ? (
+          <div className="App">
+            <div className="intro">
+              <div className="center">
+                <div className="left">
+                  <h2>Custom network</h2>
+                  <p>GEXF - 1.2+ / JSON / GML</p>
 
-                <input
-                  type="file"
-                  accept=".gexf, .json, .gml"
-                  onChange={event => {
-                    fileReader = new FileReader();
-                    fileReader.onloadend = handleFileRead(
-                      event.target.files[0]
-                    );
-                    fileReader.readAsText(event.target.files[0]);
-                  }}
-                />
+                  <input
+                    type="file"
+                    accept=".gexf, .json, .gml"
+                    onChange={event => {
+                      fileReader = new FileReader();
+                      fileReader.onloadend = handleFileRead(
+                        event.target.files[0]
+                      );
+                      fileReader.readAsText(event.target.files[0]);
+                    }}
+                  />
+                </div>
+                <div className="border" />
+                <div className="right">
+                  <h1 />
+                  <h3>Examples</h3>
+                  <div
+                    role="button"
+                    tabIndex="0"
+                    onClick={() => {
+                      setLoading(true);
+                      setFile({
+                        url:
+                          "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/java_packages.json",
+                        type: "json"
+                      });
+                      fileName.current = "java_packages";
+                      setShowNetwork(true);
+                    }}
+                    className="example"
+                  >
+                    <p>Java packages.json</p>
+                    <small>1.5k nodes, 8k edges</small>
+                  </div>
+                  <div
+                    role="button"
+                    tabIndex="-1"
+                    onClick={() => {
+                      setLoading(true);
+                      setFile({
+                        url:
+                          "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/karate.json",
+                        type: "json"
+                      });
+                      fileName.current = "karate";
+                      setShowNetwork(true);
+                    }}
+                    className="example"
+                  >
+                    <p>Zachary's karate club.json</p>
+                    <small>A karate club at a US university in the 1970s</small>
+                  </div>
+                  <div
+                    role="button"
+                    tabIndex="-2"
+                    onClick={() => {
+                      setLoading(true);
+                      setFile({
+                        url:
+                          "https://raw.githubusercontent.com/dunnock/react-sigma/master/public/upwork.json",
+                        type: "json"
+                      });
+                      fileName.current = "upwork";
+                      setShowNetwork(true);
+                    }}
+                    className="example"
+                  >
+                    <p>Network.json</p>
+                  </div>
+                  <div
+                    role="button"
+                    tabIndex="-1"
+                    onClick={() => {
+                      setLoading(true);
+                      setFile({
+                        url:
+                          "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/codeminer.gexf",
+                        type: "gexf"
+                      });
+                      fileName.current = "code_miner";
+                      setShowNetwork(true);
+                    }}
+                    className="example"
+                  >
+                    <p>Java code.GEXF</p>
+                    <small>Source code structure of a Java program</small>
+                    <br />
+                    <small>by S.Heymann & J.Palmier, 2008.</small>
+                  </div>
+                </div>
               </div>
-              <div className="border" />
-              <div className="right">
-                <h1 />
-                <h3>Examples</h3>
-                <div
-                  role="button"
-                  tabIndex="0"
-                  onClick={() => {
-                    setLoading(true);
-                    setFile({
-                      url:
-                        "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/java_packages.json",
-                      type: "json"
-                    });
-                    fileName.current = "java_packages";
-                    setShowNetwork(true);
-                  }}
-                  className="example"
-                >
-                  <p>Java packages.json</p>
-                  <small>1.5k nodes, 8k edges</small>
-                </div>
-                <div
-                  role="button"
-                  tabIndex="-1"
-                  onClick={() => {
-                    setLoading(true);
-                    setFile({
-                      url:
-                        "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/karate.json",
-                      type: "json"
-                    });
-                    fileName.current = "karate";
-                    setShowNetwork(true);
-                  }}
-                  className="example"
-                >
-                  <p>Zachary's karate club.json</p>
-                  <small>A karate club at a US university in the 1970s</small>
-                </div>
-                <div
-                  role="button"
-                  tabIndex="-2"
-                  onClick={() => {
-                    setLoading(true);
-                    setFile({
-                      url:
-                        "https://raw.githubusercontent.com/dunnock/react-sigma/master/public/upwork.json",
-                      type: "json"
-                    });
-                    fileName.current = "upwork";
-                    setShowNetwork(true);
-                  }}
-                  className="example"
-                >
-                  <p>Network.json</p>
-                </div>
-                <div
-                  role="button"
-                  tabIndex="-1"
-                  onClick={() => {
-                    setLoading(true);
-                    setFile({
-                      url:
-                        "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/codeminer.gexf",
-                      type: "gexf"
-                    });
-                    fileName.current = "code_miner";
-                    setShowNetwork(true);
-                  }}
-                  className="example"
-                >
-                  <p>Java code.GEXF</p>
-                  <small>Source code structure of a Java program</small>
-                  <br />
-                  <small>by S.Heymann & J.Palmier, 2008.</small>
-                </div>
-              </div>
+              <div className="loading">{loading && <h2>Loading</h2>}</div>
             </div>
-            <div className="loading">{loading && <h2>Loading</h2>}</div>
           </div>
-        </div>
-      ) : (
-        <div>
-          <Network
-            setShowNetwork={setShowNetwork}
-            network={file}
-            loading={loading}
-            setLoading={setLoading}
-            fileName={fileName.current}
-            renderer={renderer}
-          />
-        </div>
-      )}
-    </div>
+        ) : (
+          <div>
+            <Network
+              setShowNetwork={setShowNetwork}
+              network={file}
+              loading={loading}
+              setLoading={setLoading}
+              fileName={fileName.current}
+              renderer={renderer}
+            />
+          </div>
+        )}
+      </div>
+    </ErrorBoundary>
   );
 }
 
