@@ -65,6 +65,7 @@ export default function GroupDetail(props) {
         <div>
           <SettingsInput
             ref={colorInput}
+            defaultValue={props.nodes[0].color}
             type="text"
             onClick={() => {
               setShowColorPicker(val => !val);
