@@ -7,8 +7,6 @@ Sigma is quite older library, so I had to make changes in some plugins, to make 
 
 For frontend I'm using [React](https://reactjs.org/), it was not the best decision (importing webworkers, PWA static files ...) but it could be worse... now I would use rather something like [NextJs](https://nextjs.org/) where you're not as limited and you can configure webpack etc.
 
-![](https://media.giphy.com/media/h9KtiB6DgiS2s/giphy.gif)
-
 ## Features
 
 - Import GML, Gexf, custom JSON 
