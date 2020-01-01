@@ -37,8 +37,9 @@ export const SideBar = styled.div`
 
 export const SettingsButton = styled.button`
   display: inline-block;
-  margin-left: 2em;
-  margin-right: 2em;
+  margin-top: 1em;
+  margin-left: 1.5em;
+  margin-right: 1.5em;
   padding: 0.5em;
   background-color: #3c5da1;
   border-style: none;
@@ -79,7 +80,7 @@ export const SettingsTitle = styled.h1`
   text-align: center;
   font-size: 1.5em;
   font-weight: bold;
-
+  word-break: break-all;
   padding: 5px;
 `;
 
@@ -87,7 +88,7 @@ export const SettingsSubTitle = styled.h2`
   margin-bottom: 0;
   font-size: 1em;
   font-weight: bold;
-
+  margin-top: 0;
   padding-top: 5px;
   padding-bottom: 5px;
 `;
@@ -96,13 +97,18 @@ export const SettingsSubMenu = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  margin-left: 2em;
-  margin-right: 2em;
+  margin-left: 1.5em;
+  margin-right: 1.5em;
 
   @media only screen and (max-width: 1000px) {
     margin-left: 0;
     margin-right: 0;
   }
+}  
+`;
+
+export const Input = styled.div`
+  margin-top: 1em;
 }  
 `;
 
@@ -127,7 +133,7 @@ export const Test = styled.div`
 
 export function SettingsInputCheckbox(props) {
   return (
-    <div style={{ display: "flex", alignItems: "baseline" }}>
+    <div style={{ display: "flex", alignItems: "center" }}>
       <SettingsInput
         defaultChecked={props.default}
         ref={props.value}
@@ -140,7 +146,7 @@ export function SettingsInputCheckbox(props) {
 
 export function SettingsInputRange(props) {
   return (
-    <div style={{ display: "flex", alignItems: "baseline" }}>
+    <div style={{ display: "flex", alignItems: "center" }}>
       <SettingsInput
         type="range"
         min={props.min}

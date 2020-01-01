@@ -152,6 +152,23 @@ function App() {
                   </div>
                 </div>
               </div>
+              {/* <div className="center">
+                <button
+                  type="button"
+                  className="subButton"
+                  onClick={e => {
+                    e.preventDefault();
+                    window.location.href =
+                      "https://github.com/l-pa/network-app";
+                  }}
+                >
+                  Github
+                </button>
+
+                <button type="button" className="subButton">
+                  License
+                </button>
+              </div> */}
               <div className="loading">{loading && <h2>Loading</h2>}</div>
             </div>
           </div>

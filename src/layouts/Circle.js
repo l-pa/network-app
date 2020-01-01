@@ -41,14 +41,16 @@ export default function Circle(props) {
                      //   const x = r * Math.cos(2 * Math.PI * i / itemsLength);
                       //  const y = r * Math.sin(2 * Math.PI * i / itemsLength);
 
-                        const x = 10 + 10 * Math.cos(2 * Math.PI * i / itemsLength);
-                        const y = 10 + 10 * Math.sin(2 * Math.PI * i / itemsLength);
+                        const x = Number.parseFloat(nodeMargin.current) + Number.parseFloat(nodeMargin.current) * Math.cos(2 * Math.PI * i / itemsLength);
+                        const y =  Number.parseFloat(nodeMargin.current) + Number.parseFloat(nodeMargin.current) * Math.sin(2 * Math.PI * i / itemsLength);
 
                         sortedGraph[i].x = x* 100;
                         sortedGraph[i].y = y * 100;
+                        console.log(sortedGraph[i].x + " " + sortedGraph[i].y);
+                        
+                        window.network.graph.read(sortedGraph)
+                        window.network.refresh();
                     }
-                    window.network.graph.read(sortedGraph)
-                    window.network.refresh();
                 }}
             >
                 Random

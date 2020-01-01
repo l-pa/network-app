@@ -286,16 +286,17 @@ export default function Settings(props) {
             PNG
           </SettingsButton>
         </SettingsSubMenu>
-        {nodeDetail && showNodeDetail && (
-          <div>
-            <NodeDetail node={nodeDetail} setVisibility={setShowNodeDetail} />
-            <hr />
-          </div>
-        )}
+
         <HorizontalLine />
         <SettingsSubMenu>
           <SettingsTitle>Node</SettingsTitle>
           <HorizontalLine />
+          {nodeDetail && showNodeDetail && (
+            <div>
+              <NodeDetail node={nodeDetail} setVisibility={setShowNodeDetail} />
+              <HorizontalLine />
+            </div>
+          )}
           <SettingsSubTitle>Node type</SettingsSubTitle>
           <SettingsSelect
             value={shape}
@@ -474,6 +475,7 @@ export default function Settings(props) {
         <HorizontalLine />
         <SettingsSubMenu>
           <SettingsTitle>Communities</SettingsTitle>
+          <HorizontalLine />
 
           <SettingsButton
             onClick={() => {
@@ -541,7 +543,7 @@ export default function Settings(props) {
               return <option value={o}>{o}</option>;
             })}
           </SettingsSelect>
-          <SettingsSubTitle>Options</SettingsSubTitle>
+          <HorizontalLine />
           {renderLayoutOptions(selectedLayout)}
         </SettingsSubMenu>
         <SigmaNodes

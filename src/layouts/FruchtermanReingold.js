@@ -13,7 +13,9 @@ import {
   SettingsTitle,
   SettingsSubMenu,
   SideBar,
-  Test
+  Test,
+  SettingsInputCheckbox,
+  Input
 } from "../style";
 
 let helloWorker = new Worker();
@@ -331,8 +333,13 @@ export default function FruchtermanReingold(props) {
 
   return (
     <SettingsSubMenu>
-      <SettingsInput ref={autoArea} type="checkbox" value="linLogMode" />
-      autoArea
+      <SettingsInputCheckbox
+        text="Auto area"
+        value={autoArea}
+        default
+      />
+<Input>
+      Area
       <SettingsInput
         step={0.1}
         min={0.1}
@@ -342,8 +349,10 @@ export default function FruchtermanReingold(props) {
           area.current = event.target.value;
         }}
         type="number"
-      />
-      area
+        />
+        </Input>
+        <Input>
+        Gravity
       <SettingsInput
         step={0.1}
         min={0.1}
@@ -353,8 +362,10 @@ export default function FruchtermanReingold(props) {
           gravity.current = event.target.value;
         }}
         type="number"
-      />
-      gravity
+        />
+        </Input>
+        <Input>
+        Speed
       <SettingsInput
         step={0.1}
         min={0.1}
@@ -364,8 +375,10 @@ export default function FruchtermanReingold(props) {
           speed.current = event.target.value;
         }}
         type="number"
-      />
-      speed
+        />
+        </Input>
+        <Input>
+        Iterations
       <SettingsInput
         step={1}
         min={1}
@@ -375,8 +388,8 @@ export default function FruchtermanReingold(props) {
           iterations.current = event.target.value;
         }}
         type="number"
-      />
-      iterations
+        />
+        </Input>
       {!isRunning ? (
         <SettingsButton
           type="button"
