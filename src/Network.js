@@ -120,7 +120,6 @@ function Network(props) {
             }
           }
         };
-
         rawFile.send(null);
         break;
       default:
@@ -141,6 +140,9 @@ function Network(props) {
       window.network,
       window.network.renderers[Object.keys(window.network.renderers).length - 1]
     );
+    window.network.renderers[
+      Object.keys(window.network.renderers).length - 1
+    ].resize();
 
     return () => {
       window.sigma.plugins.killDragNodes(window.network);

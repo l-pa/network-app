@@ -10,6 +10,7 @@ function NodeDetail(props) {
 
   const size = useRef(props.node.data.node.size);
   const [isDeleted, setIsDeleted] = useState(false);
+  console.log(props.node);
 
   return (
     <div className="window">

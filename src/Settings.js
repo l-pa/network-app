@@ -54,7 +54,7 @@ export default function Settings(props) {
   const [showNodeDetail, setShowNodeDetail] = useState(false);
   const [nodeDetail, setNodeDetail] = useState(null);
   const [edgeLabelSizePowRatio, setEdgeLabelSizePowRatio] = useState(0.8);
-  const [maxNodeSize, setMaxNodeSize] = useState(10);
+  const [maxNodeSize, setMaxNodeSize] = useState(3);
   const [labelThreshold, setLabelThreshold] = useState(3);
   const [showLabel, setShowLabel] = useState(true);
 
@@ -566,7 +566,10 @@ export default function Settings(props) {
             minArrowSize: 10,
             drawLabels: showLabel,
             maxEdgeSize: 2,
-            minEdgeSize: 0.1
+            minEdgeSize: 0.1,
+            autoRescale: false,
+            zoomMax: 20,
+            font: "helvetica"
           }}
           showNodeDetail={setShowNodeDetail}
           setSelectedNode={setNodeDetail}
