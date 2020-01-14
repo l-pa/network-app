@@ -568,6 +568,7 @@ export default function Settings(props) {
             maxEdgeSize: 2,
             minEdgeSize: 0.1,
             autoRescale: false,
+            rescaleIgnoreSize: false,
             zoomMax: 20,
             font: "helvetica"
           }}

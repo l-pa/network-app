@@ -35,8 +35,63 @@ function Network(props) {
 
   const [groupArea, setGroupArea] = useState(false);
 
+  const onlyLargestComponent = (nodes, edges) => {
+    let n = nodes;
+    let e = edges;
+    let visited = [];
+    const components = [];
+    function DFS(node) {
+      visited.push(node);
+      edges.forEach(edge => {
+        if (node == edge.source) {
+          if (!visited.includes(edge.target)) {
+            DFS(edge.target);
+          }
+        }
+
+        if (node == edge.target) {
+          if (!visited.includes(edge.source)) {
+            DFS(edge.source);
+          }
+        }
+      });
+    }
+
+    while (nodes.length > 0) {
+      DFS(nodes[0].id);
+      nodes = nodes.filter(el => !visited.includes(el.id));
+      components.push(visited);
+      visited = [];
+    }
+    components.sort(function(a, b) {
+      return b.length - a.length;
+    });
+    console.log(components[0]);
+
+    n = n.filter(node => components[0].includes(node.id));
+    e = edges.filter(edge => components[0].includes(edge.source));
+
+    window.network.graph.clear();
+
+    return {
+      nodes: n,
+      edges: e
+    };
+  };
+
   const afterLoad = nodes => {
     setDefaultNodes(JSON.parse(JSON.stringify(nodes)));
+
+    if (props.largestComponent) {
+      window.network.graph.read(
+        onlyLargestComponent(
+          window.network.graph.nodes(),
+          window.network.graph.edges()
+        )
+      );
+      window.network.refresh();
+    }
+
     window.network.refresh();
 
     setLasso(
@@ -114,7 +169,13 @@ function Network(props) {
                 element.id = tmp;
                 tmp++;
               });
-              window.network.graph.read(parsedGML);
+              if (props.largestComponent) {
+                window.network.graph.read(
+                  onlyLargestComponent(parsedGML.nodes, parsedGML.edges)
+                );
+              } else {
+                window.network.graph.read(parsedGML);
+              }
               props.setLoading(false);
               afterLoad(window.network.graph.nodes());
             }

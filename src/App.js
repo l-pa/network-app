@@ -11,6 +11,8 @@ function App() {
   const [loading, setLoading] = useState(false);
   const fileName = useRef("graph");
 
+  const largestComponent = useRef(false);
+
   const renderer = useRef(0);
 
   const handleFileRead = e => {
@@ -71,6 +73,13 @@ function App() {
                       );
                       fileReader.readAsText(event.target.files[0]);
                     }}
+                  />
+                  <br />
+                  <input
+                    type="checkbox"
+                    defaultChecked={largestComponent.current}
+                    onChange={e =>
+                      (largestComponent.current = e.target.checked)}
                   />
                 </div>
                 <div className="border" />
@@ -176,6 +185,7 @@ function App() {
           <div>
             <Network
               setShowNetwork={setShowNetwork}
+              largestComponent={largestComponent.current}
               network={file}
               loading={loading}
               setLoading={setLoading}
