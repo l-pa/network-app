@@ -54,7 +54,6 @@ export default function Settings(props) {
   const [showNodeDetail, setShowNodeDetail] = useState(false);
   const [nodeDetail, setNodeDetail] = useState(null);
   const [edgeLabelSizePowRatio, setEdgeLabelSizePowRatio] = useState(0.8);
-  const [maxNodeSize, setMaxNodeSize] = useState(3);
   const [labelThreshold, setLabelThreshold] = useState(3);
   const [showLabel, setShowLabel] = useState(true);
 
@@ -65,6 +64,11 @@ export default function Settings(props) {
   const [showSideMenu, setShowSideMenu] = useState(true);
 
   const edgeShapeRef = useRef();
+
+  const [minEdgeSize, setMinEdgeSize] = useState(0.5);
+  const [maxEdgeSize, setMaxEdgeSize] = useState(1);
+  const [minNodeSize, setMinNodeSize] = useState(1);
+  const [maxNodeSize, setMaxNodeSize] = useState(8);
 
   const renderLayoutOptions = layout => {
     switch (layout) {
@@ -231,7 +235,6 @@ export default function Settings(props) {
                   defaultEdgeColor: edgeColor,
                   labelThreshold,
                   defaultLabelColor: labelColor,
-                  maxNodeSize,
                   nodeSize,
                   borderSize: 2,
                   defaultNodeBorderColor: "#fff",
@@ -240,7 +243,11 @@ export default function Settings(props) {
                   edgeHoverColor: "default",
                   edgeColor: "default",
                   minArrowSize: 10,
-                  drawLabels: showLabel
+                  drawLabels: showLabel,
+                  minNodeSize,
+                  maxNodeSize,
+                  minEdgeSize,
+                  maxEdgeSize
                 }
               });
             }}
@@ -319,6 +326,18 @@ export default function Settings(props) {
               return <option value={o}>{o}</option>;
             })}
           </SettingsSelect>
+          <SettingsSubTitle>Min size of nodes</SettingsSubTitle>
+          <SettingsInput
+            value={minNodeSize}
+            defaultValue={minNodeSize}
+            step={1}
+            min={1}
+            max={100}
+            type="number"
+            onChange={event => {
+              setMinNodeSize(event.target.value);
+            }}
+          />
           <SettingsSubTitle>Max size of nodes</SettingsSubTitle>
           <SettingsInput
             value={maxNodeSize}
@@ -471,6 +490,30 @@ export default function Settings(props) {
             />
             <SettingsSubTitle>Directed</SettingsSubTitle>
           </div>
+          <SettingsSubTitle>Min size of edges</SettingsSubTitle>
+          <SettingsInput
+            value={minEdgeSize}
+            defaultValue={minEdgeSize}
+            step={1}
+            min={1}
+            max={100}
+            type="number"
+            onChange={event => {
+              setMinEdgeSize(event.target.value);
+            }}
+          />
+          <SettingsSubTitle>Max size of edges</SettingsSubTitle>
+          <SettingsInput
+            value={maxEdgeSize}
+            defaultValue={maxEdgeSize}
+            step={1}
+            min={1}
+            max={100}
+            type="number"
+            onChange={event => {
+              setMaxEdgeSize(event.target.value);
+            }}
+          />
         </SettingsSubMenu>
         <HorizontalLine />
         <SettingsSubMenu>
@@ -556,7 +599,6 @@ export default function Settings(props) {
             defaultEdgeColor: edgeColor,
             labelThreshold,
             defaultLabelColor: labelColor,
-            maxNodeSize,
             borderSize: 2,
             defaultNodeBorderColor: "#fff",
             defaultEdgeHoverColor: "#fff",
@@ -565,12 +607,14 @@ export default function Settings(props) {
             edgeColor: "default",
             minArrowSize: 10,
             drawLabels: showLabel,
-            maxEdgeSize: 2,
-            minEdgeSize: 0.1,
-            autoRescale: false,
+            autoRescale: true, // TODO
             rescaleIgnoreSize: false,
             zoomMax: 20,
-            font: "helvetica"
+            font: "helvetica",
+            maxNodeSize,
+            minNodeSize,
+            minEdgeSize,
+            maxEdgeSize
           }}
           showNodeDetail={setShowNodeDetail}
           setSelectedNode={setNodeDetail}
