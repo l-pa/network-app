@@ -139,7 +139,7 @@ export default function GroupDetail(props) {
                     defaultNodeType: shape.current,
                     defaultNodeColor: color.current,
                     labelThreshold: 0,
-                    /*  defaultLabelColor: labelColor, */
+                    defaultLabelColor: "#fff",
                     borderSize: 2,
                     defaultNodeBorderColor: "#fff",
                     defaultEdgeHoverColor: "#fff",

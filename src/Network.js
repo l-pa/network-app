@@ -26,6 +26,7 @@ function Network(props) {
   const settings = useRef();
 
   const [defaultNodes, setDefaultNodes] = useState([]);
+  const [defaultEdges, setDefaultEdges] = useState([]);
 
   const [lasso, setLasso] = useState();
 
@@ -79,9 +80,9 @@ function Network(props) {
     };
   };
 
-  const afterLoad = nodes => {
+  const afterLoad = (nodes, edges) => {
     setDefaultNodes(JSON.parse(JSON.stringify(nodes)));
-
+    setDefaultEdges(JSON.parse(JSON.stringify(edges)));
     if (props.largestComponent) {
       window.network.graph.read(
         onlyLargestComponent(
@@ -142,13 +143,13 @@ function Network(props) {
               }
               props.setLoading(false);
             });
-          afterLoad(window.network.graph.nodes());
+          afterLoad(window.network.graph.nodes(), window.network.graph.edges());
         });
         break;
       case "gexf":
         window.sigma.parsers.gexf(props.network.url, window.network, () => {
           props.setLoading(false);
-          afterLoad(window.network.graph.nodes());
+          afterLoad(window.network.graph.nodes(), window.network.graph.edges());
         });
         break;
       case "gml":
@@ -177,7 +178,10 @@ function Network(props) {
                 window.network.graph.read(parsedGML);
               }
               props.setLoading(false);
-              afterLoad(window.network.graph.nodes());
+              afterLoad(
+                window.network.graph.nodes(),
+                window.network.graph.edges()
+              );
             }
           }
         };
@@ -258,7 +262,7 @@ function Network(props) {
             onClick={() => {
               window.network.graph.nodes();
               window.network.graph.nodes().forEach(element => {
-                element.color = "#000";
+                element.color = "#fff";
               });
               setNodeGroups([window.network.graph.nodes()]);
             }}
@@ -315,6 +319,7 @@ function Network(props) {
         <Settings
           settings={settings.current}
           defaultNodeSizes={defaultNodes}
+          defaultEdgeSizes={defaultEdges}
           setShowNetwork={props.setShowNetwork}
           lasso={lasso}
           fileName={props.fileName}

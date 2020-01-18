@@ -91,7 +91,7 @@ export default function FruchtermanReingold(props) {
 
         helloWorker.onmessage = event => {
           console.log(event.data);
-
+          if (event.data.nodes){
           const instanceNodes = this.sigInst.graph.nodes();
 
           // Apply changes
@@ -108,9 +108,9 @@ export default function FruchtermanReingold(props) {
             }
             setIsRunning(false);
           }
-
           this.sigInst.refresh();
         };
+      }
         //  this.stop();
       };
 

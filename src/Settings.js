@@ -25,7 +25,8 @@ import {
   edgeShapes,
   layouts,
   shapes,
-  nodeSizeArr
+  nodeSizeArr,
+  edgeSizeArr
 } from "./statArrays";
 
 import NodeDetail from "./NodeDetail";
@@ -43,11 +44,12 @@ export default function Settings(props) {
   const [edgeLabelSize, setEdgeLabelSize] = useState(edgeLabelSizes[0]);
   const [edgeShape, setEdgeShape] = useState(edgeShapes[0]);
 
-  const [edgeColor, setEdgeColor] = useState("#000");
-  const [nodeColor, setNodeColor] = useState("#000");
+  const [edgeColor, setEdgeColor] = useState("#fff");
+  const [nodeColor, setNodeColor] = useState("#fff");
   const [labelColor, setLabelColor] = useState("#fff");
 
   const [nodeSize, setNodeSize] = useState(nodeSizeArr[0]);
+  const [edgeSize, setEdgeSize] = useState(edgeSizeArr[0]);
 
   const [selectedLayout, setSelectedLayout] = useState(layouts[0]);
 
@@ -64,6 +66,7 @@ export default function Settings(props) {
   const [showSideMenu, setShowSideMenu] = useState(true);
 
   const edgeShapeRef = useRef();
+  const edgeSizeRef = useRef();
 
   const [minEdgeSize, setMinEdgeSize] = useState(0.5);
   const [maxEdgeSize, setMaxEdgeSize] = useState(1);
@@ -146,6 +149,27 @@ export default function Settings(props) {
   }, [nodeSize]);
 
   useEffect(() => {
+    switch (edgeSize) {
+      case "default":
+        for (let i = 0; i < window.network.graph.edges().length; i++) {
+          window.network.graph.edges()[i].size = props.defaultEdgeSizes[i].size;
+        }
+        break;
+      case "sameAsNode":
+        for (let i = 0; i < window.network.graph.edges().length; i++) {
+          const edge = window.network.graph.edges()[i];
+          edge.size = window.network.graph.nodes(edge.source).size;
+        }
+        break;
+
+      default:
+        console.log(props.defaultEdgeSizes);
+        break;
+    }
+    window.network.refresh();
+  }, [edgeSize]);
+
+  useEffect(() => {
     // TODO
 
     window.network.bind("clickNode", node => {
@@ -174,6 +198,10 @@ export default function Settings(props) {
       setMaxNodeSize(props.settings.maxNodeSize);
       setLabelThreshold(props.settings.labelThreshold);
       setShowLabel(props.settings.drawLabels);
+      setMaxEdgeSize(props.settings.maxEdgeSize);
+      setMinEdgeSize(props.settings.minEdgeSize);
+      setMaxNodeSize(props.settings.maxNodeSize);
+      setMinNodeSize(props.settings.minNodeSize);
     }
 
     // if (window.network && props.settings) {
@@ -247,7 +275,8 @@ export default function Settings(props) {
                   minNodeSize,
                   maxNodeSize,
                   minEdgeSize,
-                  maxEdgeSize
+                  maxEdgeSize,
+                  selectedLayout
                 }
               });
             }}
@@ -470,6 +499,20 @@ export default function Settings(props) {
               return <option value={o}>{o}</option>;
             })}
           </SettingsSelect>
+
+          <SettingsSubTitle>Edge size</SettingsSubTitle>
+          <SettingsSelect
+            value={edgeSize}
+            ref={edgeSizeRef}
+            onChange={event => {
+              setEdgeSize(edgeSizeRef.current.value);
+            }}
+          >
+            {edgeSizeArr.map((o, i, a) => {
+              return <option value={o}>{o}</option>;
+            })}
+          </SettingsSelect>
+
           <div style={{ display: "flex", alignItems: "baseline" }}>
             <SettingsInput
               type="checkbox"

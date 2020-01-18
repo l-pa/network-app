@@ -25,3 +25,5 @@ export const nodeSizeArr = [
   "degreeIn",
   "degreeOut"
 ];
+
+export const edgeSizeArr = ["default", "sameAsNode"];

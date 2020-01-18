@@ -75,12 +75,14 @@ function App() {
                     }}
                   />
                   <br />
+                  <br/>
                   <input
                     type="checkbox"
                     defaultChecked={largestComponent.current}
                     onChange={e =>
                       (largestComponent.current = e.target.checked)}
                   />
+                  Largest component
                 </div>
                 <div className="border" />
                 <div className="right">

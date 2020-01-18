@@ -24,7 +24,7 @@ export default function Circle(props) {
         
     return (
         <SettingsSubMenu>
-            <SettingsInput
+            {/* <SettingsInput
                 step={1}
                 min={1}
                 max={1000}
@@ -34,7 +34,7 @@ export default function Circle(props) {
                 }}
                 type="number"
             />
-            Node margin
+            Node margin */}
       <SettingsButton
                 onClick={event => {
 
