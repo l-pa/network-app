@@ -45,7 +45,7 @@ export default function Settings(props) {
   const [edgeShape, setEdgeShape] = useState(edgeShapes[0]);
 
   const [edgeColor, setEdgeColor] = useState("#fff");
-  const [nodeColor, setNodeColor] = useState("#fff");
+  const [nodeColor, setNodeColor] = useState("#000");
   const [labelColor, setLabelColor] = useState("#fff");
 
   const [nodeSize, setNodeSize] = useState(nodeSizeArr[0]);
