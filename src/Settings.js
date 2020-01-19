@@ -36,7 +36,7 @@ import FruchtermanReingold from "./layouts/FruchtermanReingold";
 import Circle from "./layouts/Circle";
 import Rotate from "./layouts/Rotate";
 
-import SigmaNodes from "./SigmaNodes";
+import SigmaSettings from "./SigmaSettings";
 
 export default function Settings(props) {
   const [shape, setShape] = useState(shapes[0]);
@@ -632,7 +632,7 @@ export default function Settings(props) {
           <HorizontalLine />
           {renderLayoutOptions(selectedLayout)}
         </SettingsSubMenu>
-        <SigmaNodes
+        <SigmaSettings
           settings={{
             defaultNodeType: shape,
             defaultNodeColor: nodeColor,
