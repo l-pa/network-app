@@ -1,8 +1,6 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 import "./loader.css";
-import SigmaNodes from "./SigmaNodes";
-import NodeDetail from "./NodeDetail";
 import "./gmlparse.js";
 import GroupCanvas from "./GroupCanvas";
 
@@ -15,10 +13,8 @@ import {
   SettingsTitle,
   HorizontalLine,
   SettingsInput,
-  SettingsButton,
-  SettingsSubMenu
+  SettingsButton
 } from "./style";
-import GroupDetail from "./GroupDetail";
 
 // https://medialab.github.io/iwanthue/
 

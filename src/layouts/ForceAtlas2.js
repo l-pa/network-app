@@ -2,14 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import {
   SettingsButton,
   SettingsInput,
-  SettingsSubTitle,
-  SettingsSelect,
-  HorizontalLine,
-  SettingsTitle,
   SettingsSubMenu,
-  SideBar,
   SettingsInputCheckbox,
-  SettingsInputRange,
   Input
 } from "../style";
 

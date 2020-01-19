@@ -15,7 +15,8 @@ export const layouts = [
   "Random",
   "No overlap",
   "Fruchterman Reingold",
-  "Circle"
+  "Circle",
+  "Rotate"
 ];
 
 export const nodeSizeArr = [

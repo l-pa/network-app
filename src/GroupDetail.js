@@ -1,28 +1,14 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import "./NodeDetail.css";
 import { HuePicker } from "react-color";
 import {
-  HideMenu,
   SettingsButton,
   SettingsInput,
   SettingsSubTitle,
-  SettingsSelect,
-  HorizontalLine,
-  SettingsTitle,
-  SettingsSubMenu,
-  SideBar,
-  ToggleButton,
-  SettingsInputCheckbox
+  SettingsSelect
 } from "./style";
 
-import {
-  edgeLabelSizes,
-  edgeShapes,
-  layouts,
-  shapes,
-  nodeSizeArr
-} from "./statArrays";
-import SigmaNodes from "./SigmaNodes";
+import { shapes } from "./statArrays";
 
 export default function GroupDetail(props) {
   const [showColorPicker, setShowColorPicker] = useState(false);

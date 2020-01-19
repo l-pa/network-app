@@ -7,7 +7,6 @@ import hideMenu from "./assets/hideMenu.svg";
 import showMenu from "./assets/showMenu.svg";
 
 import {
-  HideMenu,
   SettingsButton,
   SettingsInput,
   SettingsSubTitle,
@@ -16,8 +15,7 @@ import {
   SettingsTitle,
   SettingsSubMenu,
   SideBar,
-  ToggleButton,
-  SettingsInputCheckbox
+  ToggleButton
 } from "./style";
 
 import {
@@ -36,6 +34,7 @@ import RandomLayout from "./layouts/RandomLayout";
 import NoverlapUI from "./layouts/Noverlap";
 import FruchtermanReingold from "./layouts/FruchtermanReingold";
 import Circle from "./layouts/Circle";
+import Rotate from "./layouts/Rotate";
 
 import SigmaNodes from "./SigmaNodes";
 
@@ -85,6 +84,8 @@ export default function Settings(props) {
         return <FruchtermanReingold />;
       case layouts[4]:
         return <Circle />;
+      case layouts[5]:
+        return <Rotate />;
       default:
         return null;
     }
@@ -146,7 +147,7 @@ export default function Settings(props) {
         break;
     }
     window.network.refresh();
-  }, [nodeSize]);
+  }, [nodeSize, props.defaultNodeSizes]);
 
   useEffect(() => {
     switch (edgeSize) {
@@ -163,11 +164,10 @@ export default function Settings(props) {
         break;
 
       default:
-        console.log(props.defaultEdgeSizes);
         break;
     }
     window.network.refresh();
-  }, [edgeSize]);
+  }, [edgeSize, props.defaultEdgeSizes]);
 
   useEffect(() => {
     // TODO
