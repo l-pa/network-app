@@ -57,7 +57,7 @@ export default function Circle(props) {
                     window.network.refresh();
                 }}
             >
-                Random
+                Start
       </SettingsButton>
         </SettingsSubMenu>
     );
