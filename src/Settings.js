@@ -33,7 +33,6 @@ import ForceAtlas2 from "./layouts/ForceAtlas2";
 import RandomLayout from "./layouts/RandomLayout";
 import NoverlapUI from "./layouts/Noverlap";
 import FruchtermanReingold from "./layouts/FruchtermanReingold";
-import SigmaNodes from "./SigmaNodes";
 
 import Circle from "./layouts/Circle";
 import Rotate from "./layouts/Rotate";
