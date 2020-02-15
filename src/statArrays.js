@@ -1,5 +1,5 @@
 export const shapes = [
-  "def",
+  "circle",
   "pacman",
   "star",
   "equilateral",

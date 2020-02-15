@@ -175,7 +175,6 @@ export default function Settings(props) {
     window.network.bind("clickNode", node => {
       setShowNodeDetail(true);
       setNodeDetail(node);
-      console.log(node);
     });
 
     //  window.network.bind("overNode", node => {});

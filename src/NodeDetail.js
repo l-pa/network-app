@@ -10,7 +10,6 @@ function NodeDetail(props) {
 
   const size = useRef(props.node.data.node.size);
   const [isDeleted, setIsDeleted] = useState(false);
-  console.log(props.node);
 
   return (
     <div className="window">
@@ -112,8 +111,6 @@ function NodeDetail(props) {
             //   </button>
           }
         </div>
-        {console.log(props.node.data.node)}
-
         {/* {JSON.stringify(props.node.data.node, null, 2)} */}
       </pre>
     </div>

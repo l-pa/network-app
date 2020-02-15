@@ -49,7 +49,9 @@ function App() {
 
   useEffect(() => {
     console.log("called new sigma"); // TODO
-    if (showNetwork === false) window.network = new window.sigma();
+    if (showNetwork === false) {
+      window.network = new window.sigma();
+    }
   }, [showNetwork]);
 
   return (
@@ -62,7 +64,6 @@ function App() {
                 <div className="left">
                   <h2>Custom network</h2>
                   <p>GEXF - 1.2+ / JSON / GML</p>
-
                   <input
                     type="file"
                     accept=".gexf, .json, .gml"
@@ -75,12 +76,13 @@ function App() {
                     }}
                   />
                   <br />
-                  <br/>
+                  <br />
                   <input
                     type="checkbox"
                     defaultChecked={largestComponent.current}
                     onChange={e =>
-                      (largestComponent.current = e.target.checked)}
+                      (largestComponent.current = e.target.checked)
+                    }
                   />
                   Largest component
                 </div>
@@ -159,6 +161,23 @@ function App() {
                     <small>Source code structure of a Java program</small>
                     <br />
                     <small>by S.Heymann & J.Palmier, 2008.</small>
+                  </div>
+                  <div
+                    role="button"
+                    tabIndex="-1"
+                    onClick={() => {
+                      setLoading(true);
+                      setFile({
+                        url: "igo",
+                        type: "igo"
+                      });
+                      fileName.current = "IG";
+                      setShowNetwork(true);
+                    }}
+                    className="example"
+                  >
+                    <p>Instagram test</p>
+                    <small>😂🤣😃😃😄😆😆😉😊😋😎😘</small>
                   </div>
                 </div>
               </div>

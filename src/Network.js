@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 import "./loader.css";
 import "./gmlparse.js";
+import { ToastContainer, toast } from "react-toastify";
 import GroupCanvas from "./GroupCanvas";
 
 import NodeGroups from "./NodeGroups";
@@ -16,7 +17,7 @@ import {
   SettingsButton
 } from "./style";
 
-// https://medialab.github.io/iwanthue/
+import "react-toastify/dist/ReactToastify.css";
 
 function Network(props) {
   const settings = useRef();
@@ -31,6 +32,8 @@ function Network(props) {
   const [activeGroup, setActiveGroup] = useState(0);
 
   const [groupArea, setGroupArea] = useState(false);
+
+  const edgeCount = useRef(0);
 
   const onlyLargestComponent = (nodes, edges) => {
     let n = nodes;
@@ -183,6 +186,59 @@ function Network(props) {
         };
         rawFile.send(null);
         break;
+      case "igo":
+        toast.info(`Fetch`, {
+          position: toast.POSITION.BOTTOM_CENTER,
+          autoClose: 1000
+        });
+
+        fetch("http://localhost:5000/followings")
+          .then(res => res.json())
+          .then(followings => {
+            let tmp = 1;
+            const edges = [];
+            for (let i = 0; i < followings.length - 1; i++) {
+              const element = followings[i];
+              edges.push({
+                id: tmp,
+                source: followings[followings.length - 1].id,
+                target: element.id
+              });
+              tmp += 1;
+            }
+
+            fetch("http://localhost:5000/followers")
+              .then(res => res.json())
+              .then(followers => {
+                let tmp = edges.length + 1;
+
+                for (let i = 0; i < followers.length - 1; i++) {
+                  const element = followers[i];
+                  edges.push({
+                    id: tmp,
+                    target: followers[followers.length - 1].id,
+                    source: element.id
+                  });
+                  tmp += 1;
+                }
+
+                const eq = followers.filter(
+                  item1 => !followings.some(item2 => item2.id === item1.id)
+                );
+
+                window.network.graph.read({
+                  nodes: [...followings, ...eq],
+                  edges
+                });
+                props.setLoading(false);
+                window.CustomShapes.init(window.network);
+                window.network.refresh();
+                edgeCount.current = tmp;
+                console.log(edgeCount.current);
+              });
+          });
+
+        break;
       default:
         console.log("Unsupported file");
         break;
@@ -218,6 +274,7 @@ function Network(props) {
         display: "flex"
       }}
     >
+      <ToastContainer />
       {props.loading && (
         <div
           style={{
