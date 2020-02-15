@@ -34,7 +34,15 @@ import ForceAtlas2 from "./layouts/ForceAtlas2";
 import RandomLayout from "./layouts/RandomLayout";
 import NoverlapUI from "./layouts/Noverlap";
 import FruchtermanReingold from "./layouts/FruchtermanReingold";
+<<<<<<< Updated upstream
 import SigmaNodes from "./SigmaNodes";
+=======
+import Circle from "./layouts/Circle";
+import Rotate from "./layouts/Rotate";
+import Orthogonal from "./layouts/Orthogonal";
+
+import SigmaSettings from "./SigmaSettings";
+>>>>>>> Stashed changes
 
 export default function Settings(props) {
   const [shape, setShape] = useState(shapes[0]);
@@ -74,6 +82,12 @@ export default function Settings(props) {
         return <NoverlapUI />;
       case layouts[3]:
         return <FruchtermanReingold />;
+      case layouts[4]:
+        return <Circle />;
+      case layouts[5]:
+        return <Rotate />;
+      case layouts[6]:
+        return <Orthogonal />;
       default:
         return null;
     }
