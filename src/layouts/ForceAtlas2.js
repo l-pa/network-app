@@ -2,14 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import {
   SettingsButton,
   SettingsInput,
-  SettingsSubTitle,
-  SettingsSelect,
-  HorizontalLine,
-  SettingsTitle,
   SettingsSubMenu,
-  SideBar,
   SettingsInputCheckbox,
-  SettingsInputRange
+  Input
 } from "../style";
 
 function ForceAtlas2(props) {
@@ -46,41 +41,47 @@ function ForceAtlas2(props) {
       <SettingsInputCheckbox
         text="BarnesHut Optimize"
         value={barnesHutEnable}
-        default={true}
+        default
       />
-      <SettingsInput
-        step={0.1}
-        min={0.1}
-        max={10}
-        defaultValue={scalingRatio.current}
-        onChange={event => {
-          scalingRatio.current = event.target.value;
-        }}
-        type="number"
-      />
-      Scaling ratio
-      <SettingsInput
-        step={0.1}
-        min={0.1}
-        max={10}
-        defaultValue={barnesHutTheta.current}
-        onChange={event => {
-          barnesHutTheta.current = event.target.value;
-        }}
-        type="number"
-      />
-      BarnesHut Theta
-      <SettingsInput
-        step={0.1}
-        min={0.1}
-        max={50}
-        defaultValue={gravity.current}
-        onChange={event => {
-          gravity.current = event.target.value;
-        }}
-        type="number"
-      />
-      gravity
+      <Input>
+        Scaling ratio
+        <SettingsInput
+          step={0.1}
+          min={0.1}
+          max={10}
+          defaultValue={scalingRatio.current}
+          onChange={event => {
+            scalingRatio.current = event.target.value;
+          }}
+          type="number"
+        />
+      </Input>
+      <Input>
+        BarnesHut Theta
+        <SettingsInput
+          step={0.1}
+          min={0.1}
+          max={10}
+          defaultValue={barnesHutTheta.current}
+          onChange={event => {
+            barnesHutTheta.current = event.target.value;
+          }}
+          type="number"
+        />
+      </Input>
+      <Input>
+        Gravity
+        <SettingsInput
+          step={0.1}
+          min={0.1}
+          max={50}
+          defaultValue={gravity.current}
+          onChange={event => {
+            gravity.current = event.target.value;
+          }}
+          type="number"
+        />
+      </Input>
       {!isRunning ? (
         <SettingsButton
           onClick={event => {

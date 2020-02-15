@@ -54,7 +54,6 @@ export default function NodeGroups(props) {
             node.hidden = true;
           });
 
-          // Refresh the renderers to make the changes effective:
           window.network.refresh();
           props.activeGroup(props.id);
         }}
@@ -66,7 +65,7 @@ export default function NodeGroups(props) {
               {" "}
               Nodes 
 {' '}
-<Bold>{props.nodes.length}</Bold>              {" "}
+<Bold>{props.nodes.length}</Bold>{" "}
             </Decription>
           </Group>
         ) : (
@@ -82,15 +81,13 @@ export default function NodeGroups(props) {
               {" "}
               Nodes 
 {' '}
-<Bold>{props.nodes.length}</Bold>              {" "}
+<Bold>{props.nodes.length}</Bold>{" "}
             </Decription>
-            {/* <Decription>
-            {" "}
-            Edges <Bold>{props.edgesL}</Bold>            {" "}
-          </Decription> */}
             {props.active && (
               <GroupDetail
                 id={label}
+                index={props.index}
+                deleteGroup={props.deleteGroup}
                 nodes={props.nodes}
                 changeLabel={changeLabel}
                 visible={props.active}

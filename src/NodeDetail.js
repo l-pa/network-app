@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import "./NodeDetail.css";
 import { HuePicker } from "react-color";
 
@@ -10,6 +10,7 @@ function NodeDetail(props) {
 
   const size = useRef(props.node.data.node.size);
   const [isDeleted, setIsDeleted] = useState(false);
+  console.log(props.node);
 
   return (
     <div className="window">

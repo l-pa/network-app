@@ -29,6 +29,26 @@ hr {
   flex-direction: column;
 }
 
+.subButton{
+  background-color: #1d2026; /* Green */
+  border: none;
+  padding: 15px 50px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin:  0 3em 3em 0;
+  cursor: pointer;
+  color: white; 
+  border: 3px solid #3c5da1;
+  transition-duration: 0.2s;
+}
+
+.subButton:hover{
+  background-color: #3c5da1;
+  color: white;
+}
+
 .border {
   border: 2px solid white;
   height: 30em;
@@ -102,4 +122,12 @@ hr {
 ::-webkit-scrollbar {
   width: 0px;
   background: transparent; /* make scrollbar transparent */
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+  text-align: center;
 }

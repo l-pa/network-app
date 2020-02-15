@@ -1,28 +1,14 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import "./NodeDetail.css";
 import { HuePicker } from "react-color";
 import {
-  HideMenu,
   SettingsButton,
   SettingsInput,
   SettingsSubTitle,
-  SettingsSelect,
-  HorizontalLine,
-  SettingsTitle,
-  SettingsSubMenu,
-  SideBar,
-  ToggleButton,
-  SettingsInputCheckbox
+  SettingsSelect
 } from "./style";
 
-import {
-  edgeLabelSizes,
-  edgeShapes,
-  layouts,
-  shapes,
-  nodeSizeArr
-} from "./statArrays";
-import SigmaNodes from "./SigmaNodes";
+import { shapes } from "./statArrays";
 
 export default function GroupDetail(props) {
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -65,6 +51,7 @@ export default function GroupDetail(props) {
         <div>
           <SettingsInput
             ref={colorInput}
+            defaultValue={props.nodes[0].color}
             type="text"
             onClick={() => {
               setShowColorPicker(val => !val);
@@ -101,6 +88,23 @@ export default function GroupDetail(props) {
             </SettingsButton>
 
             <SettingsButton
+              type="button"
+              onClick={() => {
+                props.nodes.forEach(e => {
+                  const { color } = window.network.graph.nodes()[0];
+                  const { shape } = window.network.graph.nodes()[0];
+
+                  e.color = color;
+                  e.type = shape;
+                });
+                props.deleteGroup(props.index);
+                window.network.refresh();
+              }}
+            >
+              Delete group
+            </SettingsButton>
+
+            <SettingsButton
               onClick={() => {
                 const originalGraph = JSON.parse(
                   JSON.stringify(window.network)
@@ -112,7 +116,6 @@ export default function GroupDetail(props) {
                 props.difference.forEach(element => {
                   tmp.graph.dropNode(element.id);
                 });
-                console.log(tmp.graph.nodes());
 
                 tmp.toJSON({
                   download: true,
@@ -122,7 +125,7 @@ export default function GroupDetail(props) {
                     defaultNodeType: shape.current,
                     defaultNodeColor: color.current,
                     labelThreshold: 0,
-                    /*  defaultLabelColor: labelColor, */
+                    defaultLabelColor: "#fff",
                     borderSize: 2,
                     defaultNodeBorderColor: "#fff",
                     defaultEdgeHoverColor: "#fff",
@@ -133,7 +136,7 @@ export default function GroupDetail(props) {
                   }
                 });
 
-                //   window.network.graph.read(props.nodes);
+                //  window.network.graph.read(props.nodes);
                 //  window.network.refresh();
               }}
             >

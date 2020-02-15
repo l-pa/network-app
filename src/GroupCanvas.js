@@ -62,16 +62,17 @@ export default function GroupCanvas(props) {
           }
         }
       }
-
-      ctx.fillStyle = hull[0].color;
+      if (props.color) {
+        ctx.fillStyle = props.color;
+      } else {
+        ctx.fillStyle = hull[0].color;
+      }
       //   ctx.fillRect(0, 0, 100, 1000);
       ctx.beginPath();
       ctx.moveTo(
         hull[0][`renderer${props.renderer.current}:x`],
         hull[0][`renderer${props.renderer.current}:y`]
       );
-      console.log(nodes[0]);
-
       for (let i = 1; i < hull.length; i++) {
         const element = hull[i];
         ctx.lineTo(
@@ -125,8 +126,8 @@ y: 23.203983306884766
         id="areaCanvas"
         ref={canvas}
         style={{ zIndex: -2 }}
-        width="1000"
-        height="1000"
+        width={window.innerWidth}
+        height={window.innerHeight}
       />
     </div>
   );

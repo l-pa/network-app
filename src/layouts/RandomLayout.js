@@ -1,15 +1,5 @@
 import React from "react";
-import {
-  SettingsButton,
-  SettingsInput,
-  SettingsSubTitle,
-  SettingsSelect,
-  HorizontalLine,
-  SettingsTitle,
-  SettingsSubMenu,
-  SideBar,
-  Test
-} from "../style";
+import { SettingsButton, SettingsSubMenu } from "../style";
 
 export default function RandomLayout(props) {
   return (

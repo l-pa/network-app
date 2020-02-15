@@ -7,7 +7,6 @@ import hideMenu from "./assets/hideMenu.svg";
 import showMenu from "./assets/showMenu.svg";
 
 import {
-  HideMenu,
   SettingsButton,
   SettingsInput,
   SettingsSubTitle,
@@ -16,8 +15,7 @@ import {
   SettingsTitle,
   SettingsSubMenu,
   SideBar,
-  ToggleButton,
-  SettingsInputCheckbox
+  ToggleButton
 } from "./style";
 
 import {
@@ -25,7 +23,8 @@ import {
   edgeShapes,
   layouts,
   shapes,
-  nodeSizeArr
+  nodeSizeArr,
+  edgeSizeArr
 } from "./statArrays";
 
 import NodeDetail from "./NodeDetail";
@@ -34,33 +33,31 @@ import ForceAtlas2 from "./layouts/ForceAtlas2";
 import RandomLayout from "./layouts/RandomLayout";
 import NoverlapUI from "./layouts/Noverlap";
 import FruchtermanReingold from "./layouts/FruchtermanReingold";
-<<<<<<< Updated upstream
 import SigmaNodes from "./SigmaNodes";
-=======
+
 import Circle from "./layouts/Circle";
 import Rotate from "./layouts/Rotate";
 import Orthogonal from "./layouts/Orthogonal";
 
 import SigmaSettings from "./SigmaSettings";
->>>>>>> Stashed changes
 
 export default function Settings(props) {
   const [shape, setShape] = useState(shapes[0]);
   const [edgeLabelSize, setEdgeLabelSize] = useState(edgeLabelSizes[0]);
   const [edgeShape, setEdgeShape] = useState(edgeShapes[0]);
 
-  const [edgeColor, setEdgeColor] = useState("#000");
+  const [edgeColor, setEdgeColor] = useState("#fff");
   const [nodeColor, setNodeColor] = useState("#000");
   const [labelColor, setLabelColor] = useState("#fff");
 
   const [nodeSize, setNodeSize] = useState(nodeSizeArr[0]);
+  const [edgeSize, setEdgeSize] = useState(edgeSizeArr[0]);
 
   const [selectedLayout, setSelectedLayout] = useState(layouts[0]);
 
   const [showNodeDetail, setShowNodeDetail] = useState(false);
   const [nodeDetail, setNodeDetail] = useState(null);
   const [edgeLabelSizePowRatio, setEdgeLabelSizePowRatio] = useState(0.8);
-  const [maxNodeSize, setMaxNodeSize] = useState(10);
   const [labelThreshold, setLabelThreshold] = useState(3);
   const [showLabel, setShowLabel] = useState(true);
 
@@ -71,6 +68,12 @@ export default function Settings(props) {
   const [showSideMenu, setShowSideMenu] = useState(true);
 
   const edgeShapeRef = useRef();
+  const edgeSizeRef = useRef();
+
+  const [minEdgeSize, setMinEdgeSize] = useState(0.5);
+  const [maxEdgeSize, setMaxEdgeSize] = useState(1);
+  const [minNodeSize, setMinNodeSize] = useState(1);
+  const [maxNodeSize, setMaxNodeSize] = useState(8);
 
   const renderLayoutOptions = layout => {
     switch (layout) {
@@ -149,7 +152,27 @@ export default function Settings(props) {
         break;
     }
     window.network.refresh();
-  }, [nodeSize]);
+  }, [nodeSize, props.defaultNodeSizes]);
+
+  useEffect(() => {
+    switch (edgeSize) {
+      case "default":
+        for (let i = 0; i < window.network.graph.edges().length; i++) {
+          window.network.graph.edges()[i].size = props.defaultEdgeSizes[i].size;
+        }
+        break;
+      case "sameAsNode":
+        for (let i = 0; i < window.network.graph.edges().length; i++) {
+          const edge = window.network.graph.edges()[i];
+          edge.size = window.network.graph.nodes(edge.source).size;
+        }
+        break;
+
+      default:
+        break;
+    }
+    window.network.refresh();
+  }, [edgeSize, props.defaultEdgeSizes]);
 
   useEffect(() => {
     // TODO
@@ -180,6 +203,10 @@ export default function Settings(props) {
       setMaxNodeSize(props.settings.maxNodeSize);
       setLabelThreshold(props.settings.labelThreshold);
       setShowLabel(props.settings.drawLabels);
+      setMaxEdgeSize(props.settings.maxEdgeSize);
+      setMinEdgeSize(props.settings.minEdgeSize);
+      setMaxNodeSize(props.settings.maxNodeSize);
+      setMinNodeSize(props.settings.minNodeSize);
     }
 
     // if (window.network && props.settings) {
@@ -215,6 +242,7 @@ export default function Settings(props) {
         </SettingsButton>
         <br />
         <SettingsButton
+          disabled={props.selectNodesButton}
           onClick={() => {
             props.lasso.activate();
           }}
@@ -240,7 +268,6 @@ export default function Settings(props) {
                   defaultEdgeColor: edgeColor,
                   labelThreshold,
                   defaultLabelColor: labelColor,
-                  maxNodeSize,
                   nodeSize,
                   borderSize: 2,
                   defaultNodeBorderColor: "#fff",
@@ -249,7 +276,12 @@ export default function Settings(props) {
                   edgeHoverColor: "default",
                   edgeColor: "default",
                   minArrowSize: 10,
-                  drawLabels: showLabel
+                  drawLabels: showLabel,
+                  minNodeSize,
+                  maxNodeSize,
+                  minEdgeSize,
+                  maxEdgeSize,
+                  selectedLayout
                 }
               });
             }}
@@ -295,16 +327,17 @@ export default function Settings(props) {
             PNG
           </SettingsButton>
         </SettingsSubMenu>
-        {nodeDetail && showNodeDetail && (
-          <div>
-            <NodeDetail node={nodeDetail} setVisibility={setShowNodeDetail} />
-            <hr />
-          </div>
-        )}
+
         <HorizontalLine />
         <SettingsSubMenu>
           <SettingsTitle>Node</SettingsTitle>
           <HorizontalLine />
+          {nodeDetail && showNodeDetail && (
+            <div>
+              <NodeDetail node={nodeDetail} setVisibility={setShowNodeDetail} />
+              <HorizontalLine />
+            </div>
+          )}
           <SettingsSubTitle>Node type</SettingsSubTitle>
           <SettingsSelect
             value={shape}
@@ -327,6 +360,18 @@ export default function Settings(props) {
               return <option value={o}>{o}</option>;
             })}
           </SettingsSelect>
+          <SettingsSubTitle>Min size of nodes</SettingsSubTitle>
+          <SettingsInput
+            value={minNodeSize}
+            defaultValue={minNodeSize}
+            step={1}
+            min={1}
+            max={100}
+            type="number"
+            onChange={event => {
+              setMinNodeSize(event.target.value);
+            }}
+          />
           <SettingsSubTitle>Max size of nodes</SettingsSubTitle>
           <SettingsInput
             value={maxNodeSize}
@@ -459,6 +504,20 @@ export default function Settings(props) {
               return <option value={o}>{o}</option>;
             })}
           </SettingsSelect>
+
+          <SettingsSubTitle>Edge size</SettingsSubTitle>
+          <SettingsSelect
+            value={edgeSize}
+            ref={edgeSizeRef}
+            onChange={event => {
+              setEdgeSize(edgeSizeRef.current.value);
+            }}
+          >
+            {edgeSizeArr.map((o, i, a) => {
+              return <option value={o}>{o}</option>;
+            })}
+          </SettingsSelect>
+
           <div style={{ display: "flex", alignItems: "baseline" }}>
             <SettingsInput
               type="checkbox"
@@ -479,10 +538,35 @@ export default function Settings(props) {
             />
             <SettingsSubTitle>Directed</SettingsSubTitle>
           </div>
+          <SettingsSubTitle>Min size of edges</SettingsSubTitle>
+          <SettingsInput
+            value={minEdgeSize}
+            defaultValue={minEdgeSize}
+            step={1}
+            min={1}
+            max={100}
+            type="number"
+            onChange={event => {
+              setMinEdgeSize(event.target.value);
+            }}
+          />
+          <SettingsSubTitle>Max size of edges</SettingsSubTitle>
+          <SettingsInput
+            value={maxEdgeSize}
+            defaultValue={maxEdgeSize}
+            step={1}
+            min={1}
+            max={100}
+            type="number"
+            onChange={event => {
+              setMaxEdgeSize(event.target.value);
+            }}
+          />
         </SettingsSubMenu>
         <HorizontalLine />
         <SettingsSubMenu>
           <SettingsTitle>Communities</SettingsTitle>
+          <HorizontalLine />
 
           <SettingsButton
             onClick={() => {
@@ -550,10 +634,10 @@ export default function Settings(props) {
               return <option value={o}>{o}</option>;
             })}
           </SettingsSelect>
-          <SettingsSubTitle>Options</SettingsSubTitle>
+          <HorizontalLine />
           {renderLayoutOptions(selectedLayout)}
         </SettingsSubMenu>
-        <SigmaNodes
+        <SigmaSettings
           settings={{
             defaultNodeType: shape,
             defaultNodeColor: nodeColor,
@@ -563,7 +647,6 @@ export default function Settings(props) {
             defaultEdgeColor: edgeColor,
             labelThreshold,
             defaultLabelColor: labelColor,
-            maxNodeSize,
             borderSize: 2,
             defaultNodeBorderColor: "#fff",
             defaultEdgeHoverColor: "#fff",
@@ -571,7 +654,15 @@ export default function Settings(props) {
             edgeHoverColor: "default",
             edgeColor: "default",
             minArrowSize: 10,
-            drawLabels: showLabel
+            drawLabels: showLabel,
+            autoRescale: true, // TODO
+            rescaleIgnoreSize: false,
+            zoomMax: 20,
+            font: "helvetica",
+            maxNodeSize,
+            minNodeSize,
+            minEdgeSize,
+            maxEdgeSize
           }}
           showNodeDetail={setShowNodeDetail}
           setSelectedNode={setNodeDetail}

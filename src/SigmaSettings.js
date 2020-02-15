@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const SigmaNodes = props => {
+const SigmaSettings = props => {
   useEffect(() => {
     // TODO
 
@@ -25,4 +25,4 @@ const SigmaNodes = props => {
   return null;
 };
 
-export default SigmaNodes;
+export default SigmaSettings;

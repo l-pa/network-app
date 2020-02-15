@@ -12,7 +12,8 @@ import {
   SettingsTitle,
   SettingsSubMenu,
   SideBar,
-  Test
+  Test,
+  Input
 } from "../style";
 
 let helloWorker = new Worker();
@@ -242,6 +243,8 @@ export default function NoverlapUI(props) {
 
   return (
     <SettingsSubMenu>
+      <Input>
+      Node margin
       <SettingsInput
         step={0.1}
         min={0.1}
@@ -251,8 +254,12 @@ export default function NoverlapUI(props) {
           nodeMargin.current = event.target.value;
         }}
         type="number"
-      ></SettingsInput>
-      nodeMargin
+        >
+
+      </SettingsInput>
+        </Input>
+        <Input>
+        Scale nodes
       <SettingsInput
         step={0.1}
         min={0.1}
@@ -262,8 +269,10 @@ export default function NoverlapUI(props) {
           scaleNodes.current = event.target.value;
         }}
         type="number"
-      ></SettingsInput>
-      scaleNodes
+        ></SettingsInput>
+        </Input>
+       <Input>
+        Grid size
       <SettingsInput
         step={1}
         min={0}
@@ -273,8 +282,10 @@ export default function NoverlapUI(props) {
           gridSize.current = event.target.value;
         }}
         type="number"
-      ></SettingsInput>
-      gridSize
+        ></SettingsInput>
+      </Input>
+      <Input>
+      Permitted expansion
       <SettingsInput
         step={0.1}
         min={0.1}
@@ -284,19 +295,10 @@ export default function NoverlapUI(props) {
           permittedExpansion.current = event.target.value;
         }}
         type="number"
-      ></SettingsInput>
-      <SettingsInput
-        disabled
-        step={1}
-        min={0}
-        max={10}
-        defaultValue={rendererIndex.current}
-        onChange={event => {
-          rendererIndex.current = event.target.value;
-        }}
-        type="number"
-      ></SettingsInput>
-      rendererIndex
+        ></SettingsInput>
+        </Input>
+        <Input>
+        Speed
       <SettingsInput
         step={0.1}
         min={0.1}
@@ -306,8 +308,10 @@ export default function NoverlapUI(props) {
           speed.current = event.target.value;
         }}
         type="number"
-      ></SettingsInput>
-      speed
+        ></SettingsInput>
+        </Input>
+        <Input>
+        Max iterations
       <SettingsInput
         step={0.1}
         min={0.1}
@@ -317,11 +321,11 @@ export default function NoverlapUI(props) {
           maxIterations.current = event.target.value;
         }}
         type="number"
-      ></SettingsInput>
-      maxIterations
+        ></SettingsInput>
+        </Input>
       {!isRunning ? (
         <SettingsButton
-          onClick={event => {
+        onClick={event => {
             var listner = window.network.configNoverlap({
               nodeMargin: Number.parseFloat(nodeMargin.current),
               easing: "quadraticInOut",
