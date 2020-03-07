@@ -40,7 +40,7 @@ function atomicGo(nodes, edges, config) {
       continue
     }
     x += x_p
-    if (i % 5 === 0) {
+    if (i % (5 * Math.sqrt(nodes.length)) === 0) {
       y += y_p
       x = 0
     }
