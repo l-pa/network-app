@@ -130,23 +130,48 @@ function Network(props) {
   useEffect(() => {
     switch (props.network.type) {
       case "json":
-        window.sigma.parsers.json(props.network.url, window.network, () => {
-          fetch(props.network.url)
-            .then(res => res.json())
-            .then(res => {
-              if (res.settings) {
-                settings.current = res.settings;
-              }
-              props.setLoading(false);
-            });
-          afterLoad(window.network.graph.nodes(), window.network.graph.edges());
-        });
+        window.sigma.parsers.json(
+          props.network.url,
+          window.network,
+          () => {
+            fetch(props.network.url)
+              .then(res => res.json())
+              .then(res => {
+                if (res.settings) {
+                  settings.current = res.settings;
+                }
+                props.setLoading(false);
+              });
+            afterLoad(
+              window.network.graph.nodes(),
+              window.network.graph.edges()
+            );
+          },
+          () => {
+            props.setLoading(false);
+            props.setShowNetwork(false);
+
+            props.setErrorMessage("JSON Parse error");
+          }
+        );
         break;
       case "gexf":
-        window.sigma.parsers.gexf(props.network.url, window.network, () => {
-          props.setLoading(false);
-          afterLoad(window.network.graph.nodes(), window.network.graph.edges());
-        });
+        window.sigma.parsers.gexf(
+          props.network.url,
+          window.network,
+          () => {
+            props.setLoading(false);
+            afterLoad(
+              window.network.graph.nodes(),
+              window.network.graph.edges()
+            );
+          },
+          () => {
+            props.setLoading(false);
+            props.setShowNetwork(false);
+            props.setErrorMessage("GEXF Parse error");
+          }
+        );
         break;
       case "gml":
         var rawFile = new XMLHttpRequest();
@@ -156,9 +181,17 @@ function Network(props) {
             if (rawFile.status === 200 || rawFile.status === 0) {
               // console.log(rawFile.responseText[0]);
               const text = rawFile.responseText;
-              const parsedGML = window.gmlParser.parse(
-                text.substring(text.indexOf("graph"))
-              );
+              let parsedGML = {};
+              try {
+                parsedGML = window.gmlParser.parse(
+                  text.substring(text.indexOf("graph"))
+                );
+              } catch (error) {
+                props.setLoading(false);
+                props.setShowNetwork(false);
+                props.setErrorMessage("GML Parse error");
+                return;
+              }
               console.log(parsedGML);
 
               let tmp = 0;
@@ -185,6 +218,8 @@ function Network(props) {
         break;
       default:
         console.log("Unsupported file");
+        props.setLoading(false);
+        props.setShowNetwork(false);
         break;
     }
   }, []);

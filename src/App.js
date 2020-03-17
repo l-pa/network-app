@@ -9,6 +9,9 @@ function App() {
   const [file, setFile] = useState();
   const [showNetwork, setShowNetwork] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [errorMessage, setErrorMessage] = useState(""); // use error boundaries
+
   const fileName = useRef("graph");
 
   const largestComponent = useRef(false);
@@ -52,6 +55,10 @@ function App() {
     if (showNetwork === false) window.network = new window.sigma();
   }, [showNetwork]);
 
+  useEffect(() => {
+    console.log(errorMessage);
+  }, [errorMessage]);
+
   return (
     <ErrorBoundary>
       <div>
@@ -62,7 +69,6 @@ function App() {
                 <div className="left">
                   <h2>Custom network</h2>
                   <p>GEXF - 1.2+ / JSON / GML</p>
-
                   <input
                     type="file"
                     accept=".gexf, .json, .gml"
@@ -75,12 +81,13 @@ function App() {
                     }}
                   />
                   <br />
-                  <br/>
+                  <br />
                   <input
                     type="checkbox"
                     defaultChecked={largestComponent.current}
                     onChange={e =>
-                      (largestComponent.current = e.target.checked)}
+                      (largestComponent.current = e.target.checked)
+                    }
                   />
                   Largest component
                 </div>
@@ -180,6 +187,9 @@ function App() {
                 </button>
               </div> */}
               <div className="loading">{loading && <h2>Loading</h2>}</div>
+              <div className="loading">
+                <h2>{errorMessage}</h2>
+              </div>
             </div>
           </div>
         ) : (
@@ -192,6 +202,7 @@ function App() {
               setLoading={setLoading}
               fileName={fileName.current}
               renderer={renderer}
+              setErrorMessage={setErrorMessage}
             />
           </div>
         )}
