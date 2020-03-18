@@ -117,6 +117,7 @@ export const ToggleButton = styled.button`
   flex: auto;
   background-color: #1d2026;
   border-style: none;
+  z-index: 1;
 `;
 
 export const Test = styled.div`
