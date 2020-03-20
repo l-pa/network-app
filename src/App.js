@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
-import Network from "./Network";
+import Network from "./components/Network";
 import ErrorBoundary from "./ErrorBoundary";
 
 function App() {
@@ -93,7 +93,8 @@ function App() {
                     type="checkbox"
                     defaultChecked={largestComponent.current}
                     onChange={e =>
-                      (largestComponent.current = e.target.checked)}
+                      (largestComponent.current = e.target.checked)
+                    }
                   />
                   Largest component
                 </div>

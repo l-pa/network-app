@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import "./App.css";
-import "./loader.css";
-import "./gmlparse.js";
+import "../App.css";
+import "../loader.css";
+import "../gmlparse.js";
 import GroupCanvas from "./GroupCanvas";
 
-import hideMenu from "./assets/hideMenu.svg";
-import showMenu from "./assets/showMenu.svg";
+import hideMenu from "../assets/hideMenu.svg";
+import showMenu from "../assets/showMenu.svg";
 
 import NodeGroups from "./NodeGroups";
 
@@ -19,7 +19,7 @@ import {
   SettingsInput,
   SettingsButton,
   ToggleButton
-} from "./style";
+} from "../style";
 
 // https://medialab.github.io/iwanthue/
 

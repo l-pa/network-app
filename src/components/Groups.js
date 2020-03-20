@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import hideMenu from "./assets/hideMenu.svg";
-import showMenu from "./assets/showMenu.svg";
+import hideMenu from "../assets/hideMenu.svg";
+import showMenu from "../assets/showMenu.svg";
 
 import {
   SettingsButton,
@@ -13,7 +13,7 @@ import {
   SettingsSubMenu,
   SideBar,
   ToggleButton
-} from "./style";
+} from "../style";
 
 import NodeGroups from "./NodeGroups";
 import GroupCanvas from "./GroupCanvas";

@@ -3,8 +3,8 @@ import { SketchPicker } from "react-color";
 import * as iwanthue from "iwanthue";
 // https://feathericons.com/
 
-import hideMenu from "./assets/hideMenu.svg";
-import showMenu from "./assets/showMenu.svg";
+import hideMenu from "../assets/hideMenu.svg";
+import showMenu from "../assets/showMenu.svg";
 
 import {
   SettingsButton,
@@ -16,7 +16,7 @@ import {
   SettingsSubMenu,
   SideBar,
   ToggleButton
-} from "./style";
+} from "../style";
 
 import {
   edgeLabelSizes,
@@ -25,16 +25,16 @@ import {
   shapes,
   nodeSizeArr,
   edgeSizeArr
-} from "./statArrays";
+} from "../statArrays";
 
 import NodeDetail from "./NodeDetail";
 
-import ForceAtlas2 from "./layouts/ForceAtlas2";
-import RandomLayout from "./layouts/RandomLayout";
-import NoverlapUI from "./layouts/Noverlap";
-import FruchtermanReingold from "./layouts/FruchtermanReingold";
-import Circle from "./layouts/Circle";
-import Rotate from "./layouts/Rotate";
+import ForceAtlas2 from "../layouts/ForceAtlas2";
+import RandomLayout from "../layouts/RandomLayout";
+import NoverlapUI from "../layouts/Noverlap";
+import FruchtermanReingold from "../layouts/FruchtermanReingold";
+import Circle from "../layouts/Circle";
+import Rotate from "../layouts/Rotate";
 
 import SigmaSettings from "./SigmaSettings";
 
