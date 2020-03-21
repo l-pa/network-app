@@ -299,9 +299,11 @@ export default function Settings(props) {
               window.network.toSVG({
                 download: true,
                 filename: `${props.fileName}.svg`,
-                labels: true,
+                labels: showLabel,
                 classes: false,
-                data: true
+                data: true,
+                width: 1500,
+                height: 1000
               });
             }}
           >
