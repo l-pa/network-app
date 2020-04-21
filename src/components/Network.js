@@ -1,20 +1,25 @@
 import React, { useState, useRef, useEffect } from "react";
-import "./App.css";
-import "./loader.css";
-import "./gmlparse.js";
+import "../App.css";
+import "../loader.css";
+import "../gmlparse.js";
 import GroupCanvas from "./GroupCanvas";
+
+import hideMenu from "../assets/hideMenu.svg";
+import showMenu from "../assets/showMenu.svg";
 
 import NodeGroups from "./NodeGroups";
 
 import Settings from "./Settings";
+import Groups from "./Groups";
 import {
   SideBar,
   SettingsSubTitle,
   SettingsTitle,
   HorizontalLine,
   SettingsInput,
-  SettingsButton
-} from "./style";
+  SettingsButton,
+  ToggleButton
+} from "../style";
 
 // https://medialab.github.io/iwanthue/
 
@@ -24,11 +29,9 @@ function Network(props) {
   const [defaultNodes, setDefaultNodes] = useState([]);
   const [defaultEdges, setDefaultEdges] = useState([]);
 
-  const [lasso, setLasso] = useState();
-
   const [nodeGroups, setNodeGroups] = useState([]);
 
-  const [activeGroup, setActiveGroup] = useState(0);
+  const [lasso, setLasso] = useState();
 
   const [groupArea, setGroupArea] = useState(false);
 
@@ -100,13 +103,6 @@ function Network(props) {
     setNodeGroups(val => [...val, window.network.graph.nodes()]);
   };
 
-  const deleteGroup = id => {
-    setNodeGroups(val => val.filter((_, i) => i !== id));
-    window.network.graph.nodes().forEach(e => (e.hidden = false));
-    window.network.refresh();
-    setActiveGroup(0);
-  };
-
   useEffect(() => {
     if (lasso) {
       lasso.bind("selectedNodes", function(event) {
@@ -130,23 +126,48 @@ function Network(props) {
   useEffect(() => {
     switch (props.network.type) {
       case "json":
-        window.sigma.parsers.json(props.network.url, window.network, () => {
-          fetch(props.network.url)
-            .then(res => res.json())
-            .then(res => {
-              if (res.settings) {
-                settings.current = res.settings;
-              }
-              props.setLoading(false);
-            });
-          afterLoad(window.network.graph.nodes(), window.network.graph.edges());
-        });
+        window.sigma.parsers.json(
+          props.network.url,
+          window.network,
+          () => {
+            fetch(props.network.url)
+              .then(res => res.json())
+              .then(res => {
+                if (res.settings) {
+                  settings.current = res.settings;
+                }
+                props.setLoading(false);
+              });
+            afterLoad(
+              window.network.graph.nodes(),
+              window.network.graph.edges()
+            );
+          },
+          () => {
+            props.setLoading(false);
+            props.setShowNetwork(false);
+
+            props.setErrorMessage("JSON Parse error");
+          }
+        );
         break;
       case "gexf":
-        window.sigma.parsers.gexf(props.network.url, window.network, () => {
-          props.setLoading(false);
-          afterLoad(window.network.graph.nodes(), window.network.graph.edges());
-        });
+        window.sigma.parsers.gexf(
+          props.network.url,
+          window.network,
+          () => {
+            props.setLoading(false);
+            afterLoad(
+              window.network.graph.nodes(),
+              window.network.graph.edges()
+            );
+          },
+          () => {
+            props.setLoading(false);
+            props.setShowNetwork(false);
+            props.setErrorMessage("GEXF Parse error");
+          }
+        );
         break;
       case "gml":
         var rawFile = new XMLHttpRequest();
@@ -156,9 +177,17 @@ function Network(props) {
             if (rawFile.status === 200 || rawFile.status === 0) {
               // console.log(rawFile.responseText[0]);
               const text = rawFile.responseText;
-              const parsedGML = window.gmlParser.parse(
-                text.substring(text.indexOf("graph"))
-              );
+              let parsedGML = {};
+              try {
+                parsedGML = window.gmlParser.parse(
+                  text.substring(text.indexOf("graph"))
+                );
+              } catch (error) {
+                props.setLoading(false);
+                props.setShowNetwork(false);
+                props.setErrorMessage("GML Parse error");
+                return;
+              }
               console.log(parsedGML);
 
               let tmp = 0;
@@ -185,6 +214,8 @@ function Network(props) {
         break;
       default:
         console.log("Unsupported file");
+        props.setLoading(false);
+        props.setShowNetwork(false);
         break;
     }
   }, []);
@@ -239,79 +270,13 @@ function Network(props) {
           justifyContent: "space-between"
         }}
       >
-        <SideBar show width={10}>
-          <br />
-          <SettingsTitle>Groups</SettingsTitle>
-
-          <div style={{ display: "flex", alignItems: "baseline" }}>
-            <SettingsInput
-              type="checkbox"
-              defaultChecked={groupArea}
-              onChange={e => {
-                setGroupArea(e.target.checked);
-              }}
-            />
-            <SettingsSubTitle>Show groups area</SettingsSubTitle>
-          </div>
-
-          <SettingsButton
-            onClick={() => {
-              window.network.graph.nodes();
-              window.network.graph.nodes().forEach(element => {
-                element.color = "#fff";
-              });
-              setNodeGroups([window.network.graph.nodes()]);
-            }}
-          >
-            Delete groups
-          </SettingsButton>
-          <HorizontalLine />
-          <div className="scrollable">
-            {nodeGroups.map((e, i) => {
-              if (i === activeGroup) {
-                return (
-                  <div>
-                    <NodeGroups
-                      index={i}
-                      id={i}
-                      nodes={e}
-                      active
-                      activeGroup={setActiveGroup}
-                      deleteGroup={deleteGroup}
-                    />
-                    {i === 0
-                      ? groupArea &&
-                        i === activeGroup && (
-                          <GroupCanvas
-                            color="#fff"
-                            nodes={e}
-                            renderer={props.renderer}
-                          />
-                        )
-                      : groupArea &&
-                        i === activeGroup && (
-                          <GroupCanvas nodes={e} renderer={props.renderer} />
-                        )}
-                  </div>
-                );
-              }
-              return (
-                <div>
-                  <NodeGroups
-                    index={i}
-                    id={i}
-                    nodes={e}
-                    activeGroup={setActiveGroup}
-                    deleteGroup={deleteGroup}
-                  />
-                  {groupArea && activeGroup === 0 && (
-                    <GroupCanvas nodes={e} renderer={props.renderer} />
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </SideBar>
+        <Groups
+          groupArea={groupArea}
+          renderer={props.renderer}
+          setNodeGroups={setNodeGroups}
+          nodeGroups={nodeGroups}
+          setGroupArea={setGroupArea}
+        />
         <Settings
           settings={settings.current}
           defaultNodeSizes={defaultNodes}

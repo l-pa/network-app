@@ -6,9 +6,9 @@ import {
   SettingsInput,
   SettingsSubTitle,
   SettingsSelect
-} from "./style";
+} from "../style";
 
-import { shapes } from "./statArrays";
+import { shapes } from "../statArrays";
 
 export default function GroupDetail(props) {
   const [showColorPicker, setShowColorPicker] = useState(false);

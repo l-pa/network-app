@@ -3,8 +3,8 @@ import { SketchPicker } from "react-color";
 import * as iwanthue from "iwanthue";
 // https://feathericons.com/
 
-import hideMenu from "./assets/hideMenu.svg";
-import showMenu from "./assets/showMenu.svg";
+import hideMenu from "../assets/hideMenu.svg";
+import showMenu from "../assets/showMenu.svg";
 
 import {
   SettingsButton,
@@ -16,7 +16,7 @@ import {
   SettingsSubMenu,
   SideBar,
   ToggleButton
-} from "./style";
+} from "../style";
 
 import {
   edgeLabelSizes,
@@ -25,18 +25,16 @@ import {
   shapes,
   nodeSizeArr,
   edgeSizeArr
-} from "./statArrays";
+} from "../statArrays";
 
 import NodeDetail from "./NodeDetail";
 
-import ForceAtlas2 from "./layouts/ForceAtlas2";
-import RandomLayout from "./layouts/RandomLayout";
-import NoverlapUI from "./layouts/Noverlap";
-import FruchtermanReingold from "./layouts/FruchtermanReingold";
-
-import Circle from "./layouts/Circle";
-import Rotate from "./layouts/Rotate";
-import Orthogonal from "./layouts/Orthogonal";
+import ForceAtlas2 from "../layouts/ForceAtlas2";
+import RandomLayout from "../layouts/RandomLayout";
+import NoverlapUI from "../layouts/Noverlap";
+import FruchtermanReingold from "../layouts/FruchtermanReingold";
+import Circle from "../layouts/Circle";
+import Rotate from "../layouts/Rotate";
 
 import SigmaSettings from "./SigmaSettings";
 
@@ -226,8 +224,8 @@ export default function Settings(props) {
         {showSideMenu ? (
           <img src={hideMenu} alt="" style={{ color: "white" }} />
         ) : (
-          <img src={showMenu} alt="" style={{ color: "white" }} />
-        )}
+            <img src={showMenu} alt="" style={{ color: "white" }} />
+          )}
       </ToggleButton>
       <SideBar show={showSideMenu} width={20} showScrolY>
         <br />
@@ -303,9 +301,11 @@ export default function Settings(props) {
               window.network.toSVG({
                 download: true,
                 filename: `${props.fileName}.svg`,
-                labels: true,
+                labels: showLabel,
                 classes: false,
-                data: true
+                data: true,
+                width: 1500,
+                height: 1000
               });
             }}
           >
@@ -445,15 +445,15 @@ export default function Settings(props) {
               <small>Available with proportional edge label type</small>
             </div>
           ) : (
-            <SettingsInput
-              value={edgeLabelSizePowRatio}
-              type="number"
-              min={0}
-              onChange={event => {
-                setEdgeLabelSizePowRatio(event.target.value);
-              }}
-            />
-          )}
+              <SettingsInput
+                value={edgeLabelSizePowRatio}
+                type="number"
+                min={0}
+                onChange={event => {
+                  setEdgeLabelSizePowRatio(event.target.value);
+                }}
+              />
+            )}
           <SettingsSubTitle>Label color</SettingsSubTitle>
           <SettingsInput
             value={labelColor}

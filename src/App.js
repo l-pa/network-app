@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
-import Network from "./Network";
+import Network from "./components/Network";
 import ErrorBoundary from "./ErrorBoundary";
 
 function App() {
@@ -9,6 +9,9 @@ function App() {
   const [file, setFile] = useState();
   const [showNetwork, setShowNetwork] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [errorMessage, setErrorMessage] = useState(""); // use error boundaries
+
   const fileName = useRef("graph");
 
   const largestComponent = useRef(false);
@@ -52,6 +55,16 @@ function App() {
     if (showNetwork === false) window.network = new window.sigma();
   }, [showNetwork]);
 
+  const setExample = (url, type, name) => {
+    setLoading(true);
+    setFile({
+      url,
+      type
+    });
+    fileName.current = name;
+    setShowNetwork(true);
+    setErrorMessage(null);
+  };
   return (
     <ErrorBoundary>
       <div>
@@ -62,11 +75,11 @@ function App() {
                 <div className="left">
                   <h2>Custom network</h2>
                   <p>GEXF - 1.2+ / JSON / GML</p>
-
                   <input
                     type="file"
                     accept=".gexf, .json, .gml"
                     onChange={event => {
+                      setErrorMessage(null);
                       fileReader = new FileReader();
                       fileReader.onloadend = handleFileRead(
                         event.target.files[0]
@@ -75,12 +88,13 @@ function App() {
                     }}
                   />
                   <br />
-                  <br/>
+                  <br />
                   <input
                     type="checkbox"
                     defaultChecked={largestComponent.current}
                     onChange={e =>
-                      (largestComponent.current = e.target.checked)}
+                      (largestComponent.current = e.target.checked)
+                    }
                   />
                   Largest component
                 </div>
@@ -91,14 +105,11 @@ function App() {
                     role="button"
                     tabIndex="0"
                     onClick={() => {
-                      setLoading(true);
-                      setFile({
-                        url:
-                          "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/java_packages.json",
-                        type: "json"
-                      });
-                      fileName.current = "java_packages";
-                      setShowNetwork(true);
+                      setExample(
+                        "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/java_packages.json",
+                        "json",
+                        "java_packages"
+                      );
                     }}
                     className="example"
                   >
@@ -109,14 +120,11 @@ function App() {
                     role="button"
                     tabIndex="-1"
                     onClick={() => {
-                      setLoading(true);
-                      setFile({
-                        url:
-                          "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/karate.json",
-                        type: "json"
-                      });
-                      fileName.current = "karate";
-                      setShowNetwork(true);
+                      setExample(
+                        "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/karate.json",
+                        "json",
+                        "karate"
+                      );
                     }}
                     className="example"
                   >
@@ -127,14 +135,11 @@ function App() {
                     role="button"
                     tabIndex="-2"
                     onClick={() => {
-                      setLoading(true);
-                      setFile({
-                        url:
-                          "https://raw.githubusercontent.com/dunnock/react-sigma/master/public/upwork.json",
-                        type: "json"
-                      });
-                      fileName.current = "upwork";
-                      setShowNetwork(true);
+                      setExample(
+                        "https://raw.githubusercontent.com/dunnock/react-sigma/master/public/upwork.json",
+                        "json",
+                        "upwork"
+                      );
                     }}
                     className="example"
                   >
@@ -144,14 +149,11 @@ function App() {
                     role="button"
                     tabIndex="-1"
                     onClick={() => {
-                      setLoading(true);
-                      setFile({
-                        url:
-                          "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/codeminer.gexf",
-                        type: "gexf"
-                      });
-                      fileName.current = "code_miner";
-                      setShowNetwork(true);
+                      setExample(
+                        "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/codeminer.gexf",
+                        "gexf",
+                        "code_miner"
+                      );
                     }}
                     className="example"
                   >
@@ -180,6 +182,9 @@ function App() {
                 </button>
               </div> */}
               <div className="loading">{loading && <h2>Loading</h2>}</div>
+              <div className="loading">
+                {errorMessage && <h2>{errorMessage}</h2>}
+              </div>
             </div>
           </div>
         ) : (
@@ -192,6 +197,7 @@ function App() {
               setLoading={setLoading}
               fileName={fileName.current}
               renderer={renderer}
+              setErrorMessage={setErrorMessage}
             />
           </div>
         )}
