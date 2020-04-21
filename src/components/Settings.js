@@ -62,7 +62,7 @@ export default function Settings(props) {
   const [showColorPickerEdge, setShowColorPickerEdge] = useState(false);
   const [showColorPickerLabel, setShowColorPickerLabel] = useState(false);
 
-  const [showSideMenu, setShowSideMenu] = useState(true);
+  const [showSideMenu, setShowSideMenu] = useState(props.visible);
 
   const edgeShapeRef = useRef();
   const edgeSizeRef = useRef();
@@ -86,8 +86,6 @@ export default function Settings(props) {
         return <Circle />;
       case layouts[5]:
         return <Rotate />;
-      case layouts[6]:
-        return <Orthogonal />;
       default:
         return null;
     }

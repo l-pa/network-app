@@ -63,7 +63,7 @@ function Network(props) {
       components.push(visited);
       visited = [];
     }
-    components.sort(function(a, b) {
+    components.sort(function (a, b) {
       return b.length - a.length;
     });
     console.log(components[0]);
@@ -105,7 +105,7 @@ function Network(props) {
 
   useEffect(() => {
     if (lasso) {
-      lasso.bind("selectedNodes", function(event) {
+      lasso.bind("selectedNodes", function (event) {
         const nodes = event.data;
 
         setNodeGroups(val => [...val, nodes]);
@@ -172,7 +172,7 @@ function Network(props) {
       case "gml":
         var rawFile = new XMLHttpRequest();
         rawFile.open("GET", props.network.url);
-        rawFile.onreadystatechange = function() {
+        rawFile.onreadystatechange = function () {
           if (rawFile.readyState === 4) {
             if (rawFile.status === 200 || rawFile.status === 0) {
               // console.log(rawFile.responseText[0]);
@@ -271,6 +271,7 @@ function Network(props) {
         }}
       >
         <Groups
+          visible={props.hidePanels}
           groupArea={groupArea}
           renderer={props.renderer}
           setNodeGroups={setNodeGroups}
@@ -278,6 +279,7 @@ function Network(props) {
           setGroupArea={setGroupArea}
         />
         <Settings
+          visible={props.hidePanels}
           settings={settings.current}
           defaultNodeSizes={defaultNodes}
           defaultEdgeSizes={defaultEdges}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
+
 import Network from "./components/Network";
 import ErrorBoundary from "./ErrorBoundary";
 
@@ -9,6 +10,7 @@ function App() {
   const [file, setFile] = useState();
   const [showNetwork, setShowNetwork] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [hidePanels, setHidePanels] = useState(!false);
 
   const [errorMessage, setErrorMessage] = useState(""); // use error boundaries
 
@@ -65,6 +67,37 @@ function App() {
     setShowNetwork(true);
     setErrorMessage(null);
   };
+
+  useEffect(() => {
+    const windowUrl = window.location.search;
+    const params = new URLSearchParams(windowUrl);
+    if (params.get("n") && params.get("t")) {
+      if (params.get("f")) {
+        setExample(params.get("n"), params.get("t"), params.get("f"));
+      }
+
+      if (params.get("h") === "1") {
+        setHidePanels(!true);
+      }
+      setExample(params.get("n"), params.get("t"), params.get("f"));
+      setShowNetwork(true);
+    }
+  }, []);
+
+  const setExamplePromise = (url, type, name) => {
+    return new Promise((res, rej) => {
+      setLoading(true);
+      setFile({
+        url,
+        type
+      });
+      fileName.current = name;
+      setShowNetwork(true);
+      setErrorMessage(null);
+      res(1);
+    });
+  };
+
   return (
     <ErrorBoundary>
       <div>
@@ -93,8 +126,7 @@ function App() {
                     type="checkbox"
                     defaultChecked={largestComponent.current}
                     onChange={e =>
-                      (largestComponent.current = e.target.checked)
-                    }
+                      (largestComponent.current = e.target.checked)}
                   />
                   Largest component
                 </div>
@@ -188,8 +220,8 @@ function App() {
             </div>
           </div>
         ) : (
-          <div>
             <Network
+              hidePanels={hidePanels}
               setShowNetwork={setShowNetwork}
               largestComponent={largestComponent.current}
               network={file}
@@ -199,8 +231,7 @@ function App() {
               renderer={renderer}
               setErrorMessage={setErrorMessage}
             />
-          </div>
-        )}
+          )}
       </div>
     </ErrorBoundary>
   );

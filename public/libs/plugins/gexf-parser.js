@@ -1,4 +1,4 @@
-(function(undefined) {
+(function (undefined) {
   /**
    * GEXF Library
    * =============
@@ -212,7 +212,7 @@
       metas.lastmodifieddate = _xml.els.meta.getAttribute("lastmodifieddate");
 
       // Other information
-      _helpers.nodeListEach(_xml.els.meta.childNodes, function(child) {
+      _helpers.nodeListEach(_xml.els.meta.childNodes, function (child) {
         metas[child.tagName.toLowerCase()] = child.textContent;
       });
 
@@ -225,7 +225,7 @@
 
       // Iterating through attributes
       if (_xml.els.model[cls])
-        _helpers.nodeListEach(_xml.els.model[cls], function(attr) {
+        _helpers.nodeListEach(_xml.els.model[cls], function (attr) {
           // Properties
           const properties = {
             id: attr.getAttribute("id") || attr.getAttribute("for"),
@@ -252,7 +252,7 @@
       const attvalues_els = node_or_edge.getElementsByTagName("attvalue");
 
       // Getting Node Indicated Attributes
-      const ah = _helpers.nodeListToHash(attvalues_els, function(el) {
+      const ah = _helpers.nodeListToHash(attvalues_els, function (el) {
         const attributes = _helpers.namedNodeMapToObject(el.attributes);
         const key = attributes.id || attributes.for;
 
@@ -261,7 +261,7 @@
       });
 
       // Iterating through model
-      model.map(function(a) {
+      model.map(function (a) {
         // Default value?
         data[a.id] =
           !(a.id in ah) && "defaultValue" in a
@@ -277,7 +277,7 @@
       const nodes = [];
 
       // Iteration through nodes
-      _helpers.nodeListEach(_xml.els.nodes, function(n) {
+      _helpers.nodeListEach(_xml.els.nodes, function (n) {
         // Basic properties
         const properties = {
           id: n.getAttribute("id"),
@@ -305,7 +305,7 @@
       const color_el = _helpers.getFirstElementByTagNS(node, "viz", "color");
 
       if (color_el) {
-        const color = ["r", "g", "b", "a"].map(function(c) {
+        const color = ["r", "g", "b", "a"].map(function (c) {
           return color_el.getAttribute(c);
         });
 
@@ -315,17 +315,20 @@
       // Position
       const pos_el = _helpers.getFirstElementByTagNS(node, "viz", "position");
 
+      viz.position = {};
       if (pos_el) {
-        viz.position = {};
-
-        ["x", "y", "z"].map(function(p) {
+        ["x", "y", "z"].map(function (p) {
           viz.position[p] = +pos_el.getAttribute(p);
         });
+      } else {
+        viz.position.x = Math.random();
+        viz.position.y = Math.random();
       }
 
       // Size
       const size_el = _helpers.getFirstElementByTagNS(node, "viz", "size");
       if (size_el) viz.size = +size_el.getAttribute("value");
+      else viz.size = 1;
 
       // Shape
       const shape_el = _helpers.getFirstElementByTagNS(node, "viz", "shape");
@@ -339,7 +342,7 @@
       const edges = [];
 
       // Iteration through edges
-      _helpers.nodeListEach(_xml.els.edges, function(e) {
+      _helpers.nodeListEach(_xml.els.edges, function (e) {
         // Creating the edge
         const properties = _helpers.namedNodeMapToObject(e.attributes);
         if (!("type" in properties)) {
@@ -366,7 +369,7 @@
       const color_el = _helpers.getFirstElementByTagNS(edge, "viz", "color");
 
       if (color_el) {
-        const color = ["r", "g", "b", "a"].map(function(c) {
+        const color = ["r", "g", "b", "a"].map(function (c) {
           return color_el.getAttribute(c);
         });
 
@@ -418,7 +421,7 @@
 
   // Fetching GEXF with XHR
   function fetch(gexf_url, callback) {
-    const xhr = (function() {
+    const xhr = (function () {
       if (window.XMLHttpRequest) return new XMLHttpRequest();
 
       let names;
@@ -435,7 +438,7 @@
         for (i in names)
           try {
             return new ActiveXObject(names[i]);
-          } catch (e) {}
+          } catch (e) { }
       }
 
       return null;
@@ -451,11 +454,11 @@
     // We'll be parsing the response string then.
     if (xhr.overrideMimeType) {
       xhr.overrideMimeType("text/xml");
-      getResult = function(r) {
+      getResult = function (r) {
         return r.responseXML;
       };
     } else {
-      getResult = function(r) {
+      getResult = function (r) {
         const p = new DOMParser();
         return p.parseFromString(r.responseText, "application/xml");
       };
@@ -464,7 +467,7 @@
     xhr.open("GET", gexf_url, async);
 
     if (async)
-      xhr.onreadystatechange = function() {
+      xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) callback(getResult(xhr));
       };
 
@@ -481,7 +484,7 @@
   // Fetch and parse the GEXF File
   function fetchAndParse(gexf_url, callback, err) {
     if (typeof callback === "function") {
-      return fetch(gexf_url, function(gexf) {
+      return fetch(gexf_url, function (gexf) {
         callback(Graph(gexf, err));
       });
     }
@@ -494,7 +497,7 @@
    */
   if (typeof this.gexf !== "undefined")
     throw 'gexf: error - a variable called "gexf" already ' +
-      "exists in the global scope";
+    "exists in the global scope";
 
   this.gexf = {
     // Functions

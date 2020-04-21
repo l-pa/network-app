@@ -19,7 +19,7 @@ import NodeGroups from "./NodeGroups";
 import GroupCanvas from "./GroupCanvas";
 
 export default function Groups(props) {
-  const [showGroups, setShowGroups] = useState(true);
+  const [showGroups, setShowGroups] = useState(props.visible);
   const [activeGroup, setActiveGroup] = useState(0);
 
   const deleteGroup = id => {
@@ -39,8 +39,8 @@ export default function Groups(props) {
         {showGroups ? (
           <img src={showMenu} alt="" style={{ color: "white" }} />
         ) : (
-          <img src={hideMenu} alt="" style={{ color: "white" }} />
-        )}
+            <img src={hideMenu} alt="" style={{ color: "white" }} />
+          )}
       </ToggleButton>
       <SideBar show={showGroups} width={10}>
         <br />
@@ -84,17 +84,17 @@ export default function Groups(props) {
                   />
                   {i === 0
                     ? props.groupArea &&
-                      i === activeGroup && (
-                        <GroupCanvas
-                          color="#fff"
-                          nodes={e}
-                          renderer={props.renderer}
-                        />
-                      )
+                    i === activeGroup && (
+                      <GroupCanvas
+                        color="#fff"
+                        nodes={e}
+                        renderer={props.renderer}
+                      />
+                    )
                     : props.groupArea &&
-                      i === activeGroup && (
-                        <GroupCanvas nodes={e} renderer={props.renderer} />
-                      )}
+                    i === activeGroup && (
+                      <GroupCanvas nodes={e} renderer={props.renderer} />
+                    )}
                 </div>
               );
             }
