@@ -16,8 +16,7 @@ export const layouts = [
   "No overlap",
   "Fruchterman Reingold",
   "Circle",
-  "Rotate",
-  "Orthogonal"
+  "Rotate"
 ];
 
 export const nodeSizeArr = [
