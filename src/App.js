@@ -79,6 +79,10 @@ function App() {
       if (params.get("h") === "1") {
         setHidePanels(!true);
       }
+
+      if (params.get("m") === "1") {
+        largestComponent.current = true;
+      }
       setExample(params.get("n"), params.get("t"), params.get("f"));
       setShowNetwork(true);
     }
@@ -126,7 +130,8 @@ function App() {
                     type="checkbox"
                     defaultChecked={largestComponent.current}
                     onChange={e =>
-                      (largestComponent.current = e.target.checked)}
+                      (largestComponent.current = e.target.checked)
+                    }
                   />
                   Largest component
                 </div>
