@@ -108,13 +108,11 @@ function Network(props) {
       lasso.bind("selectedNodes", function (event) {
         const nodes = event.data;
 
-        setNodeGroups(val => [...val, nodes]);
-        /*
-        nodes.forEach(element => {
-          window.network.graph.nodes(element.id).type = "pacman";
-        });
-*/
-        window.network.refresh();
+        if (nodes.length !== 0) {
+          setNodeGroups(val => [...val, nodes]);
+          window.network.refresh();
+        }
+
         // Do whatever you want with those nodes
 
         // Eventually unactivate the lasso-tool mode
