@@ -56,16 +56,16 @@ export default function Orthogonal(props) {
 
     let x = 0
     let y = 0
-    
+
     let x_p = 10
-    let y_p = 10    
+    let y_p = 10
 
     let compactionDir = true;
-    let iterationCount= 90 * Math.ceil(Math.sqrt(sigInst.graph.nodes().length))
+    let iterationCount = 90 * Math.ceil(Math.sqrt(sigInst.graph.nodes().length))
 
     let T = 2 * Math.sqrt(sigInst.graph.nodes().length)
 
-    let k = (0.2 / T)**(1/iterationCount)
+    let k = (0.2 / T) ** (1 / iterationCount)
 
     for (let i = 0; i < sigInst.graph.nodes().length; i++) {
 
@@ -76,7 +76,7 @@ export default function Orthogonal(props) {
         continue
       }
       console.log(Math.ceil((5 * Math.sqrt(sigInst.graph.nodes().length))));
-      
+
       x += x_p
       if (i % Math.ceil((5 * Math.sqrt(sigInst.graph.nodes().length))) === 0) {
         y += y_p
@@ -129,7 +129,7 @@ export default function Orthogonal(props) {
             }}
           >
             Stop
-        </SettingsButton>
+          </SettingsButton>
         )}
     </SettingsSubMenu>
   );

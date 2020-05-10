@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 
 import hideMenu from "../assets/hideMenu.svg";
 import showMenu from "../assets/showMenu.svg";
@@ -15,8 +15,12 @@ import {
   ToggleButton
 } from "../style";
 
+import DefaultNetwork from "../DefaultNetwork";
+
 import NodeGroups from "./NodeGroups";
 import GroupCanvas from "./GroupCanvas";
+
+// redux + context !!!
 
 export default function Groups(props) {
   const [showGroups, setShowGroups] = useState(props.visible);
@@ -24,10 +28,14 @@ export default function Groups(props) {
 
   const deleteGroup = id => {
     props.setNodeGroups(val => val.filter((_, i) => i !== id));
-    window.network.graph.nodes().forEach(e => (e.hidden = false));
-    window.network.refresh();
     setActiveGroup(0);
+    window.network.graph.nodes().forEach(e => {
+      e.hidden = false;
+    });
+    window.network.refresh();
   };
+
+  const defaultNetwork = useContext(DefaultNetwork);
 
   return (
     <div style={{ display: "flex", flexDirection: "row-reverse", zIndex: 1 }}>
@@ -56,12 +64,18 @@ export default function Groups(props) {
           />
           <SettingsSubTitle>Show groups area</SettingsSubTitle>
         </div>
-
         <SettingsButton
           onClick={() => {
-            window.network.graph.nodes();
-            window.network.graph.nodes().forEach(element => {
-              element.color = "#fff";
+            setActiveGroup(0);
+            // window.network.graph.nodes();
+            for (let i = 0; i < defaultNetwork.nodes.length; i++) {
+              const element = defaultNetwork.nodes[i];
+              window.network.graph.nodes(element.id).type = element.type;
+              window.network.graph.nodes(element.id).color = element.color;
+              window.network.graph.nodes(element.id).size = element.size;
+            }
+            window.network.graph.nodes().forEach(e => {
+              e.hidden = false;
             });
             props.setNodeGroups([window.network.graph.nodes()]);
           }}

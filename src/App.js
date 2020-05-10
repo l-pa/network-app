@@ -47,13 +47,13 @@ function App() {
           break;
       }
       setShowNetwork(true);
-    } catch (e) {
-      console.log("Err", e);
+    } catch (err) {
+      console.log("Err", err);
     }
   };
 
   useEffect(() => {
-    console.log("called new sigma"); // TODO
+    console.log("called new sigma"); // needs change in sigma lib
     if (showNetwork === false) window.network = new window.sigma();
   }, [showNetwork]);
 
@@ -130,8 +130,7 @@ function App() {
                     type="checkbox"
                     defaultChecked={largestComponent.current}
                     onChange={e =>
-                      (largestComponent.current = e.target.checked)
-                    }
+                      (largestComponent.current = e.target.checked)}
                   />
                   Largest component
                 </div>

@@ -29,7 +29,7 @@ hr {
   flex-direction: column;
 }
 
-.subButton{
+.subButton {
   background-color: #1d2026; /* Green */
   border: none;
   padding: 15px 50px;
@@ -37,14 +37,14 @@ hr {
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  margin:  0 3em 3em 0;
+  margin: 0 3em 3em 0;
   cursor: pointer;
-  color: white; 
+  color: white;
   border: 3px solid #3c5da1;
   transition-duration: 0.2s;
 }
 
-.subButton:hover{
+.subButton:hover {
   background-color: #3c5da1;
   color: white;
 }
@@ -76,7 +76,6 @@ hr {
   flex-direction: row;
 }
 
-
 .loading {
   margin-top: 0em;
 }
@@ -100,10 +99,8 @@ hr {
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
 }
 
-
 @media only screen and (max-width: 600px) {
   .center {
-    
     display: flex;
     flex-direction: column;
   }
@@ -111,9 +108,7 @@ hr {
   .border {
     display: none;
   }
-  
 }
-
 
 .scrollable {
   overflow-y: scroll;
@@ -130,4 +125,9 @@ hr {
   justify-content: center;
   align-self: center;
   text-align: center;
+  align-items: center;
+}
+
+.errorBoundary {
+  max-width: 60vw;
 }

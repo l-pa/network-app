@@ -29,6 +29,7 @@ export default function NodeGroups(props) {
   `;
 
   const [label, setLabel] = useState(props.id);
+  const [change, setChange] = useState(false);
 
   const changeLabel = customId => {
     setLabel(customId);
@@ -50,11 +51,12 @@ export default function NodeGroups(props) {
         onClick={() => {
           window.network.graph.nodes().forEach(e => (e.hidden = false));
 
-          difference.forEach(function(node) {
+          difference.forEach(function (node) {
             node.hidden = true;
           });
 
           window.network.refresh();
+          console.log("active ", props.id);
           props.activeGroup(props.id);
         }}
       >
@@ -63,40 +65,41 @@ export default function NodeGroups(props) {
             <Title>All nodes </Title>
             <Decription>
               {" "}
-              Nodes 
+              Nodes
 {' '}
-<Bold>{props.nodes.length}</Bold>{" "}
+              <Bold>{props.nodes.length}</Bold>{" "}
             </Decription>
           </Group>
         ) : (
-          <Group
-            active={props.active}
-            color={props.nodes[0].color}
-            onClick={() => {
-              setShowGroupDetail(true);
-            }}
-          >
-            <Title>{label}</Title>
-            <Decription>
-              {" "}
-              Nodes 
+            <Group
+              active={props.active}
+              color={props.nodes[0].color}
+              onClick={() => {
+                setShowGroupDetail(true);
+              }}
+            >
+              <Title>{label}</Title>
+              <Decription>
+                {" "}
+              Nodes
 {' '}
-<Bold>{props.nodes.length}</Bold>{" "}
-            </Decription>
-            {props.active && (
-              <GroupDetail
-                id={label}
-                index={props.index}
-                deleteGroup={props.deleteGroup}
-                nodes={props.nodes}
-                changeLabel={changeLabel}
-                visible={props.active}
-                setVisible={setVisible}
-                difference={difference}
-              />
-            )}
-          </Group>
-        )}
+                <Bold>{props.nodes.length}</Bold>{" "}
+              </Decription>
+              {props.active && (
+                <GroupDetail
+                  id={label}
+                  index={props.index}
+                  deleteGroup={props.deleteGroup}
+                  nodes={props.nodes}
+                  changeLabel={changeLabel}
+                  visible={props.active}
+                  setVisible={setVisible}
+                  difference={difference}
+                  change={setChange}
+                />
+              )}
+            </Group>
+          )}
       </div>
     </div>
   );

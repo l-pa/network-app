@@ -2,6 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import "../App.css";
 import "../loader.css";
 import "../gmlparse.js";
+
+import DefaultNetwork from "../DefaultNetwork";
+
 import GroupCanvas from "./GroupCanvas";
 
 import hideMenu from "../assets/hideMenu.svg";
@@ -240,56 +243,58 @@ function Network(props) {
   }, []);
 
   return (
-    <div
-      id="container"
-      style={{
-        height: "100vh",
-        display: "flex"
-      }}
+    <DefaultNetwork.Provider
+      value={{ nodes: defaultNodes, edges: defaultEdges }}
     >
-      {props.loading && (
-        <div
-          style={{
-            zIndex: 2,
-            display: "block",
-            position: "absolute",
-            left: "50%"
-          }}
-          className="loader"
-          showScrolY
-        >
-          Loading...
-        </div>
-      )}
       <div
+        id="container"
         style={{
-          display: "flex",
-          width: "100vw",
-          justifyContent: "space-between"
+          height: "100vh",
+          display: "flex"
         }}
       >
-        <Groups
-          visible={props.hidePanels}
-          groupArea={groupArea}
-          renderer={props.renderer}
-          setNodeGroups={setNodeGroups}
-          nodeGroups={nodeGroups}
-          setGroupArea={setGroupArea}
-        />
-        <Settings
-          visible={props.hidePanels}
-          settings={settings.current}
-          defaultNodeSizes={defaultNodes}
-          defaultEdgeSizes={defaultEdges}
-          setShowNetwork={props.setShowNetwork}
-          lasso={lasso}
-          fileName={props.fileName}
-          setNodeGroups={setNodeGroups}
-          groupArea={groupArea}
-          selectNodesButton={groupArea}
-        />
+        {props.loading && (
+          <div
+            style={{
+              zIndex: 2,
+              display: "block",
+              position: "absolute",
+              left: "50%"
+            }}
+            className="loader"
+            showScrolY
+          >
+            Loading...
+          </div>
+        )}
+        <div
+          style={{
+            display: "flex",
+            width: "100vw",
+            justifyContent: "space-between"
+          }}
+        >
+          <Groups
+            visible={props.hidePanels}
+            groupArea={groupArea}
+            renderer={props.renderer}
+            setNodeGroups={setNodeGroups}
+            nodeGroups={nodeGroups}
+            setGroupArea={setGroupArea}
+          />
+          <Settings
+            visible={props.hidePanels}
+            settings={settings.current}
+            setShowNetwork={props.setShowNetwork}
+            lasso={lasso}
+            fileName={props.fileName}
+            setNodeGroups={setNodeGroups}
+            groupArea={groupArea}
+            selectNodesButton={groupArea}
+          />
+        </div>
       </div>
-    </div>
+    </DefaultNetwork.Provider>
   );
 }
 

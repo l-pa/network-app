@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import "./NodeDetail.css";
 import { HuePicker } from "react-color";
 import {
@@ -8,19 +8,28 @@ import {
   SettingsSelect
 } from "../style";
 
+import DefaultNetwork from "../DefaultNetwork";
+
 import { shapes } from "../statArrays";
 
 export default function GroupDetail(props) {
   const [showColorPicker, setShowColorPicker] = useState(false);
   const label = useRef(props.id);
-  const colorInput = useRef();
-  const color = useRef();
+  const colorInput = useRef(props.nodes[0].color);
 
-  const size = useRef(1);
-  const shape = useRef(shapes[0]);
+  const size = useRef(props.nodes[0].size);
+  const shape = useRef(shapes[shapes.indexOf(props.nodes[0].type)]);
+
+  const defaultNetwork = useContext(DefaultNetwork);
+
+  const arrayToObject = (array, keyField) =>
+    array.reduce((obj, item) => {
+      obj[item[keyField]] = item;
+      return obj;
+    }, {});
 
   return (
-    <div className="window">
+    <div className="window" onClick={e => e.stopPropagation()}>
       {/* <div
         role="button"
         tabIndex="-1"
@@ -47,6 +56,17 @@ export default function GroupDetail(props) {
           })}
         </SettingsSelect>
 
+        <SettingsSubTitle>Node size</SettingsSubTitle>
+        <SettingsInput
+          defaultValue={props.nodes[0].size}
+          step={1}
+          min={1}
+          max={100}
+          type="number"
+          onChange={event => {
+            size.current = event.target.value;
+          }}
+        />
         <SettingsSubTitle>Color</SettingsSubTitle>
         <div>
           <SettingsInput
@@ -63,7 +83,6 @@ export default function GroupDetail(props) {
               width="auto"
               onChangeComplete={event => {
                 colorInput.current.value = `rgb(${event.rgb.r},${event.rgb.g},${event.rgb.b})`;
-                color.current = `rgb(${event.rgb.r},${event.rgb.g},${event.rgb.b})`;
               }}
             />
           </div>
@@ -79,9 +98,10 @@ export default function GroupDetail(props) {
                 props.nodes.forEach(e => {
                   e.color = colorInput.current.value;
                   e.type = shape.current;
-                  //     e.size = size.current.value;
+                  e.size = size.current;
                 });
                 window.network.refresh();
+                props.change(v => !v);
               }}
             >
               Change group
@@ -90,12 +110,17 @@ export default function GroupDetail(props) {
             <SettingsButton
               type="button"
               onClick={() => {
-                props.nodes.forEach(e => {
-                  const { color } = window.network.graph.nodes()[0];
-                  const { shape } = window.network.graph.nodes()[0];
+                const nodeArr = arrayToObject(defaultNetwork.nodes, "id");
 
-                  e.color = color;
-                  e.type = shape;
+                props.nodes.forEach(e => {
+                  window.network.graph.nodes(e.id).color = nodeArr[e.id].color;
+
+                  if (!nodeArr[e.id].shape) {
+                    window.network.graph.nodes(e.id).type = shapes[0];
+                  } else {
+                    window.network.graph.nodes(e.id).type = nodeArr[e.id].shape;
+                  }
+                  window.network.graph.nodes(e.id).size = nodeArr[e.id].size;
                 });
                 props.deleteGroup(props.index);
                 window.network.refresh();
@@ -123,7 +148,7 @@ export default function GroupDetail(props) {
                   filename: `${label.current.value}.json`,
                   settings: {
                     defaultNodeType: shape.current,
-                    defaultNodeColor: color.current,
+                    defaultNodeColor: colorInput.current,
                     labelThreshold: 0,
                     defaultLabelColor: "#fff",
                     borderSize: 2,

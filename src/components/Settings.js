@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { SketchPicker } from "react-color";
 import * as iwanthue from "iwanthue";
 // https://feathericons.com/
+
+import DefaultNetwork from "../DefaultNetwork";
 
 import hideMenu from "../assets/hideMenu.svg";
 import showMenu from "../assets/showMenu.svg";
@@ -72,6 +74,8 @@ export default function Settings(props) {
   const [minNodeSize, setMinNodeSize] = useState(1);
   const [maxNodeSize, setMaxNodeSize] = useState(8);
 
+  const defaultNetwork = useContext(DefaultNetwork);
+
   const renderLayoutOptions = layout => {
     switch (layout) {
       case layouts[0]:
@@ -96,7 +100,7 @@ export default function Settings(props) {
     switch (nodeSize) {
       case "default":
         for (let i = 0; i < window.network.graph.nodes().length; i++) {
-          window.network.graph.nodes()[i].size = props.defaultNodeSizes[i].size;
+          window.network.graph.nodes()[i].size = defaultNetwork.nodes[i].size;
         }
         break;
 
@@ -146,14 +150,11 @@ export default function Settings(props) {
       default:
         break;
     }
-    window.network.refresh();
-  }, [nodeSize, props.defaultNodeSizes]);
 
-  useEffect(() => {
     switch (edgeSize) {
       case "default":
         for (let i = 0; i < window.network.graph.edges().length; i++) {
-          window.network.graph.edges()[i].size = props.defaultEdgeSizes[i].size;
+          window.network.graph.edges()[i].size = defaultNetwork.edges[i].size;
         }
         break;
       case "sameAsNode":
@@ -167,7 +168,7 @@ export default function Settings(props) {
         break;
     }
     window.network.refresh();
-  }, [edgeSize, props.defaultEdgeSizes]);
+  }, [nodeSize, edgeSize]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     // TODO
