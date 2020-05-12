@@ -1,6 +1,17 @@
-(function(undefined) {
-  "use strict";
+const getCircularReplacer = () => {
+  const seen = new WeakSet();
+  return (key, value) => {
+    if (typeof value === "object" && value !== null) {
+      if (seen.has(value)) {
+        return;
+      }
+      seen.add(value);
+    }
+    return value;
+  };
+};
 
+(function (undefined) {
   /**
    * Sigma JSON File Exporter
    * ================================
@@ -18,9 +29,9 @@
 
   // Utilities
   function download(fileEntry, extension, filename) {
-    var blob = null;
-    var objectUrl = null;
-    var dataUrl = null;
+    let blob = null;
+    let objectUrl = null;
+    let dataUrl = null;
 
     if (window.Blob) {
       // use Blob if available
@@ -28,7 +39,7 @@
       objectUrl = window.URL.createObjectURL(blob);
     } else {
       // else use dataURI
-      dataUrl = "data:text/json;charset=UTF-8," + encodeURIComponent(fileEntry);
+      dataUrl = `data:text/json;charset=UTF-8,${encodeURIComponent(fileEntry)}`;
     }
 
     if (navigator.msSaveBlob) {
@@ -39,9 +50,9 @@
       navigator.msSaveOrOpenBlob(blob, filename);
     } else {
       // A-download
-      var anchor = document.createElement("a");
+      const anchor = document.createElement("a");
       anchor.setAttribute("href", window.Blob ? objectUrl : dataUrl);
-      anchor.setAttribute("download", filename || "graph." + extension);
+      anchor.setAttribute("download", filename || `graph.${extension}`);
 
       // Firefox requires the link to be added to the DOM before it can be clicked.
       document.body.appendChild(anchor);
@@ -50,7 +61,7 @@
     }
 
     if (objectUrl) {
-      setTimeout(function() {
+      setTimeout(function () {
         // Firefox needs a timeout
         window.URL.revokeObjectURL(objectUrl);
       }, 0);
@@ -64,13 +75,13 @@
    * @return {object}   The object copy.
    */
   function deepCopy(o) {
-    var copy = Object.create(null);
-    for (var i in o) {
+    const copy = Object.create(null);
+    for (const i in o) {
       if (typeof o[i] === "object" && o[i] !== null) {
         copy[i] = deepCopy(o[i]);
       } else if (typeof o[i] === "function" && o[i] !== null) {
         // clone function:
-        eval(" copy[i] = " + o[i].toString());
+        eval(` copy[i] = ${o[i].toString()}`);
         // copy[i] = o[i].bind(_g);
       } else {
         copy[i] = o[i];
@@ -98,11 +109,11 @@
    * @return {object}   The cleaned object.
    */
   function cleanup(o) {
-    for (var prop in o) {
+    for (const prop in o) {
       if (
         startsWith("read_cam", prop) ||
         startsWith("cam", prop) ||
-        startsWith("renderer", "" + prop)
+        startsWith("renderer", `${prop}`)
       ) {
         o[prop] = undefined;
       }
@@ -117,10 +128,10 @@
    * @param  {object} params The options.
    * @return {string}        The JSON string.
    */
-  sigma.prototype.toJSON = function(params) {
+  sigma.prototype.toJSON = function (params) {
     params = params || {};
 
-    var graph = {
+    const graph = {
       nodes: this.graph
         .nodes()
         .map(deepCopy)
@@ -143,7 +154,7 @@
       for (const [key, value] of Object.entries(params.settings)) {
         jsonParse.settings[key] = value;
       }
-      jsonString = JSON.stringify(jsonParse);
+      jsonString = JSON.stringify(jsonParse, getCircularReplacer());
     }
     if (params.download) {
       download(jsonString, "json", params.filename);
