@@ -9242,17 +9242,6 @@
         <viz:size value="10.0"></viz:size>
         <viz:position x="-417.25055" y="234.1241"></viz:position>
       </node>
-      <node id="2780" label="Adam J. Kaplan">
-        <attvalues>
-          <attvalue for="0" value="3"></attvalue>
-          <attvalue for="1" value="AKAPLAN"></attvalue>
-          <attvalue for="2" value="91"></attvalue>
-          <attvalue for="3" value="500"></attvalue>
-          <attvalue for="4" value="117"></attvalue>
-        </attvalues>
-        <viz:size value="10.0"></viz:size>
-        <viz:position x="-416.5979" y="206.0049"></viz:position>
-      </node>
     </nodes>
     <edges>
       <edge id="0" source="179" target="254"></edge>
