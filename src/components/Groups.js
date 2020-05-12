@@ -71,7 +71,11 @@ export default function Groups(props) {
             for (let i = 0; i < defaultNetwork.nodes.length; i++) {
               const element = defaultNetwork.nodes[i];
               window.network.graph.nodes(element.id).type = element.type;
-              window.network.graph.nodes(element.id).color = element.color;
+              if (!element.color) {
+                window.network.graph.nodes(element.id).color = "#000";
+              } else {
+                window.network.graph.nodes(element.id).color = element.color;
+              }
               window.network.graph.nodes(element.id).size = element.size;
             }
             window.network.graph.nodes().forEach(e => {

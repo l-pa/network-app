@@ -36,6 +36,8 @@ function Network(props) {
 
   const [lasso, setLasso] = useState();
 
+  const [fcValue, forceRerender] = useState(true); // REACT REDUX !!!!!!!!!!!
+
   const [groupArea, setGroupArea] = useState(false);
 
   const onlyLargestComponent = (nodes, edges) => {
@@ -244,7 +246,7 @@ function Network(props) {
 
   return (
     <DefaultNetwork.Provider
-      value={{ nodes: defaultNodes, edges: defaultEdges }}
+      value={{ nodes: defaultNodes, edges: defaultEdges, fc: forceRerender }}
     >
       <div
         id="container"
@@ -281,6 +283,7 @@ function Network(props) {
             setNodeGroups={setNodeGroups}
             nodeGroups={nodeGroups}
             setGroupArea={setGroupArea}
+            fc={fcValue}
           />
           <Settings
             visible={props.hidePanels}
@@ -292,6 +295,7 @@ function Network(props) {
             nodeGroups={nodeGroups}
             groupArea={groupArea}
             selectNodesButton={groupArea}
+            fc={fcValue}
           />
         </div>
       </div>

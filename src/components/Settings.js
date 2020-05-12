@@ -194,7 +194,7 @@ export default function Settings(props) {
     window.network.refresh();
   }, [nodeColor]);
 
-  useEffect(() => {
+  const edgeColorChange = () => {
     switch (edgeColor) {
       case "default":
         for (let i = 0; i < window.network.graph.edges().length; i++) {
@@ -227,7 +227,11 @@ export default function Settings(props) {
         break;
     }
     window.network.refresh();
-  }, [edgeColor, nodeColor, nodeRealColor, props.nodeGroups]);
+  };
+
+  useEffect(() => {
+    edgeColorChange();
+  }, [edgeColor, nodeColor, nodeRealColor, props.nodeGroups, props.fc]);
 
   useEffect(() => {
     // TODO
@@ -391,7 +395,11 @@ export default function Settings(props) {
           <HorizontalLine />
           {nodeDetail && showNodeDetail && (
             <div>
-              <NodeDetail node={nodeDetail} setVisibility={setShowNodeDetail} />
+              <NodeDetail
+                newColor={setNodeRealColor}
+                node={nodeDetail}
+                setVisibility={setShowNodeDetail}
+              />
               <HorizontalLine />
             </div>
           )}

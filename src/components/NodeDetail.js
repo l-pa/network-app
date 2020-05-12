@@ -78,7 +78,7 @@ function NodeDetail(props) {
                 props.node.data.node.label = label.current.value;
                 props.node.data.node.color = colorInput.current.value;
                 props.node.data.node.size = size.current.value;
-
+                props.newColor(colorInput.current.value);
                 window.network.refresh();
               }}
             >

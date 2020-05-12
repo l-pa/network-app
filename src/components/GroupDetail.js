@@ -102,6 +102,7 @@ export default function GroupDetail(props) {
                 });
                 window.network.refresh();
                 props.change(v => !v);
+                defaultNetwork.fc(v => !v);
               }}
             >
               Change group
