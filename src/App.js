@@ -111,7 +111,6 @@ function App() {
               <div className="center">
                 <div className="left">
                   <h2>Custom network</h2>
-                  <p>GEXF - 1.2+ / JSON / GML</p>
                   <input
                     type="file"
                     accept=".gexf, .json, .gml"
@@ -125,6 +124,8 @@ function App() {
                     }}
                   />
                   <br />
+                  <p>GEXF - 1.2+ / JSON / GML</p>
+                  <div className="border-h" />
                   <br />
                   <input
                     type="checkbox"
@@ -142,15 +143,20 @@ function App() {
                     tabIndex="0"
                     onClick={() => {
                       setExample(
-                        "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/java_packages.json",
-                        "json",
-                        "java_packages"
+                        "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/diseasome.gexf",
+                        "gexf",
+                        "diseasome"
                       );
                     }}
                     className="example"
                   >
-                    <p>Java packages.json</p>
-                    <small>1.5k nodes, 8k edges</small>
+                    <p>Diseasome.gexf</p>
+                    <small>
+                      A network of disorders and disease genes linked by known
+                      disorder–gene associations, indicating the common genetic
+                      origin of many diseases.
+{" "}
+                    </small>
                   </div>
                   <div
                     role="button"

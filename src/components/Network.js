@@ -289,6 +289,7 @@ function Network(props) {
             lasso={lasso}
             fileName={props.fileName}
             setNodeGroups={setNodeGroups}
+            nodeGroups={nodeGroups}
             groupArea={groupArea}
             selectNodesButton={groupArea}
           />

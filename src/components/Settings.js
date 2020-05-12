@@ -227,7 +227,7 @@ export default function Settings(props) {
         break;
     }
     window.network.refresh();
-  }, [edgeColor, nodeColor, nodeRealColor]);
+  }, [edgeColor, nodeColor, nodeRealColor, props.nodeGroups]);
 
   useEffect(() => {
     // TODO
@@ -671,7 +671,6 @@ export default function Settings(props) {
                 .nodes(nodes)
                 .edges(window.network.graph.edges());
               const result = community();
-              console.log(result);
               const palette = iwanthue(Math.max(...Object.values(result)) + 1, {
                 clustering: "force-vector",
                 seed: Math.random()
