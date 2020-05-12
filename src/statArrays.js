@@ -27,4 +27,8 @@ export const nodeSizeArr = [
   "degreeOut"
 ];
 
+export const nodeColorArr = ["default", "custom"];
+
 export const edgeSizeArr = ["default", "sameAsNode"];
+
+export const edgeColorArr = ["default", "source", "target", "custom"];

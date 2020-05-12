@@ -26,7 +26,9 @@ import {
   layouts,
   shapes,
   nodeSizeArr,
-  edgeSizeArr
+  edgeSizeArr,
+  edgeColorArr,
+  nodeColorArr
 } from "../statArrays";
 
 import NodeDetail from "./NodeDetail";
@@ -45,8 +47,10 @@ export default function Settings(props) {
   const [edgeLabelSize, setEdgeLabelSize] = useState(edgeLabelSizes[0]);
   const [edgeShape, setEdgeShape] = useState(edgeShapes[0]);
 
-  const [edgeColor, setEdgeColor] = useState("#fff");
-  const [nodeColor, setNodeColor] = useState("#000");
+  const [edgeColor, setEdgeColor] = useState(edgeColorArr[0]);
+  const [nodeColor, setNodeColor] = useState(nodeColorArr[0]);
+  const [nodeRealColor, setNodeRealColor] = useState();
+
   const [labelColor, setLabelColor] = useState("#fff");
 
   const [nodeSize, setNodeSize] = useState(nodeSizeArr[0]);
@@ -171,6 +175,61 @@ export default function Settings(props) {
   }, [nodeSize, edgeSize]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
+    switch (nodeColor) {
+      case "default":
+        for (let i = 0; i < window.network.graph.nodes().length; i++) {
+          if (!defaultNetwork.nodes[i].color) {
+            window.network.graph.nodes()[i].color = "#000";
+            console.log("no color");
+          } else {
+            window.network.graph.nodes()[i].color =
+              defaultNetwork.nodes[i].color;
+          }
+        }
+        break;
+      default:
+        break;
+    }
+    console.log(defaultNetwork);
+    window.network.refresh();
+  }, [nodeColor]);
+
+  useEffect(() => {
+    switch (edgeColor) {
+      case "default":
+        for (let i = 0; i < window.network.graph.edges().length; i++) {
+          if (!defaultNetwork.edges[i].color) {
+            window.network.graph.edges()[i].color = "#000";
+          } else {
+            window.network.graph.edges()[i].color =
+              defaultNetwork.edges[i].color;
+          }
+        }
+        break;
+      case "source":
+        for (let i = 0; i < window.network.graph.edges().length; i++) {
+          window.network.graph.edges()[i].color = window.network.graph.nodes(
+            window.network.graph.edges()[i].source
+          ).color;
+        }
+        break;
+
+      case "target":
+        for (let i = 0; i < window.network.graph.edges().length; i++) {
+          window.network.graph.edges()[i].color = window.network.graph.nodes(
+            window.network.graph.edges()[i].target
+          ).color;
+        }
+
+        break;
+
+      default:
+        break;
+    }
+    window.network.refresh();
+  }, [edgeColor, nodeColor, nodeRealColor]);
+
+  useEffect(() => {
     // TODO
 
     window.network.bind("clickNode", node => {
@@ -189,8 +248,8 @@ export default function Settings(props) {
       setShape(props.settings.defaultNodeType);
       setEdgeLabelSize(props.settings.labelSize);
       setEdgeShape(props.settings.defaultEdgeType);
-      // setEdgeColor(props.settings.defaultEdgeColor)
-      // setNodeColor(props.settings.defaultNodeColor)
+      setEdgeColor(props.settings.defaultEdgeColor);
+      setNodeColor(props.settings.defaultNodeColor);
       setLabelColor(props.settings.defaultLabelColor);
 
       setNodeSize(props.settings.nodeSize);
@@ -347,6 +406,31 @@ export default function Settings(props) {
               return <option value={o}>{o}</option>;
             })}
           </SettingsSelect>
+
+          <SettingsSubTitle>Node color</SettingsSubTitle>
+          <SettingsSelect
+            value={nodeColor}
+            onChange={event => {
+              setNodeColor(event.target.selectedOptions[0].value);
+            }}
+          >
+            {nodeColorArr.map((o, i, a) => {
+              return <option value={o}>{o}</option>;
+            })}
+          </SettingsSelect>
+          {nodeColor === "custom" && (
+            <SketchPicker
+              color={nodeRealColor}
+              onChange={event => {
+                window.network.graph
+                  .nodes()
+                  .forEach(n => (n.color = event.hex));
+                setNodeRealColor(event.hex);
+                window.network.refresh();
+              }}
+            />
+          )}
+
           <SettingsSubTitle>Node size</SettingsSubTitle>
           <SettingsSelect
             value={nodeSize}
@@ -438,6 +522,7 @@ export default function Settings(props) {
               return <option value={o}>{o}</option>;
             })}
           </SettingsSelect>
+
           <SettingsSubTitle>Label pow ratio</SettingsSubTitle>
           {edgeLabelSize === "fixed" ? (
             <div>
@@ -460,6 +545,7 @@ export default function Settings(props) {
               setShowColorPickerLabel(val => !val);
             }}
           />
+
           {showColorPickerLabel && (
             <SketchPicker
               color={labelColor}
@@ -475,17 +561,24 @@ export default function Settings(props) {
           <SettingsTitle>Edge</SettingsTitle>
           <HorizontalLine />
           <SettingsSubTitle>Edge color</SettingsSubTitle>
-          <SettingsInput
+          <SettingsSelect
             value={edgeColor}
-            onClick={() => {
-              setShowColorPickerEdge(val => !val);
+            onChange={event => {
+              setEdgeColor(event.target.selectedOptions[0].value);
             }}
-          />
-          {showColorPickerEdge && (
+          >
+            {edgeColorArr.map((o, i, a) => {
+              return <option value={o}>{o}</option>;
+            })}
+          </SettingsSelect>
+          {edgeColor === "custom" && (
             <SketchPicker
               color={edgeColor}
-              onChangeComplete={event => {
-                setEdgeColor(event.hex);
+              onChange={event => {
+                window.network.graph
+                  .edges()
+                  .forEach(e => (e.color = event.hex));
+                window.network.refresh();
               }}
             />
           )}
