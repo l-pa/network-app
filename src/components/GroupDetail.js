@@ -114,7 +114,12 @@ export default function GroupDetail(props) {
                 const nodeArr = arrayToObject(defaultNetwork.nodes, "id");
 
                 props.nodes.forEach(e => {
-                  window.network.graph.nodes(e.id).color = nodeArr[e.id].color;
+                  if (!nodeArr[e.id].color) {
+                    window.network.graph.nodes(e.id).color = "#000";
+                  } else {
+                    window.network.graph.nodes(e.id).color =
+                      nodeArr[e.id].color;
+                  }
 
                   if (!nodeArr[e.id].shape) {
                     window.network.graph.nodes(e.id).type = shapes[0];
