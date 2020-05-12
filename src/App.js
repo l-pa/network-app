@@ -131,7 +131,8 @@ function App() {
                     type="checkbox"
                     defaultChecked={largestComponent.current}
                     onChange={e =>
-                      (largestComponent.current = e.target.checked)}
+                      (largestComponent.current = e.target.checked)
+                    }
                   />
                   Largest component
                 </div>
@@ -143,19 +144,19 @@ function App() {
                     tabIndex="0"
                     onClick={() => {
                       setExample(
-                        "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/diseasome.gexf",
+                        "https://raw.githubusercontent.com/l-pa/network-app/master/src/networks/cpan-authors.gexf",
                         "gexf",
-                        "diseasome"
+                        "cpan-authors"
                       );
                     }}
                     className="example"
                   >
-                    <p>Diseasome.gexf</p>
+                    <p>CPAN authors</p>
                     <small>
-                      A network of disorders and disease genes linked by known
-                      disorder–gene associations, indicating the common genetic
-                      origin of many diseases.
-{" "}
+                      CPAN Explorer is a visualization project aiming at
+                      analyzing the relationships between the developers and the
+                      packages of the Perl language, known as the CPAN
+                      community.
                     </small>
                   </div>
                   <div
