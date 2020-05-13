@@ -154,7 +154,7 @@ export default function GroupDetail(props) {
                   filename: `${label.current.value}.json`,
                   settings: {
                     defaultNodeType: shape.current,
-                    defaultNodeColor: colorInput.current,
+                    defaultNodeColor: colorInput.current.value,
                     labelThreshold: 0,
                     defaultLabelColor: "#fff",
                     borderSize: 2,

@@ -131,10 +131,9 @@ function App() {
                     type="checkbox"
                     defaultChecked={largestComponent.current}
                     onChange={e =>
-                      (largestComponent.current = e.target.checked)
-                    }
+                      (largestComponent.current = e.target.checked)}
                   />
-                  Largest component
+                  Maximal component
                 </div>
                 <div className="border" />
                 <div className="right">
