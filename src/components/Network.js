@@ -259,10 +259,9 @@ function Network(props) {
     if (toDelete) {
       tmp = nodeGroups.map(v => v.filter(n => n.id != toDelete));
       tmp = tmp.filter(a => a.length !== 0);
+      console.log(tmp);
+      setNodeGroups(tmp);
     }
-    console.log(tmp);
-
-    setNodeGroups(tmp);
   }, [toDelete]);
 
   return (
