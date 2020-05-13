@@ -1,15 +1,27 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import "./NodeDetail.css";
 import { HuePicker } from "react-color";
+import { shapes } from "../statArrays";
+
+import DefaultNetwork from "../DefaultNetwork";
+
+import {
+  SettingsInput,
+  SettingsSubTitle,
+  SettingsSelect,
+  SettingsButton
+} from "../style";
 
 function NodeDetail(props) {
   const [showColorPicker, setShowColorPicker] = useState(false);
   const label = useRef(props.node.data.node.label);
   const colorInput = useRef(props.node.data.node.color);
   const color = useRef(props.node.data.node.color);
+  const shape = useRef(shapes[shapes.indexOf(props.node.data.node.type)]);
+
+  const defaultNetwork = useContext(DefaultNetwork);
 
   const size = useRef(props.node.data.node.size);
-  const [isDeleted, setIsDeleted] = useState(false);
   console.log(props.node);
 
   return (
@@ -35,6 +47,23 @@ function NodeDetail(props) {
             />
           </div>
         </div>
+
+        <div className="option">
+          <h2>Node type</h2>
+          <div key={props.node.data.node.size}>
+            <SettingsSelect
+              defValue={shape}
+              onChange={event => {
+                shape.current = event.target.selectedOptions[0].value;
+              }}
+            >
+              {shapes.map((o, i, a) => {
+                return <option value={o}>{o}</option>;
+              })}
+            </SettingsSelect>
+          </div>
+        </div>
+
         <div className="option">
           <h2>Color</h2>
           <div key={props.node.data.node.color}>
@@ -64,7 +93,7 @@ function NodeDetail(props) {
           <div key={props.node.data.node.size}>
             <input
               ref={size}
-              type="text"
+              type="number"
               defaultValue={props.node.data.node.size}
             />
           </div>
@@ -72,29 +101,49 @@ function NodeDetail(props) {
 
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div>
-            <button
+            <SettingsButton
               type="button"
               onClick={() => {
                 props.node.data.node.label = label.current.value;
                 props.node.data.node.color = colorInput.current.value;
                 props.node.data.node.size = size.current.value;
+                props.node.data.node.type = shape.current;
                 props.newColor(colorInput.current.value);
                 window.network.refresh();
               }}
             >
               Change node
-            </button>
+            </SettingsButton>
 
-            <button
+            <SettingsButton
               type="button"
               onClick={() => {
+                defaultNetwork.updateNodes(
+                  defaultNetwork.nodes.filter(
+                    n => n.id !== props.node.data.node.id
+                  )
+                );
+
+                defaultNetwork.updateEdges(
+                  defaultNetwork.edges.filter(
+                    n => n.source !== props.node.data.node.id
+                  )
+                );
+                defaultNetwork.updateEdges(
+                  defaultNetwork.edges.filter(
+                    n => n.target !== props.node.data.node.id
+                  )
+                );
+
                 window.network.graph.dropNode(props.node.data.node.id);
                 window.network.refresh();
-                setIsDeleted(true);
+                props.setVisibility(false);
+                defaultNetwork.fc(v => !v);
+                defaultNetwork.delete(props.node.data.node.id);
               }}
             >
               Delete node
-            </button>
+            </SettingsButton>
           </div>
 
           {

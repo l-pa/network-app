@@ -40,6 +40,16 @@ function Network(props) {
 
   const [groupArea, setGroupArea] = useState(false);
 
+  const [toDelete, setToDelete] = useState();
+
+  const updateDefaultNodes = nodes => {
+    setDefaultNodes(nodes);
+  };
+
+  const updateDefaultEdges = edges => {
+    setDefaultEdges(edges);
+  };
+
   const onlyLargestComponent = (nodes, edges) => {
     let n = nodes;
     let e = edges;
@@ -244,9 +254,27 @@ function Network(props) {
     };
   }, []);
 
+  useEffect(() => {
+    let tmp = [];
+    if (toDelete) {
+      tmp = nodeGroups.map(v => v.filter(n => n.id != toDelete));
+      tmp = tmp.filter(a => a.length !== 0);
+    }
+    console.log(tmp);
+
+    setNodeGroups(tmp);
+  }, [toDelete]);
+
   return (
     <DefaultNetwork.Provider
-      value={{ nodes: defaultNodes, edges: defaultEdges, fc: forceRerender }}
+      value={{
+        nodes: defaultNodes,
+        edges: defaultEdges,
+        fc: forceRerender,
+        updateEdges: updateDefaultEdges,
+        updateNodes: updateDefaultNodes,
+        delete: setToDelete
+      }}
     >
       <div
         id="container"
