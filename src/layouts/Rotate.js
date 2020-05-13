@@ -19,7 +19,7 @@ export default function Rotate(props) {
     */
 
     <SettingsSubMenu>
-      Scale nodes
+      Angle
       <SettingsInput
         step={1}
         min={0}
