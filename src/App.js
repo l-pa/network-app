@@ -110,32 +110,50 @@ function App() {
             <div className="intro">
               <div className="center">
                 <div className="left">
-                  <h2>Custom network</h2>
-                  <input
-                    type="file"
-                    accept=".gexf, .json, .gml"
-                    onChange={event => {
-                      setErrorMessage(null);
-                      fileReader = new FileReader();
-                      fileReader.onloadend = handleFileRead(
-                        event.target.files[0]
-                      );
-                      fileReader.readAsText(event.target.files[0]);
-                    }}
-                  />
-                  <br />
-                  <p>GEXF - 1.2+ / JSON / GML</p>
-                  <div className="border-h" />
-                  <br />
-                  <input
-                    type="checkbox"
-                    defaultChecked={largestComponent.current}
-                    onChange={e =>
-                      (largestComponent.current = e.target.checked)}
-                  />
-                  Maximal component
+                  <div>
+                    <h2>Convert to network</h2>
+                    <input
+                      type="file"
+                      accept=".xls, .xlsx"
+                      onChange={event => {
+                        setErrorMessage(null);
+                        fileReader = new FileReader();
+                        fileReader.onload = e => {
+                          console.log(e.target.files);
+                        };
+                        fileReader.readAsDataURL(event.target.files[0]);
+                      }}
+                    />
+                    <br />
+                    <p>XLSX</p>
+                  </div>
+                  <div>
+                    <h2>Custom network</h2>
+                    <input
+                      type="file"
+                      accept=".gexf, .json, .gml"
+                      onChange={event => {
+                        setErrorMessage(null);
+                        fileReader = new FileReader();
+                        fileReader.onloadend = handleFileRead(
+                          event.target.files[0]
+                        );
+                        fileReader.readAsText(event.target.files[0]);
+                      }}
+                    />
+                    <br />
+                    <p>GEXF - 1.2+ / JSON / GML</p>
+                    <div className="border-h" />
+                    <br />
+                    <input
+                      type="checkbox"
+                      defaultChecked={largestComponent.current}
+                      onChange={e =>
+                        (largestComponent.current = e.target.checked)}
+                    />
+                    Maximal component
+                  </div>
                 </div>
-                <div className="border" />
                 <div className="right">
                   <h3>Examples</h3>
                   <div

@@ -55,7 +55,9 @@ function Network(props) {
     let e = edges;
     let visited = [];
     const components = [];
+    let tmp = 0;
     function DFS(node) {
+      tmp += 1;
       visited.push(node);
       edges.forEach(edge => {
         if (node == edge.source) {
@@ -82,6 +84,7 @@ function Network(props) {
       return b.length - a.length;
     });
     console.log(components[0]);
+    console.log(tmp);
 
     n = n.filter(node => components[0].includes(node.id));
     e = edges.filter(edge => components[0].includes(edge.source));
